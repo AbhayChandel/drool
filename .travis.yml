@@ -1,0 +1,26 @@
+language: java
+sudo: false
+install: true
+dist: trusty
+
+addons:
+  sonarcloud:
+    organization: "abhaychandel-github"
+    token:
+      secure: "$SONAR_TOKEN"
+
+jdk:
+  - oraclejdk8
+
+script:
+  - 'if [[ "$TRAVIS_EVENT_TYPE" == "push" && ("$TRAVIS_BRANCH" =~ ^feature.* || "$TRAVIS_BRANCH" =~ ^issue.*) ]]; then
+          mvn clean install;
+      else
+          mvn clean install -P test;
+      fi'
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent org.jacoco:jacoco-maven-plugin:report package sonar:sonar
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
