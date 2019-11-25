@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -18,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JwtSecurityIT {
+
+    @Value("${rest.uri.version}")
+    String restUriVersion;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -36,7 +40,7 @@ class JwtSecurityIT {
         jwtRequestJson.put("email", "talk_to_priyankaa@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/user/v1/authenticate", request, String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/" + restUriVersion + "/user/authenticate", request, String.class);
         assertEquals(401, responseEntity.getStatusCodeValue());
         assertEquals("Wrong Username or Password", responseEntity.getBody());
     }
@@ -49,7 +53,7 @@ class JwtSecurityIT {
         jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyankaa");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/user/v1/authenticate", request, String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/" + restUriVersion + "/user/authenticate", request, String.class);
         assertEquals(401, responseEntity.getStatusCodeValue());
         assertEquals("Wrong Username or Password", responseEntity.getBody());
     }
@@ -62,7 +66,7 @@ class JwtSecurityIT {
         jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/user/v1/authenticate", request, String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity("/" + restUriVersion + "/user/authenticate", request, String.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
         assertNotNull(responseEntity.getBody());
     }

@@ -1,11 +1,12 @@
 package com.hexlindia.drool.usermanagement.security.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.usermanagement.security.business.api.JwtUserAuthentication;
+import com.hexlindia.drool.usermanagement.security.business.api.usecase.JwtUserAuthentication;
 import com.hexlindia.drool.usermanagement.security.services.JwtRequest;
 import com.hexlindia.drool.usermanagement.security.services.api.rest.JwtUserAuthenticationRestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class JwtUserAuthenticationRestServiceImplTest {
 
+    @Value("${rest.uri.version}")
+    String restUriVersion;
+
     @Autowired
     JwtUserAuthenticationRestService jwtUserAuthenticationRestService;
 
@@ -39,7 +43,7 @@ class JwtUserAuthenticationRestServiceImplTest {
 
     @Test
     void createAuthenticationToken_RequestObjectMissing() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/v1/authenticate"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/" + restUriVersion + "/user/authenticate"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -48,7 +52,7 @@ class JwtUserAuthenticationRestServiceImplTest {
         doThrow(new BadCredentialsException("Bad Credentials")).when(this.jwtUserAuthentication).authenticate(any(), any());
         JwtRequest jwtRequest = new JwtRequest();
         String requestBody = objectMapper.writeValueAsString(jwtRequest);
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/v1/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/" + restUriVersion + "/user/authenticate")
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Wrong Username or Password"));
@@ -62,7 +66,7 @@ class JwtUserAuthenticationRestServiceImplTest {
         jwtRequest.setEmail("shehnaz@gmail.com");
         jwtRequest.setPassword("shehnaz");
         String requestBody = objectMapper.writeValueAsString(jwtRequest);
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/v1/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/" + restUriVersion + "/user/authenticate")
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

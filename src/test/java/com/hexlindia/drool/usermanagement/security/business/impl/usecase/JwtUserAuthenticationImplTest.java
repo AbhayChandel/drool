@@ -1,8 +1,8 @@
-package com.hexlindia.drool.usermanagement.security.business.impl;
+package com.hexlindia.drool.usermanagement.security.business.impl.usecase;
 
 import com.hexlindia.drool.usermanagement.security.business.JwtUserDetailsService;
 import com.hexlindia.drool.usermanagement.security.business.JwtUtil;
-import com.hexlindia.drool.usermanagement.security.business.api.JwtUserAuthentication;
+import com.hexlindia.drool.usermanagement.security.business.api.usecase.JwtUserAuthentication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

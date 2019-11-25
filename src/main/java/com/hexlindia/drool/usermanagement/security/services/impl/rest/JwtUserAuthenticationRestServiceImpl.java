@@ -1,6 +1,6 @@
 package com.hexlindia.drool.usermanagement.security.services.impl.rest;
 
-import com.hexlindia.drool.usermanagement.security.business.api.JwtUserAuthentication;
+import com.hexlindia.drool.usermanagement.security.business.api.usecase.JwtUserAuthentication;
 import com.hexlindia.drool.usermanagement.security.services.JwtRequest;
 import com.hexlindia.drool.usermanagement.security.services.JwtResponse;
 import com.hexlindia.drool.usermanagement.security.services.api.rest.JwtUserAuthenticationRestService;

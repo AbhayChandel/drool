@@ -1,8 +1,8 @@
-package com.hexlindia.drool.usermanagement.security.business.impl;
+package com.hexlindia.drool.usermanagement.security.business.impl.usecase;
 
 import com.hexlindia.drool.usermanagement.security.business.JwtUserDetailsService;
 import com.hexlindia.drool.usermanagement.security.business.JwtUtil;
-import com.hexlindia.drool.usermanagement.security.business.api.JwtUserAuthentication;
+import com.hexlindia.drool.usermanagement.security.business.api.usecase.JwtUserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

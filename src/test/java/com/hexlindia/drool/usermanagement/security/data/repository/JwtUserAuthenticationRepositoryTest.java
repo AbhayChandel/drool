@@ -16,13 +16,13 @@ class JwtUserAuthenticationRepositoryTest {
     UserAuthenticationRepository userAuthenticationRepository;
 
     @Test
-    private void testRetrievingUserAuthenticationEntityById() {
+    void testRetrievingUserAuthenticationEntityById() {
         Optional<UserAuthenticationEntity> userAuthenticationEntity = userAuthenticationRepository.findById(1L);
         assertTrue(userAuthenticationEntity.isPresent());
     }
 
     @Test
-    private void testRetrievingUserAuthenticationEntityByEmail() {
+    void testRetrievingUserAuthenticationEntityByEmail() {
         Optional<UserAuthenticationEntity> userAuthenticationEntity = userAuthenticationRepository.findByEmail("talk_to_priyanka@gmail.com");
         assertTrue(userAuthenticationEntity.isPresent());
     }
