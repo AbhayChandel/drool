@@ -3,8 +3,7 @@ package com.hexlindia.drool.usermanagement.filters;
 import com.hexlindia.drool.usermanagement.business.JwtUserDetailsService;
 import com.hexlindia.drool.usermanagement.business.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,9 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtValidationFilter extends OncePerRequestFilter {
-
-    private static final Logger LOGGER = LogManager.getLogger(JwtValidationFilter.class);
 
     private final JwtUserDetailsService jwtUserDetailsService;
 
@@ -49,12 +47,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                LOGGER.error("Unable to get JWT Token");
+                log.error("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                LOGGER.error("JWT Token has expired");
+                log.error("JWT Token has expired");
             }
         } else {
-            LOGGER.error("JWT Token does not begin with Bearer String");
+            log.error("JWT Token does not begin with Bearer String");
         }
 
         // Once we get the token validate it.
