@@ -5,12 +5,14 @@ import com.hexlindia.drool.usermanagement.business.api.to.mapper.UserProfileMapp
 import com.hexlindia.drool.usermanagement.business.api.usecase.UserProfile;
 import com.hexlindia.drool.usermanagement.data.entity.UserProfileEntity;
 import com.hexlindia.drool.usermanagement.data.repository.UserProfileRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class UserProfileImpl implements UserProfile {
 
     private final UserProfileRepository userProfileRepository;
@@ -34,6 +36,7 @@ public class UserProfileImpl implements UserProfile {
     public UserProfileTo findByUsername(String username) {
         Optional<UserProfileEntity> userProfileEntityOptional = this.userProfileRepository.findByUsername(username);
         if (userProfileEntityOptional.isPresent()) {
+            log.info("User with username {} found", username);
             UserProfileEntity userProfileEntity = userProfileEntityOptional.get();
             return userProfileMapper.toTransferObject(userProfileEntity);
         }
@@ -43,6 +46,7 @@ public class UserProfileImpl implements UserProfile {
     @Override
     public UserProfileTo update(UserProfileTo userProfileTo) {
         UserProfileEntity userProfileEntity = this.userProfileRepository.save(userProfileMapper.toEntity(userProfileTo));
+        log.debug("User profile after update {}", userProfileEntity);
         return this.userProfileMapper.toTransferObject(userProfileEntity);
     }
 }

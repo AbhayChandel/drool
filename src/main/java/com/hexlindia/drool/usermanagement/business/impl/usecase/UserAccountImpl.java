@@ -10,6 +10,7 @@ import com.hexlindia.drool.usermanagement.business.api.usecase.UserAccount;
 import com.hexlindia.drool.usermanagement.business.api.usecase.UserProfile;
 import com.hexlindia.drool.usermanagement.data.entity.UserAccountEntity;
 import com.hexlindia.drool.usermanagement.data.repository.UserAccountRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Component
 @Transactional
+@Slf4j
 public class UserAccountImpl implements UserAccount {
 
     private final UserAccountRepository userAccountRepository;
@@ -56,6 +58,7 @@ public class UserAccountImpl implements UserAccount {
     public UserAccountTo findByEmail(String email) {
         Optional<UserAccountEntity> userAccountEntityOptional = this.userAccountRepository.findByEmail(email);
         if (userAccountEntityOptional.isPresent()) {
+            log.info("user with email {} found", email);
             return userAccountMapper.toTransferObject(userAccountEntityOptional.get());
         }
         return new UserAccountTo();

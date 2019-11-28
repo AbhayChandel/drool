@@ -3,6 +3,7 @@ package com.hexlindia.drool.usermanagement.business;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
@@ -30,12 +32,16 @@ public class JwtUtil implements Serializable {
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        String username = getClaimFromToken(token, Claims::getSubject);
+        log.debug("Username retrieved from token: {}", username);
+        return username;
     }
 
     //retrieve expiration date from jwt token
     private Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
+        Date expirationDate = getClaimFromToken(token, Claims::getExpiration);
+        log.debug("Token expiration date: {}", expirationDate);
+        return expirationDate;
     }
 
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -51,6 +57,8 @@ public class JwtUtil implements Serializable {
     //check if the token has expired
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
+        log.info("Token is expired: {}", expiration.before(new Date()));
+
         return expiration.before(new Date());
     }
 
@@ -75,6 +83,7 @@ public class JwtUtil implements Serializable {
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
+        log.debug("username match: {0}. Username from token: '{1}'. Username from userDetails: '{2}'", username.equals(userDetails.getUsername()), username, userDetails.getUsername());
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
