@@ -46,7 +46,7 @@ public class UserProfileImpl implements UserProfile {
     @Override
     public UserProfileTo update(UserProfileTo userProfileTo) {
         UserProfileEntity userProfileEntity = this.userProfileRepository.save(userProfileMapper.toEntity(userProfileTo));
-        log.debug("User profile after update {}", userProfileEntity == null ? userProfileEntity : userProfileEntity.toString());
+        log.debug("User profile after update {}", userProfileEntity);
         return this.userProfileMapper.toTransferObject(userProfileEntity);
     }
 }
