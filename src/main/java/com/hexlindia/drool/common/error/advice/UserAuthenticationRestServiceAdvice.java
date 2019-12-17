@@ -19,7 +19,7 @@ public class UserAuthenticationRestServiceAdvice {
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseBody
     String handleMethodArgumentNotValidException(BadCredentialsException e) {
-        return "Wrong Username or Password";
+        return "Wrong Username or Password.";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
