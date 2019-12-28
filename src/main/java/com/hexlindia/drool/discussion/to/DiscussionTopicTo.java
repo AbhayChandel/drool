@@ -45,8 +45,6 @@ public class DiscussionTopicTo {
     }
 
     public DiscussionTopicTo() {
-        this.id = null;
-        this.userId = null;
     }
 
     public Long getId() {

@@ -9,16 +9,16 @@ import javax.validation.constraints.NotNull;
 public class DiscussionReplyTo {
 
     @NotNull(message = "Reply Id cannot be null", groups = {DiscussionReplyUpdateValidation.class})
-    private Long id = null;
+    private Long id;
 
     @NotNull(message = "Discussion Id cannot be null", groups = {DiscussionReplyPostValidation.class})
-    private Long discussionTopicId = null;
+    private Long discussionTopicId;
 
     @NotEmpty(message = "Reply cannot be empty", groups = {DiscussionReplyPostValidation.class, DiscussionReplyUpdateValidation.class})
     private String reply;
 
     @NotNull(message = "User Id cannot be null", groups = {DiscussionReplyPostValidation.class})
-    private Long userId = null;
+    private Long userId;
 
     private DiscussionReplyActivityTo discussionReplyActivityTo;
 
@@ -29,7 +29,8 @@ public class DiscussionReplyTo {
         this.userId = userId;
     }
 
-
+    public DiscussionReplyTo() {
+    }
 
     public Long getId() {
         return id;
@@ -61,9 +62,6 @@ public class DiscussionReplyTo {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public DiscussionReplyTo() {
     }
 
     public DiscussionReplyActivityTo getDiscussionReplyActivityTo() {
