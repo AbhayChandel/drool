@@ -6,3 +6,5 @@ insert into user_account(email, password) values ('sonam99@gmail.com', '$2y$12$n
 insert into user_profile(username, mobile, city, gender) values ('priyanka11', 9876543210, 'Indore', 'F');
 insert into user_profile(username, mobile, city, gender) values ('priya21', 8765432109, 'Pune', 'F');
 insert into user_profile(username, mobile, city, gender) values ('sonam31', 7654321098, 'Jaipur', 'F');
+
+insert into discussion_topic(topic, user_id, date_posted, last_active_date, views, likes) values ('Are Loreal lip colors better than Lakme or is it the other way around', 1, now(), now(), 15, 12);
