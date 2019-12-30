@@ -42,7 +42,7 @@ CREATE TABLE discussion_topic_activity
     views               INT default 0,
     likes               INT default 0,
     replies             INT default 0,
-    CONSTRAINT ` discussion_topic_activity ` FOREIGN KEY (` discussion_topic_id `) REFERENCES ` discussion_topic ` (` id `)
+    CONSTRAINT `discussion_topic_activity` FOREIGN KEY (`discussion_topic_id`) REFERENCES `discussion_topic` (`id`)
 --CONSTRAINT discussion_topic_stats_fk FOREIGN KEY (id) REFERENCES discussion_topic(id)
 );
 
