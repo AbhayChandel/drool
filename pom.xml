@@ -65,6 +65,12 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+
         <!--End of Data Dependencies -->
 
         <!-- Security Dependencies -->
@@ -248,6 +254,13 @@
             <id>test</id>
             <properties>
                 <skip.integration.tests>false</skip.integration.tests>
+                <skip.unit.tests>true</skip.unit.tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <skip.integration.tests>true</skip.integration.tests>
                 <skip.unit.tests>true</skip.unit.tests>
             </properties>
         </profile>
