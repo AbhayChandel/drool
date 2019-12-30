@@ -8,7 +8,7 @@ public class DiscussionReplyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reply_id_generator")
-    @SequenceGenerator(name = "reply_id_generator", sequenceName = "discussion_reply_seq", allocationSize = 1)
+    @SequenceGenerator(name = "reply_id_generator", sequenceName = "discussion_reply_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

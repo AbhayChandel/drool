@@ -10,7 +10,7 @@ public class DiscussionTopicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_generator")
-    @SequenceGenerator(name = "topic_id_generator", sequenceName = "discussion_topic_seq", allocationSize = 1)
+    @SequenceGenerator(name = "topic_id_generator", sequenceName = "discussion_topic_id_seq", allocationSize = 1)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
