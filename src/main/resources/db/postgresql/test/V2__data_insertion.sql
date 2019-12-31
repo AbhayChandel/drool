@@ -29,9 +29,7 @@ insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
 values (2, now(), 4);
 
 insert into discussion_reply(discussion_topic_id, reply, user_id)
-values (1,
-        'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better',
-        2);
+values (1,'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better', 2);
 insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
 values (3, now(), 3);
 
