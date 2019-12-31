@@ -6,7 +6,7 @@ import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DiscussionReplyMapper.class})
 public interface DiscussionTopicMapper {
 
     @Mapping(target = "discussionTopicActivityEntity", source = "discussionTopicActivityTo")
