@@ -23,8 +23,8 @@ values (1, 'Yes, Loreal is better than Lakme', 4);
 insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
 values (1, now(), 2);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id)
-values (1, 'No, I dont think Loreal products are any better than Lakme. It is just the hype', 8);
+insert into discussion_reply(discussion_topic_id, reply, user_id, active)
+values (1, 'No, I dont think Loreal products are any better than Lakme. It is just the hype', 8, false);
 insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
 values (2, now(), 4);
 

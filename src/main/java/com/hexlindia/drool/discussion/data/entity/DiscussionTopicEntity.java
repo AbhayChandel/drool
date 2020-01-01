@@ -1,5 +1,7 @@
 package com.hexlindia.drool.discussion.data.entity;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ public class DiscussionTopicEntity {
             mappedBy = "discussionTopicEntity",
             orphanRemoval = true
     )
+    @Where(clause = "active = 'true'")
     private List<DiscussionReplyEntity> discussionReplyEntityList = new ArrayList<>();
 
     private String topic;

@@ -22,6 +22,7 @@ class DiscussionTopicRepositoryTest {
         DiscussionTopicEntity discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
         assertEquals("Are Loreal lip colors better than Lakme or is it the other way around", discussionTopicEntityRetrieved.getTopic());
         assertEquals(5L, discussionTopicEntityRetrieved.getUserId());
+        assertEquals(1, discussionTopicEntityRetrieved.getDiscussionReplyEntityList().size());
     }
 
     @Test
