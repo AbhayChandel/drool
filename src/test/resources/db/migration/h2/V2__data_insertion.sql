@@ -13,6 +13,9 @@ insert into discussion_topic_activity(discussion_topic_id, date_posted, date_las
 insert into discussion_reply(discussion_topic_id, reply, user_id) values (1, 'Yes, Loreal is better than Lakme', 4);
 insert into discussion_reply_activity(discussion_reply_id, date_posted, likes) values(1, now(), 2);
 
+insert into discussion_reply(discussion_topic_id, reply, user_id, active) values (1, 'No, Loreal is better than Lakme', 2, false);
+insert into discussion_reply_activity(discussion_reply_id, date_posted, likes) values(2, now(), 2);
+
 insert into POST_TYPE(post_type_id, post_type) values (1, 'Topic');
 insert into POST_TYPE(post_type_id, post_type) values (2, 'Reply');
 insert into POST_TYPE(post_type_id, post_type) values (3, 'Comment');

@@ -33,14 +33,14 @@ class DiscussionReplyRepositoryTest {
         discussionReplyEntityMocked.setDiscussionReplyActivityEntity(discussionReplyActivityEntityMocked);
         discussionReplyRepository.save(discussionReplyEntityMocked);
 
-        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(2L);
+        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(3L);
         assertTrue(discussionReplyEntityRetrievedOptional.isPresent());
         discussionReplyEntityRetrieved = discussionReplyEntityRetrievedOptional.get();
         assertEquals("No, it is not better", discussionReplyEntityRetrieved.getReply());
         assertEquals(3L, discussionReplyEntityRetrieved.getUserId());
         DiscussionReplyActivityEntity discussionReplyActivityEntityRetrieved = discussionReplyEntityRetrieved.getDiscussionReplyActivityEntity();
         assertNotNull(discussionReplyActivityEntityRetrieved);
-        assertEquals(2L, discussionReplyActivityEntityRetrieved.getDiscussionTopicId());
+        assertEquals(3L, discussionReplyActivityEntityRetrieved.getDiscussionTopicId());
     }
 
     @Test
