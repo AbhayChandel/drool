@@ -7,15 +7,17 @@ CREATE TABLE user_account
     CONSTRAINT user_authentication_pk PRIMARY KEY (id)
 );
 
+ALTER SEQUENCE user_account_id_seq RESTART WITH 10001004;
+
 CREATE TABLE user_profile
 (
-    id       SERIAL,
+    user_account_id BIGINT NOT NULL REFERENCES user_account (id),
     username varchar(100) NOT NULL,
     mobile   BIGINT,
     city     varchar(100),
     gender   CHAR,
     CONSTRAINT username_unique UNIQUE (username),
-    CONSTRAINT user_profile_pk PRIMARY KEY (id)
+    CONSTRAINT user_profile_pk PRIMARY KEY (user_account_id)
 );
 
 CREATE TABLE discussion_topic

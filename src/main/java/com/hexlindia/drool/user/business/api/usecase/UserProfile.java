@@ -6,6 +6,8 @@ public interface UserProfile {
 
     UserProfileTo create(UserProfileTo userProfileTo);
 
+    UserProfileTo findById(Long userAccountId);
+
     UserProfileTo findByUsername(String username);
 
     UserProfileTo update(UserProfileTo userProfileTo);

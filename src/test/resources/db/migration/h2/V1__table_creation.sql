@@ -12,16 +12,16 @@ CREATE TABLE user_account
     CONSTRAINT user_authentication_pk PRIMARY KEY (id)
 );
 
-CREATE SEQUENCE user_profile_id_seq;
 CREATE TABLE user_profile
 (
-    id       BIGINT default user_profile_id_seq.nextval NOT NULL,
-    username varchar(100)                               NOT NULL,
+    user_account_id BIGINT NOT NULL,
+    username varchar(100)  NOT NULL,
     mobile   BIGINT,
     city     varchar(100),
     gender   CHAR,
     CONSTRAINT username_unique UNIQUE (username),
-    CONSTRAINT user_profile_pk PRIMARY KEY (id)
+    CONSTRAINT user_profile_pk PRIMARY KEY (user_account_id),
+    CONSTRAINT user_profile_fk FOREIGN KEY (user_account_id) REFERENCES user_account (id)
 );
 
 CREATE SEQUENCE discussion_topic_id_seq;

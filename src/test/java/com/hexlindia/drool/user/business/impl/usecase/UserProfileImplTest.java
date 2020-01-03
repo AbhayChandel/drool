@@ -74,7 +74,22 @@ class UserProfileImplTest {
     }
 
     @Test
-    void findByUsername_testPassingEntityToRepository() {
+    void findById_testPassingArgumentsToRepository() {
+        when(this.userProfileRepository.findById(1L)).thenReturn(Optional.of(new UserProfileEntity()));
+        userProfileImpl.findById(1L);
+        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(userProfileRepository, times(1)).findById(idArgumentCaptor.capture());
+        assertEquals(1L, idArgumentCaptor.getValue().longValue());
+    }
+
+    @Test
+    void findById_noProfileFound() {
+        when(this.userProfileRepository.findById(7L)).thenReturn(Optional.empty());
+        Assertions.assertThrows(UserProfileNotFoundException.class, () -> userProfileImpl.findById(7L));
+    }
+
+    @Test
+    void findByUsername_testPassingArugumentsToRepository() {
         when(this.userProfileRepository.findByUsername("priya21")).thenReturn(Optional.of(new UserProfileEntity()));
         userProfileImpl.findByUsername("priya21");
         ArgumentCaptor<String> usernameArgumentCaptor = ArgumentCaptor.forClass(String.class);

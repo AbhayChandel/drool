@@ -6,12 +6,12 @@ values ('priya.singh@gmail.com', '$2y$12$nfSQJzgpJ3gTu.CczB6BiuceNqA6niFi7EX03p4
 insert into user_account(email, password)
 values ('sonam99@gmail.com', '$2y$12$nkEeE1P.hWfg1iqhp8JWOea9F7lEEzBi07ZdGs1ujrVJM5YVYnQqi');
 
-insert into user_profile(username, mobile, city, gender)
-values ('shabanastyle', 9876543210, 'Lucknow', 'F');
-insert into user_profile(username, mobile, city, gender)
-values ('priya21', 8765432109, 'Pune', 'F');
-insert into user_profile(username, mobile, city, gender)
-values ('sonam31', 7654321098, 'Jaipur', 'F');
+insert into user_profile(user_account_id, username, mobile, city, gender)
+values (1, 'shabanastyle', 9876543210, 'Lucknow', 'F');
+insert into user_profile(user_account_id, username, mobile, city, gender)
+values (2, 'priya21', 8765432109, 'Pune', 'F');
+insert into user_profile(user_account_id, username, mobile, city, gender)
+values (3, 'sonam31', 7654321098, 'Jaipur', 'F');
 
 insert into discussion_topic(topic, user_id)
 values ('Are Loreal lip colors better than Lakme or is it the other way around', 5);
