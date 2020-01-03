@@ -10,6 +10,9 @@ public interface UserProfileRestService {
     @PutMapping(value = "/update")
     ResponseEntity<UserProfileTo> update(@RequestBody UserProfileTo userProfileTo);
 
+    @GetMapping(value = "/find/id/{id}")
+    ResponseEntity<UserProfileTo> findById(@PathVariable("id") Long id);
+
     @GetMapping(value = "/find/username/{username}")
     ResponseEntity<UserProfileTo> findByUsername(@PathVariable("username") String username);
 }

@@ -1,11 +1,14 @@
 package com.hexlindia.drool.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.user.business.api.to.UserAccountTo;
 import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +34,23 @@ class UserAccountIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String authToken;
+
+    @BeforeEach
+    private void getAuthenticationToken() throws JSONException, JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject jwtRequestJson = new JSONObject();
+        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("password", "priyanka");
+        HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
+        String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(response);
+        authToken = rootNode.path("token").asText();
+    }
+
     // To-Do Log these error messages
     /*
     User registration fails because email already exist
@@ -48,8 +68,9 @@ class UserAccountIT {
         assertEquals(500, responseEntity.getStatusCodeValue());
         assertEquals("Not able to register user at this time. Try again in some time.", responseEntity.getBody());
 
+        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntityProile = restTemplate.exchange(getFindUsernameUri() + "/priyanka99", HttpMethod.GET, httpEntity, String.class);
+        ResponseEntity<String> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/priyanka99", HttpMethod.GET, httpEntity, String.class);
         Assertions.assertEquals(404, responseEntityProile.getStatusCodeValue());
         Assertions.assertEquals("User profile with username priyanka99 not found", responseEntityProile.getBody());
     }
@@ -71,6 +92,7 @@ class UserAccountIT {
         assertEquals(500, responseEntity.getStatusCodeValue());
         assertEquals("Not able to register user at this time. Try again in some time.", responseEntity.getBody());
 
+        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/priyanka11@gmail.com", HttpMethod.GET, httpEntity, String.class);
         Assertions.assertEquals(404, responseEntityAccount.getStatusCodeValue());
@@ -92,11 +114,15 @@ class UserAccountIT {
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
 
+        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<UserAccountTo> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/abhishek.gupta@gmail.com", HttpMethod.GET, httpEntity, UserAccountTo.class);
         assertEquals("abhishek.gupta@gmail.com", responseEntityAccount.getBody().getEmail());
 
-        ResponseEntity<UserProfileTo> responseEntityProile = restTemplate.exchange(getFindUsernameUri() + "/filo72", HttpMethod.GET, httpEntity, UserProfileTo.class);
+        ResponseEntity<UserProfileTo> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/filo72", HttpMethod.GET, httpEntity, UserProfileTo.class);
+        assertEquals("filo72", responseEntityProile.getBody().getUsername());
+
+        ResponseEntity<UserProfileTo> responseEntityProileId = restTemplate.exchange(getUserProfileFindByIdUri() + "/" + responseEntityAccount.getBody().getId(), HttpMethod.GET, httpEntity, UserProfileTo.class);
         assertEquals("filo72", responseEntityProile.getBody().getUsername());
 
 
@@ -106,6 +132,7 @@ class UserAccountIT {
     void testFindingAvailableEmailAndValidateResponse() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<UserAccountTo> responseEntity = restTemplate.exchange(getFindEmailUri() + "/talk_to_priyanka@gmail.com", HttpMethod.GET, httpEntity, UserAccountTo.class);
         UserAccountTo userAccountToReturned = responseEntity.getBody();
@@ -117,21 +144,30 @@ class UserAccountIT {
     void testFindingUnavailableEmail() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(getFindEmailUri() + "/meenac@gmail.com", HttpMethod.GET, httpEntity, String.class);
         Assertions.assertEquals(404, responseEntity.getStatusCodeValue());
         Assertions.assertEquals("User Account with email meenac@gmail.com not found", responseEntity.getBody());
     }
 
+    private String getAuthenticationUri() {
+        return "/" + restUriVersion + "/user/account/authenticate";
+    }
+
     private String getRegisterUri() {
         return "/" + restUriVersion + "/user/account/register";
+    }
+
+    private String getUserProfileFindByIdUri() {
+        return "/" + restUriVersion + "/user/profile/find/id";
     }
 
     private String getFindEmailUri() {
         return "/" + restUriVersion + "/user/account/find/email";
     }
 
-    private String getFindUsernameUri() {
+    private String getUserProfileFindByUsernameUri() {
         return "/" + restUriVersion + "/user/profile/find/username";
     }
 }

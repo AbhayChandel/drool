@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.user.business.api.to.UserAccountTo;
+import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.to.UserRegistrationDetailsTo;
 import com.hexlindia.drool.user.business.api.to.mapper.RegistrationToUserProfileMapper;
 import com.hexlindia.drool.user.business.api.to.mapper.UserAccountMapper;
@@ -50,8 +51,12 @@ public class UserAccountImpl implements UserAccount {
 
     @Override
     public String register(UserRegistrationDetailsTo userRegistrationDetailsTo) {
-        userAccountRepository.saveAndFlush(getUserAuthenticationEntity(userRegistrationDetailsTo));
-        userProfile.create(registrationToUserProfileMapper.toUserProfileTo(userRegistrationDetailsTo));
+        UserAccountEntity userAccountEntity = userAccountRepository.saveAndFlush(getUserAuthenticationEntity(userRegistrationDetailsTo));
+        UserProfileTo userProfileTo = registrationToUserProfileMapper.toUserProfileTo(userRegistrationDetailsTo);
+        userProfileTo.setId(userAccountEntity.getId());
+        userProfileTo.setCity(null);
+        userProfileTo.setGender('N');
+        userProfile.create(userProfileTo);
         return getJwtToken(userRegistrationDetailsTo);
     }
 

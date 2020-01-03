@@ -1,21 +1,13 @@
 package com.hexlindia.drool.discussion.business.api.to.mapper;
 
-import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
 import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
-import com.hexlindia.drool.discussion.to.mapper.DiscussionReplyMapper;
 import com.hexlindia.drool.discussion.to.mapper.DiscussionTopicMapper;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class DiscussionTopicMapperTest {

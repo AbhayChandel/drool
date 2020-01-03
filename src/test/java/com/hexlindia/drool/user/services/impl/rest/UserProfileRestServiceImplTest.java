@@ -42,6 +42,39 @@ class UserProfileRestServiceImplTest {
     UserProfile userProfile;
 
     @Test
+    public void findById_HttpMethodNotAllowedError() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getFindByIdUri() + "/1"))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    public void findById_ParametersMissing() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(getFindByIdUri() + "/"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findById_ParametersPassedToBusinessLayer() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/8"));
+        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(this.userProfile, times(1)).findById(idArgumentCaptor.capture());
+        assertEquals(8, idArgumentCaptor.getValue().longValue());
+    }
+
+    @Test
+    void findById_ValidateJsonResponse() throws Exception {
+        UserProfileTo userProfileTo = new UserProfileTo(2L, "priya21", 8765432109L, "Pune", 'F');
+        when(this.userProfile.findById(2L)).thenReturn(userProfileTo);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.username").value("priya21"))
+                .andExpect(jsonPath("$.mobile").value(8765432109L))
+                .andExpect(jsonPath("$.city").value("Pune"))
+                .andExpect(jsonPath("$.gender").value("F"));
+    }
+
+    @Test
     public void findByUsername_HttpMethodNotAllowedError() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.put(getFindUsernameUri() + "/priya21"))
                 .andExpect(status().isMethodNotAllowed());
@@ -101,6 +134,10 @@ class UserProfileRestServiceImplTest {
                 .andExpect(jsonPath("$.mobile").value(8765432109L))
                 .andExpect(jsonPath("$.city").value("Pune"))
                 .andExpect(jsonPath("$.gender").value("F"));
+    }
+
+    private String getFindByIdUri() {
+        return "/" + restUriVersion + "/user/profile/find/id";
     }
 
     private String getFindUsernameUri() {

@@ -32,14 +32,23 @@ public class UserProfileImpl implements UserProfile {
         return this.userProfileMapper.toTransferObject(userProfileEntity);
     }
 
+    @Override
+    public UserProfileTo findById(Long userAccountId) {
+        Optional<UserProfileEntity> userProfileEntityOptional = this.userProfileRepository.findById(userAccountId);
+        if (userProfileEntityOptional.isPresent()) {
+            log.debug("User with id {} found", userAccountId);
+            return userProfileMapper.toTransferObject(userProfileEntityOptional.get());
+        }
+        throw new UserProfileNotFoundException("User profile with id " + userAccountId + " not found");
+    }
+
 
     @Override
     public UserProfileTo findByUsername(String username) {
         Optional<UserProfileEntity> userProfileEntityOptional = this.userProfileRepository.findByUsername(username);
         if (userProfileEntityOptional.isPresent()) {
-            log.info("User with username {} found", username);
-            UserProfileEntity userProfileEntity = userProfileEntityOptional.get();
-            return userProfileMapper.toTransferObject(userProfileEntity);
+            log.debug("User with username {} found", username);
+            return userProfileMapper.toTransferObject(userProfileEntityOptional.get());
         }
         throw new UserProfileNotFoundException("User profile with username " + username + " not found");
     }

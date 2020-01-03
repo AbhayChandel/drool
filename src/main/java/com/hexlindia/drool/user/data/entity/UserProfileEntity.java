@@ -1,14 +1,16 @@
 package com.hexlindia.drool.user.data.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_profile")
 public class UserProfileEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_profile_id_generator")
-    @SequenceGenerator(name = "user_profile_id_generator", sequenceName = "user_profile_id_seq", allocationSize = 1)
+    @Column(name = "user_account_id")
     private Long id;
 
     private String username;
