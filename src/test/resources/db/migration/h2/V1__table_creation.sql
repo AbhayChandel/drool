@@ -53,16 +53,9 @@ CREATE TABLE discussion_reply
     reply               varchar(500)                                    NOT NULL,
     user_id             BIGINT                                          NOT NULL,
     active              BOOLEAN default true                            NOT NULL,
-    CONSTRAINT discussion_reply_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE discussion_reply_activity
-(
-    discussion_reply_id BIGINT NOT NULL,
     date_posted         TIMESTAMP,
-    likes               INT default 0,
-    CONSTRAINT discussion_reply_activity FOREIGN KEY (discussion_reply_id) REFERENCES discussion_reply (id)
---CONSTRAINT discussion_topic_stats_fk FOREIGN KEY (id) REFERENCES discussion_topic(id)
+    likes               INT     default 0,
+    CONSTRAINT discussion_reply_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE discussion_reply_user_like

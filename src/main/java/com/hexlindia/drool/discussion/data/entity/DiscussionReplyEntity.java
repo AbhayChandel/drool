@@ -1,6 +1,7 @@
 package com.hexlindia.drool.discussion.data.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "discussion_reply")
@@ -15,13 +16,11 @@ public class DiscussionReplyEntity {
     @JoinColumn(name = "discussion_topic_id")
     private DiscussionTopicEntity discussionTopicEntity;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
-    private DiscussionReplyActivityEntity discussionReplyActivityEntity;
-
     private String reply;
     private Long userId;
     private boolean active;
+    private Timestamp datePosted;
+    private int likes;
 
     public DiscussionReplyEntity(String reply, Long userId) {
         this.reply = reply;
@@ -47,14 +46,6 @@ public class DiscussionReplyEntity {
         this.id = id;
     }
 
-    public DiscussionReplyActivityEntity getDiscussionReplyActivityEntity() {
-        return discussionReplyActivityEntity;
-    }
-
-    public void setDiscussionReplyActivityEntity(DiscussionReplyActivityEntity discussionReplyActivityEntity) {
-        this.discussionReplyActivityEntity = discussionReplyActivityEntity;
-    }
-
     public String getReply() {
         return reply;
     }
@@ -77,5 +68,21 @@ public class DiscussionReplyEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Timestamp getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(Timestamp datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

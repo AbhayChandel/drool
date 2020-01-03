@@ -10,10 +10,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DiscussionReplyMapper {
 
-    @Mapping(target = "discussionReplyActivityEntity", source = "discussionReplyActivityTo")
     DiscussionReplyEntity toEntity(DiscussionReplyTo discussionReplyTo);
 
-    @Mapping(target = "discussionReplyActivityTo", source = "discussionReplyActivityEntity")
     @Mapping(target = "discussionTopicId", source = "discussionTopicEntity.id")
     DiscussionReplyTo toTransferObject(DiscussionReplyEntity discussionReplyEntity);
 

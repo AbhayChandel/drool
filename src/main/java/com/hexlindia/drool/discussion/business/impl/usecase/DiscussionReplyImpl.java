@@ -5,7 +5,6 @@ import com.hexlindia.drool.common.util.DateTimeUtil;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReply;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReplyUserLike;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
-import com.hexlindia.drool.discussion.data.entity.DiscussionReplyActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
 import com.hexlindia.drool.discussion.data.repository.DiscussionReplyRepository;
@@ -39,13 +38,10 @@ public class DiscussionReplyImpl implements DiscussionReply {
     @Override
     @Transactional
     public DiscussionReplyTo post(DiscussionReplyTo discussionReplyTo) {
-        DiscussionReplyEntity discussionReplyEntity = this.discussionReplyRepository.save(discussionReplyMapper.toEntity(discussionReplyTo));
+        DiscussionReplyEntity discussionReplyEntity = discussionReplyMapper.toEntity(discussionReplyTo);
+        discussionReplyEntity.setDatePosted(DateTimeUtil.getCurrentTimestamp());
+        discussionReplyEntity = this.discussionReplyRepository.save(discussionReplyEntity);
         log.debug("Discussion Reply: '{}', id: '{}' for Discussion ID: {} posted", discussionReplyEntity.getReply(), discussionReplyEntity.getId(), discussionReplyTo.getDiscussionTopicId());
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = new DiscussionReplyActivityEntity(discussionReplyEntity.getId());
-        discussionReplyActivityEntity.setDatePosted(DateTimeUtil.getCurrentTimestamp());
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
-        discussionReplyEntity = discussionReplyRepository.save(discussionReplyEntity);
-        log.debug("Discussion Reply Id: '{}' activity row created", discussionReplyEntity.getId());
         discussionTopic.saveReply(discussionReplyEntity, discussionReplyTo.getDiscussionTopicId());
         return discussionReplyMapper.toTransferObject(discussionReplyEntity);
     }
@@ -66,9 +62,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     @Transactional
     public void incrementLikesByOne(ActivityTo activityTo) {
         DiscussionReplyEntity discussionReplyEntity = findInRepository("Reply likes increment", activityTo.getPostId());
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = discussionReplyEntity.getDiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(discussionReplyActivityEntity.getLikes() + 1);
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
+        discussionReplyEntity.setLikes(discussionReplyEntity.getLikes() + 1);
         discussionReplyRepository.save(discussionReplyEntity);
         discussionReplyUserLike.save(new DiscussionReplyUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
 
@@ -78,9 +72,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     @Override
     public void decrementLikesByOne(ActivityTo activityTo) {
         DiscussionReplyEntity discussionReplyEntity = findInRepository("Topic likes decrement", activityTo.getPostId());
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = discussionReplyEntity.getDiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(discussionReplyActivityEntity.getLikes() - 1);
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
+        discussionReplyEntity.setLikes(discussionReplyEntity.getLikes() - 1);
         discussionReplyRepository.save(discussionReplyEntity);
         discussionReplyUserLike.remove(new DiscussionReplyUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
 
