@@ -66,8 +66,8 @@ public class DiscussionReplyIT {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<DiscussionTopicTo> discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        int repliesBeforeNewReply = discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getReplies();
-        Timestamp discussionDateLastActiveBeforeNewReply = discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive();
+        int repliesBeforeNewReply = discussionTopicresponseEntity.getBody().getReplies();
+        Timestamp discussionDateLastActiveBeforeNewReply = discussionTopicresponseEntity.getBody().getDateLastActive();
 
         JSONObject discussion = new JSONObject();
         discussion.put("discussionTopicId", "1");
@@ -84,8 +84,8 @@ public class DiscussionReplyIT {
         assertNotNull(discussionReplyToRetrieved.getDiscussionReplyActivityTo().getDatePosted());
 
         discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertEquals(repliesBeforeNewReply + 1, discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getReplies());
-        assertTrue(discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive().getTime() > discussionDateLastActiveBeforeNewReply.getTime());
+        assertEquals(repliesBeforeNewReply + 1, discussionTopicresponseEntity.getBody().getReplies());
+        assertTrue(discussionTopicresponseEntity.getBody().getDateLastActive().getTime() > discussionDateLastActiveBeforeNewReply.getTime());
 
         responseEntity = restTemplate.exchange(getFindByIdUri() + "/" + discussionReplyToRetrieved.getId(), HttpMethod.GET, httpEntity, DiscussionReplyTo.class);
         discussionReplyToRetrieved = responseEntity.getBody();
@@ -146,7 +146,7 @@ public class DiscussionReplyIT {
         int replyLikesBeforeIncrement = replyResponseEntity.getBody().getDiscussionReplyActivityTo().getLikes();
 
         ResponseEntity<DiscussionTopicTo> discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        Timestamp discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive();
+        Timestamp discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
         activityTo.put("postId", "1");
@@ -159,7 +159,7 @@ public class DiscussionReplyIT {
         assertEquals(replyLikesBeforeIncrement + 1, replyResponseEntity.getBody().getDiscussionReplyActivityTo().getLikes());
 
         discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertTrue(discussionResponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive().getTime() > discussionDateLastActiveBeforeLikeIncrement.getTime());
+        assertTrue(discussionResponseEntity.getBody().getDateLastActive().getTime() > discussionDateLastActiveBeforeLikeIncrement.getTime());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class DiscussionReplyIT {
         int replyLikesBeforeIncrement = replyResponseEntity.getBody().getDiscussionReplyActivityTo().getLikes();
 
         ResponseEntity<DiscussionTopicTo> discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        Timestamp discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive();
+        Timestamp discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
         activityTo.put("postId", "1");
@@ -186,7 +186,7 @@ public class DiscussionReplyIT {
         assertEquals(replyLikesBeforeIncrement - 1, replyResponseEntity.getBody().getDiscussionReplyActivityTo().getLikes());
 
         discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertTrue(discussionResponseEntity.getBody().getDiscussionTopicActivityTo().getDateLastActive().getTime() > discussionDateLastActiveBeforeLikeIncrement.getTime());
+        assertTrue(discussionResponseEntity.getBody().getDateLastActive().getTime() > discussionDateLastActiveBeforeLikeIncrement.getTime());
     }
 
     @Test
@@ -197,13 +197,13 @@ public class DiscussionReplyIT {
         HttpEntity<String> request = new HttpEntity<>(null, headers);
 
         ResponseEntity<DiscussionTopicTo> discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, request, DiscussionTopicTo.class);
-        int repliesBeforeReplyDeletion = discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getReplies();
+        int repliesBeforeReplyDeletion = discussionTopicresponseEntity.getBody().getReplies();
 
         ResponseEntity<DiscussionReplyTo> responseEntityDelete = restTemplate.exchange(getDeleteByIdUri() + "/1", HttpMethod.DELETE, request, DiscussionReplyTo.class);
         assertEquals(200, responseEntityDelete.getStatusCodeValue());
 
         discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, request, DiscussionTopicTo.class);
-        assertEquals(repliesBeforeReplyDeletion - 1, discussionTopicresponseEntity.getBody().getDiscussionTopicActivityTo().getReplies());
+        assertEquals(repliesBeforeReplyDeletion - 1, discussionTopicresponseEntity.getBody().getReplies());
     }
 
 

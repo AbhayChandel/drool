@@ -23,21 +23,18 @@ CREATE TABLE user_profile
 CREATE TABLE discussion_topic
 (
     id      SERIAL,
-    topic   varchar(250)         NOT NULL,
-    user_id BIGINT               NOT NULL,
-    active  BOOLEAN default true NOT NULL,
+    topic            varchar(250)                                    NOT NULL,
+    user_id          BIGINT                                          NOT NULL,
+    date_posted      TIMESTAMP,
+    date_last_active TIMESTAMP,
+    views            INT     default 0,
+    likes            INT     default 0,
+    replies          INT     default 0,
+    active           BOOLEAN default true                            NOT NULL,
     CONSTRAINT discussion_topic_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE discussion_topic_activity
-(
-    discussion_topic_id BIGINT NOT NULL REFERENCES discussion_topic (id),
-    date_posted         TIMESTAMP,
-    date_last_active    TIMESTAMP,
-    views               INT default 0,
-    likes               INT default 0,
-    replies             INT default 0
-);
+ALTER SEQUENCE discussion_topic_id_seq RESTART WITH 10001001;
 
 CREATE TABLE discussion_topic_user_like
 (

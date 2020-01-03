@@ -3,6 +3,7 @@ package com.hexlindia.drool.discussion.data.entity;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,6 @@ public class DiscussionTopicEntity {
     @SequenceGenerator(name = "topic_id_generator", sequenceName = "discussion_topic_id_seq", allocationSize = 1)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
-    private DiscussionTopicActivityEntity discussionTopicActivityEntity;
-
     @OneToMany(
             mappedBy = "discussionTopicEntity",
             orphanRemoval = true
@@ -28,6 +25,11 @@ public class DiscussionTopicEntity {
 
     private String topic;
     private Long userId;
+    private Timestamp datePosted;
+    private Timestamp dateLastActive;
+    private int views;
+    private int likes;
+    private int replies;
     private boolean active;
 
     public DiscussionTopicEntity() {
@@ -55,14 +57,6 @@ public class DiscussionTopicEntity {
         this.id = id;
     }
 
-    public DiscussionTopicActivityEntity getDiscussionTopicActivityEntity() {
-        return discussionTopicActivityEntity;
-    }
-
-    public void setDiscussionTopicActivityEntity(DiscussionTopicActivityEntity discussionTopicActivityEntity) {
-        this.discussionTopicActivityEntity = discussionTopicActivityEntity;
-    }
-
     public String getTopic() {
         return topic;
     }
@@ -85,5 +79,45 @@ public class DiscussionTopicEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Timestamp getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(Timestamp datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public Timestamp getDateLastActive() {
+        return dateLastActive;
+    }
+
+    public void setDateLastActive(Timestamp dateLastActive) {
+        this.dateLastActive = dateLastActive;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getReplies() {
+        return replies;
+    }
+
+    public void setReplies(int replies) {
+        this.replies = replies;
     }
 }

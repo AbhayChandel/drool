@@ -1,6 +1,5 @@
 package com.hexlindia.drool.discussion.data.repository;
 
-import com.hexlindia.drool.discussion.data.entity.DiscussionTopicActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,25 +27,18 @@ class DiscussionTopicRepositoryTest {
     @Test
     void testSave() {
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity("Dandruff ke liye sabse acha shampoo kaun sa hai", 3L, true);
-        DiscussionTopicEntity discussionTopicEntityRetrieved = discussionTopicRepository.save(discussionTopicEntity);
-
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity(discussionTopicEntityRetrieved.getId());
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        discussionTopicActivityEntity.setDatePosted(timestamp);
-        discussionTopicActivityEntity.setDateLastActive(timestamp);
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setDatePosted(timestamp);
+        discussionTopicEntity.setDateLastActive(timestamp);
         discussionTopicRepository.save(discussionTopicEntity);
 
         Optional<DiscussionTopicEntity> discussionTopicEntityRetrievedOptional = this.discussionTopicRepository.findById(2L);
         assertTrue(discussionTopicEntityRetrievedOptional.isPresent());
-        discussionTopicEntityRetrieved = discussionTopicEntityRetrievedOptional.get();
+        DiscussionTopicEntity discussionTopicEntityRetrieved = discussionTopicEntityRetrievedOptional.get();
         assertEquals("Dandruff ke liye sabse acha shampoo kaun sa hai", discussionTopicEntityRetrieved.getTopic());
         assertEquals(3L, discussionTopicEntityRetrieved.getUserId());
-        DiscussionTopicActivityEntity discussionTopicActivityEntityRetrieved = discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity();
-        assertNotNull(discussionTopicActivityEntityRetrieved);
-        assertEquals(2L, discussionTopicActivityEntityRetrieved.getDiscussionTopicId());
-        assertEquals(timestamp, discussionTopicActivityEntityRetrieved.getDatePosted());
-        assertEquals(timestamp, discussionTopicActivityEntityRetrieved.getDateLastActive());
+        assertEquals(timestamp, discussionTopicEntity.getDatePosted());
+        assertEquals(timestamp, discussionTopicEntity.getDateLastActive());
     }
 
     @Test
@@ -61,34 +53,28 @@ class DiscussionTopicRepositoryTest {
     @Test
     void testUpdateViews() {
         DiscussionTopicEntity discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setViews(55);
-        discussionTopicEntityRetrieved.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntityRetrieved.setViews(55);
         discussionTopicRepository.save(discussionTopicEntityRetrieved);
         discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        assertEquals(55, discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity().getViews());
+        assertEquals(55, discussionTopicEntityRetrieved.getViews());
     }
 
     @Test
     void testUpdateLikes() {
         DiscussionTopicEntity discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(105);
-        discussionTopicEntityRetrieved.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntityRetrieved.setLikes(105);
         discussionTopicRepository.save(discussionTopicEntityRetrieved);
         discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        assertEquals(105, discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity().getLikes());
+        assertEquals(105, discussionTopicEntityRetrieved.getLikes());
     }
 
     @Test
     void testUpdateReplies() {
         DiscussionTopicEntity discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(25);
-        discussionTopicEntityRetrieved.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntityRetrieved.setReplies(25);
         discussionTopicRepository.save(discussionTopicEntityRetrieved);
         discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
-        assertEquals(25, discussionTopicEntityRetrieved.getDiscussionTopicActivityEntity().getReplies());
+        assertEquals(25, discussionTopicEntityRetrieved.getReplies());
     }
 
 }

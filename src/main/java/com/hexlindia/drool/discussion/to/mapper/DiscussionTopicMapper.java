@@ -9,10 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {DiscussionReplyMapper.class})
 public interface DiscussionTopicMapper {
 
-    @Mapping(target = "discussionTopicActivityEntity", source = "discussionTopicActivityTo")
     DiscussionTopicEntity toEntity(DiscussionTopicTo discussionTopicTo);
 
-    @Mapping(target = "discussionTopicActivityTo", source = "discussionTopicActivityEntity")
     @Mapping(target = "discussionReplyToList", source = "discussionReplyEntityList")
     DiscussionTopicTo toTransferObject(DiscussionTopicEntity discussionTopicEntity);
 

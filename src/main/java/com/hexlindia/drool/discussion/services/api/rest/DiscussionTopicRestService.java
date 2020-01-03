@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/${rest.uri.version}/discussion")
 public interface DiscussionTopicRestService {
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/post")
     ResponseEntity<DiscussionTopicTo> post(@RequestBody DiscussionTopicTo discussionTopicTo);
 
     @GetMapping(value = "/find/id/{id}")
