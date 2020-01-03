@@ -3,7 +3,6 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReplyUserLike;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
-import com.hexlindia.drool.discussion.data.entity.DiscussionReplyActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
@@ -56,7 +55,7 @@ class DiscussionReplyImplTest {
         discussionReplyToMocked.setId(1L);
         this.discussionReplyImplSpy.post(discussionReplyToMocked);
         ArgumentCaptor<DiscussionReplyEntity> discussionReplyEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyEntity.class);
-        verify(this.discussionReplyRepositoryMocked, times(2)).save(discussionReplyEntityArgumentCaptor.capture());
+        verify(this.discussionReplyRepositoryMocked, times(1)).save(discussionReplyEntityArgumentCaptor.capture());
         assertEquals("This is a dummy reply", discussionReplyEntityArgumentCaptor.getValue().getReply());
         assertEquals(7L, discussionReplyEntityArgumentCaptor.getValue().getUserId());
     }
@@ -111,26 +110,22 @@ class DiscussionReplyImplTest {
     void incrementLikesByOne_saveToReplyEntity() {
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity();
         discussionTopicEntityMocked.setId(1L);
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = new DiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(22);
         DiscussionReplyEntity discussionReplyEntity = new DiscussionReplyEntity();
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
+        discussionReplyEntity.setLikes(22);
         discussionReplyEntity.setDiscussionTopicEntity(discussionTopicEntityMocked);
         when(this.discussionReplyRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionReplyEntity));
         discussionReplyImplSpy.incrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionReplyEntity> discussionReplyEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyEntity.class);
         verify(this.discussionReplyRepositoryMocked, times(1)).save(discussionReplyEntityArgumentCaptor.capture());
-        assertEquals(23, discussionReplyEntityArgumentCaptor.getValue().getDiscussionReplyActivityEntity().getLikes());
+        assertEquals(23, discussionReplyEntityArgumentCaptor.getValue().getLikes());
     }
 
     @Test
     void incrementLikesByOne_saveToReplyUserLikeEntity() {
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = new DiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(12);
+        DiscussionReplyEntity discussionReplyEntity = new DiscussionReplyEntity();
+        discussionReplyEntity.setLikes(12);
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity();
         discussionTopicEntityMocked.setId(1L);
-        DiscussionReplyEntity discussionReplyEntity = new DiscussionReplyEntity();
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
         discussionReplyEntity.setDiscussionTopicEntity(discussionTopicEntityMocked);
         when(this.discussionReplyRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionReplyEntity));
         discussionReplyImplSpy.incrementLikesByOne(new ActivityTo(100L, 5L));
@@ -144,26 +139,22 @@ class DiscussionReplyImplTest {
     void decrementLikesByOne_saveToReplyEntity() {
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity();
         discussionTopicEntityMocked.setId(1L);
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = new DiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(42);
         DiscussionReplyEntity discussionReplyEntity = new DiscussionReplyEntity();
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
+        discussionReplyEntity.setLikes(42);
         discussionReplyEntity.setDiscussionTopicEntity(discussionTopicEntityMocked);
         when(this.discussionReplyRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionReplyEntity));
         discussionReplyImplSpy.decrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionReplyEntity> discussionReplyEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyEntity.class);
         verify(this.discussionReplyRepositoryMocked, times(1)).save(discussionReplyEntityArgumentCaptor.capture());
-        assertEquals(41, discussionReplyEntityArgumentCaptor.getValue().getDiscussionReplyActivityEntity().getLikes());
+        assertEquals(41, discussionReplyEntityArgumentCaptor.getValue().getLikes());
     }
 
     @Test
     void decrementLikesByOne_savToUserLikeEntity() {
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity();
         discussionTopicEntityMocked.setId(1L);
-        DiscussionReplyActivityEntity discussionReplyActivityEntity = new DiscussionReplyActivityEntity();
-        discussionReplyActivityEntity.setLikes(32);
         DiscussionReplyEntity discussionReplyEntity = new DiscussionReplyEntity();
-        discussionReplyEntity.setDiscussionReplyActivityEntity(discussionReplyActivityEntity);
+        discussionReplyEntity.setLikes(32);
         discussionReplyEntity.setDiscussionTopicEntity(discussionTopicEntityMocked);
         when(this.discussionReplyRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionReplyEntity));
         discussionReplyImplSpy.decrementLikesByOne(new ActivityTo(100L, 5L));

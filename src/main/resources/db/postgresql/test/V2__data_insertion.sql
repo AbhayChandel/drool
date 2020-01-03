@@ -13,25 +13,19 @@ values (2, 'priya21', 8765432109, 'Pune', 'F');
 insert into user_profile(user_account_id, username, mobile, city, gender)
 values (3, 'sonam31', 7654321098, 'Jaipur', 'F');
 
-insert into discussion_topic(topic, user_id)
-values ('Are Loreal lip colors better than Lakme or is it the other way around', 5);
-insert into discussion_topic_activity(discussion_topic_id, date_posted, date_last_active, views, likes, replies)
-values (1, now(), now(), 15, 12, 3);
+insert into discussion_topic(topic, user_id, date_posted, date_last_active, views, likes, replies)
+values ('Are Loreal lip colors better than Lakme or is it the other way around', 5, now(), now(), 15, 12, 3);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id)
-values (1, 'Yes, Loreal is better than Lakme', 4);
-insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
-values (1, now(), 2);
+insert into discussion_reply(discussion_topic_id, reply, user_id, date_posted, likes)
+values (1, 'Yes, Loreal is better than Lakme', 4, now(), 2);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id, active)
-values (1, 'No, I dont think Loreal products are any better than Lakme. It is just the hype', 8, false);
-insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
-values (2, now(), 4);
+insert into discussion_reply(discussion_topic_id, reply, user_id, active, date_posted, likes)
+values (1, 'No, I dont think Loreal products are any better than Lakme. It is just the hype', 8, false, now(), 4);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id)
-values (1,'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better', 2);
-insert into discussion_reply_activity(discussion_reply_id, date_posted, likes)
-values (3, now(), 3);
+insert into discussion_reply(discussion_topic_id, reply, user_id, date_posted, likes)
+values (1,
+        'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better',
+        2, now(), 3);
 
 insert into POST_TYPE(post_type_id, post_type)
 values (1, 'Topic');

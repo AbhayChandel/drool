@@ -248,7 +248,7 @@ class DiscussionTopicRestServiceImplTest {
 
 
     private String getCreateUri() {
-        return "/" + restUriVersion + "/discussion/create";
+        return "/" + restUriVersion + "/discussion/post";
     }
 
     private String getUpdateUri() {

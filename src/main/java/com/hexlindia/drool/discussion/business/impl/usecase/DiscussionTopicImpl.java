@@ -5,7 +5,6 @@ import com.hexlindia.drool.common.util.DateTimeUtil;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopicUserLike;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
-import com.hexlindia.drool.discussion.data.entity.DiscussionTopicActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicUserLikeId;
 import com.hexlindia.drool.discussion.data.repository.DiscussionTopicRepository;
@@ -37,15 +36,12 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     public DiscussionTopicTo post(DiscussionTopicTo discussionTopicTo) {
-        DiscussionTopicEntity discussionTopicEntity = discussionTopicRepository.save(discussionTopicMapper.toEntity(discussionTopicTo));
-        log.debug("DiscussionTopic: '{}', id: '{}' created", discussionTopicEntity.getTopic(), discussionTopicEntity.getId());
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity(discussionTopicEntity.getId());
+        DiscussionTopicEntity discussionTopicEntity = discussionTopicMapper.toEntity(discussionTopicTo);
         Timestamp timestamp = DateTimeUtil.getCurrentTimestamp();
-        discussionTopicActivityEntity.setDatePosted(timestamp);
-        discussionTopicActivityEntity.setDateLastActive(timestamp);
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setDatePosted(timestamp);
+        discussionTopicEntity.setDateLastActive(timestamp);
         discussionTopicEntity = discussionTopicRepository.save(discussionTopicEntity);
-        log.debug("Discussion id: '{}' activity row created", discussionTopicEntity.getId());
+        log.debug("DiscussionTopic: '{}', id: '{}' created", discussionTopicEntity.getTopic(), discussionTopicEntity.getId());
         return discussionTopicMapper.toTransferObject(discussionTopicEntity);
     }
 
@@ -64,9 +60,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     @Override
     public void incrementViewsByOne(Long id) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic views increment", id);
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setViews(discussionTopicActivityEntity.getViews() + 1);
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setViews(discussionTopicEntity.getViews() + 1);
         discussionTopicRepository.save(discussionTopicEntity);
     }
 
@@ -74,10 +68,8 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     @Transactional
     public void incrementLikesByOne(ActivityTo activityTo) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic likes increment", activityTo.getPostId());
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(discussionTopicActivityEntity.getLikes() + 1);
-        discussionTopicActivityEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(discussionTopicEntity.getLikes() + 1);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
 
         discussionTopicUserLike.save(new DiscussionTopicUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
@@ -87,10 +79,8 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     @Transactional
     public void decrementLikesByOne(ActivityTo activityTo) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic likes decrement", activityTo.getPostId());
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(discussionTopicActivityEntity.getLikes() - 1);
-        discussionTopicActivityEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(discussionTopicEntity.getLikes() - 1);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
 
         discussionTopicUserLike.remove(new DiscussionTopicUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
@@ -99,29 +89,23 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     @Override
     public void incrementRepliesByOne(Long id) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic replies increment", id);
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(discussionTopicActivityEntity.getReplies() + 1);
-        discussionTopicActivityEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setReplies(discussionTopicEntity.getReplies() + 1);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
     }
 
     @Override
     public void decrementRepliesByOne(Long id) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic replies decrement", id);
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(discussionTopicActivityEntity.getReplies() - 1);
-        discussionTopicActivityEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setReplies(discussionTopicEntity.getReplies() - 1);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
     }
 
     @Override
     public void setLastDateActiveToNow(Long id) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Update last active date", id);
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = discussionTopicEntity.getDiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
     }
 
@@ -129,8 +113,8 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     public void saveReply(DiscussionReplyEntity discussionReplyEntity, Long discussionTopicId) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Save reply", discussionTopicId);
         discussionTopicEntity.getDiscussionReplyEntityList().add(discussionReplyEntity);
-        discussionTopicEntity.getDiscussionTopicActivityEntity().setReplies(discussionTopicEntity.getDiscussionTopicActivityEntity().getReplies() + 1);
-        discussionTopicEntity.getDiscussionTopicActivityEntity().setDateLastActive(DateTimeUtil.getCurrentTimestamp());
+        discussionTopicEntity.setReplies(discussionTopicEntity.getReplies() + 1);
+        discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
         discussionReplyEntity.setDiscussionTopicEntity(discussionTopicEntity);
     }

@@ -5,6 +5,7 @@ import com.hexlindia.drool.discussion.to.validation.DiscussionTopicUpdateValidat
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class DiscussionTopicTo {
@@ -18,7 +19,11 @@ public class DiscussionTopicTo {
     @NotNull(message = "User Id cannot be null", groups = {DiscussionTopicCreateValidation.class})
     private Long userId;
 
-    private DiscussionTopicActivityTo discussionTopicActivityTo;
+    private Timestamp datePosted;
+    private Timestamp dateLastActive;
+    private int views;
+    private int likes;
+    private int replies;
 
     private List<DiscussionReplyTo> discussionReplyToList;
 
@@ -26,14 +31,6 @@ public class DiscussionTopicTo {
         this.id = id;
         this.topic = topic;
         this.userId = userId;
-    }
-
-    public DiscussionTopicActivityTo getDiscussionTopicActivityTo() {
-        return discussionTopicActivityTo;
-    }
-
-    public void setDiscussionTopicActivityTo(DiscussionTopicActivityTo discussionTopicActivityTo) {
-        this.discussionTopicActivityTo = discussionTopicActivityTo;
     }
 
     public List<DiscussionReplyTo> getDiscussionReplyToList() {
@@ -69,5 +66,45 @@ public class DiscussionTopicTo {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public Timestamp getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(Timestamp datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public Timestamp getDateLastActive() {
+        return dateLastActive;
+    }
+
+    public void setDateLastActive(Timestamp dateLastActive) {
+        this.dateLastActive = dateLastActive;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getReplies() {
+        return replies;
+    }
+
+    public void setReplies(int replies) {
+        this.replies = replies;
     }
 }

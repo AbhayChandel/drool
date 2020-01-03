@@ -1,6 +1,5 @@
 package com.hexlindia.drool.discussion.data.repository;
 
-import com.hexlindia.drool.discussion.data.entity.DiscussionReplyActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +24,13 @@ class DiscussionReplyRepositoryTest {
 
     @Test
     void testSave() {
-        DiscussionReplyEntity discussionReplyEntityMocked = new DiscussionReplyEntity("No, it is not better", 3L);
-        DiscussionReplyEntity discussionReplyEntityRetrieved = discussionReplyRepository.save(discussionReplyEntityMocked);
-
-        DiscussionReplyActivityEntity discussionReplyActivityEntityMocked = new DiscussionReplyActivityEntity(discussionReplyEntityRetrieved.getId());
-
-        discussionReplyEntityMocked.setDiscussionReplyActivityEntity(discussionReplyActivityEntityMocked);
-        discussionReplyRepository.save(discussionReplyEntityMocked);
+        discussionReplyRepository.save(new DiscussionReplyEntity("No, it is not better", 3L));
 
         Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(3L);
         assertTrue(discussionReplyEntityRetrievedOptional.isPresent());
-        discussionReplyEntityRetrieved = discussionReplyEntityRetrievedOptional.get();
+        DiscussionReplyEntity discussionReplyEntityRetrieved = discussionReplyEntityRetrievedOptional.get();
         assertEquals("No, it is not better", discussionReplyEntityRetrieved.getReply());
         assertEquals(3L, discussionReplyEntityRetrieved.getUserId());
-        DiscussionReplyActivityEntity discussionReplyActivityEntityRetrieved = discussionReplyEntityRetrieved.getDiscussionReplyActivityEntity();
-        assertNotNull(discussionReplyActivityEntityRetrieved);
-        assertEquals(3L, discussionReplyActivityEntityRetrieved.getDiscussionTopicId());
     }
 
     @Test
@@ -55,12 +45,10 @@ class DiscussionReplyRepositoryTest {
     @Test
     void testUpdateLikes() {
         DiscussionReplyEntity discussionReplyEntityRetrieved = this.discussionReplyRepository.findById(1L).get();
-        DiscussionReplyActivityEntity discussionReplyActivityEntityRetrieved = discussionReplyEntityRetrieved.getDiscussionReplyActivityEntity();
-        discussionReplyActivityEntityRetrieved.setLikes(105);
-        discussionReplyEntityRetrieved.setDiscussionReplyActivityEntity(discussionReplyActivityEntityRetrieved);
+        discussionReplyEntityRetrieved.setLikes(105);
         discussionReplyRepository.save(discussionReplyEntityRetrieved);
         discussionReplyEntityRetrieved = this.discussionReplyRepository.findById(1L).get();
-        assertEquals(105, discussionReplyEntityRetrieved.getDiscussionReplyActivityEntity().getLikes());
+        assertEquals(105, discussionReplyEntityRetrieved.getLikes());
     }
 
 }

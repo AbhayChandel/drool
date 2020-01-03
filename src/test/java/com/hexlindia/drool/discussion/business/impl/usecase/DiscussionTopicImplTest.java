@@ -2,7 +2,6 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopicUserLike;
-import com.hexlindia.drool.discussion.data.entity.DiscussionTopicActivityEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicUserLikeId;
 import com.hexlindia.drool.discussion.data.repository.DiscussionTopicRepository;
@@ -43,22 +42,22 @@ class DiscussionTopicImplTest {
     }
 
     @Test
-    void create_PassingObjectToRepositoryLayer() {
+    void post_PassingObjectToRepositoryLayer() {
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity("This is a dummy topic", 7L, false);
         when(this.discussionTopicMapperMocked.toEntity(any())).thenReturn(discussionTopicEntityMocked);
         when(this.discussionTopicRepositoryMocked.save(any())).thenReturn(discussionTopicEntityMocked);
         this.discussionTopicImplSpy.post(null);
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
-        verify(this.discussionTopicRepositoryMocked, times(2)).save(discussionTopicEntityArgumentCaptor.capture());
+        verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
         assertEquals("This is a dummy topic", discussionTopicEntityArgumentCaptor.getValue().getTopic());
         assertEquals(7L, discussionTopicEntityArgumentCaptor.getValue().getUserId());
     }
 
     @Test
-    void create_ObjectReturnedFromRepositoryLayerIsReceived() {
+    void post_ObjectReturnedFromRepositoryLayerIsReceived() {
         DiscussionTopicEntity discussionTopicEntityMocked = new DiscussionTopicEntity("This is a dummy topic", 7L, false);
         discussionTopicEntityMocked.setId(100L);
-        when(this.discussionTopicMapperMocked.toEntity(any())).thenReturn(null);
+        when(this.discussionTopicMapperMocked.toEntity(any())).thenReturn(discussionTopicEntityMocked);
         when(this.discussionTopicRepositoryMocked.save(any())).thenReturn(discussionTopicEntityMocked);
         DiscussionTopicTo discussionTopicToMocked = new DiscussionTopicTo();
         discussionTopicToMocked.setId(discussionTopicEntityMocked.getId());
@@ -102,36 +101,30 @@ class DiscussionTopicImplTest {
 
     @Test
     void incrementViewsByOne() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setViews(50);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setViews(50);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.incrementViewsByOne(100L);
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
         verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
-        assertEquals(51, discussionTopicEntityArgumentCaptor.getValue().getDiscussionTopicActivityEntity().getViews());
+        assertEquals(51, discussionTopicEntityArgumentCaptor.getValue().getViews());
     }
 
     @Test
     void incrementLikesByOne_saveToTopicEntity() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(12);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(12);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.incrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
         verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
-        assertEquals(13, discussionTopicEntityArgumentCaptor.getValue().getDiscussionTopicActivityEntity().getLikes());
+        assertEquals(13, discussionTopicEntityArgumentCaptor.getValue().getLikes());
     }
 
     @Test
     void incrementLikesByOne_saveToUserLikeEntity() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(12);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(12);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.incrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionTopicUserLikeId> userLikeIdArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicUserLikeId.class);
@@ -142,23 +135,19 @@ class DiscussionTopicImplTest {
 
     @Test
     void decrementLikesByOne_saveToTopicEntity() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(12);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(12);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.decrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
         verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
-        assertEquals(11, discussionTopicEntityArgumentCaptor.getValue().getDiscussionTopicActivityEntity().getLikes());
+        assertEquals(11, discussionTopicEntityArgumentCaptor.getValue().getLikes());
     }
 
     @Test
     void decrementLikesByOne_saveNewUserLikeEntity() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setLikes(12);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setLikes(12);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.decrementLikesByOne(new ActivityTo(100L, 5L));
         ArgumentCaptor<DiscussionTopicUserLikeId> userLikeIdArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicUserLikeId.class);
@@ -169,36 +158,30 @@ class DiscussionTopicImplTest {
 
     @Test
     void incrementRepliesByOne() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(5);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setReplies(5);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.incrementRepliesByOne(100L);
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
         verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
-        assertEquals(6, discussionTopicEntityArgumentCaptor.getValue().getDiscussionTopicActivityEntity().getReplies());
+        assertEquals(6, discussionTopicEntityArgumentCaptor.getValue().getReplies());
     }
 
     @Test
     void decrementRepliesByOne() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(5);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setReplies(5);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.decrementRepliesByOne(100L);
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
         verify(this.discussionTopicRepositoryMocked, times(1)).save(discussionTopicEntityArgumentCaptor.capture());
-        assertEquals(4, discussionTopicEntityArgumentCaptor.getValue().getDiscussionTopicActivityEntity().getReplies());
+        assertEquals(4, discussionTopicEntityArgumentCaptor.getValue().getReplies());
     }
 
     @Test
     void setDateLastActiveToNow() {
-        DiscussionTopicActivityEntity discussionTopicActivityEntity = new DiscussionTopicActivityEntity();
-        discussionTopicActivityEntity.setReplies(5);
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity();
-        discussionTopicEntity.setDiscussionTopicActivityEntity(discussionTopicActivityEntity);
+        discussionTopicEntity.setReplies(5);
         when(this.discussionTopicRepositoryMocked.findById(100L)).thenReturn(Optional.of(discussionTopicEntity));
         discussionTopicImplSpy.setLastDateActiveToNow(100L);
         ArgumentCaptor<DiscussionTopicEntity> discussionTopicEntityArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicEntity.class);
