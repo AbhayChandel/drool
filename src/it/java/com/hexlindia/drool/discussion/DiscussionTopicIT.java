@@ -3,7 +3,6 @@ package com.hexlindia.drool.discussion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.discussion.to.DiscussionReplyTo;
 import com.hexlindia.drool.discussion.to.DiscussionTopicActivityTo;
 import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -123,9 +121,6 @@ public class DiscussionTopicIT {
         assertEquals(15, discussionTopicActivityTo.getViews());
         assertEquals(12, discussionTopicActivityTo.getLikes());
         assertEquals(1, discussionTopicActivityTo.getReplies());
-
-        List<DiscussionReplyTo> discussionReplyToList = discussionTopicTo.getDiscussionReplyToList();
-        assertTrue(discussionReplyToList.size() >= 1);
     }
 
     @Test
