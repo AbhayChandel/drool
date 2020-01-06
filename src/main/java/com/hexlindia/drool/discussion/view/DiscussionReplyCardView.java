@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
         })
 public class DiscussionReplyCardView {
 
-    @JsonProperty("reply")
+    @JsonProperty("replyDetails")
     private DiscussionReplyView discussionReplyView;
 
     @JsonProperty("userCard")

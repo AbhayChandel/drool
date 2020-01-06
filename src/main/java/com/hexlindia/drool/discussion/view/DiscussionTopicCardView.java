@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
         })
 public class DiscussionTopicCardView {
 
-    @JsonProperty("topic")
+    @JsonProperty("topicDetails")
     private DiscussionTopicView discussionTopicView;
 
     @JsonProperty("userCard")
