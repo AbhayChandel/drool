@@ -1,5 +1,6 @@
 package com.hexlindia.drool.discussion.view;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.common.view.UserProfileCardView;
 
 import javax.persistence.ColumnResult;
@@ -27,7 +28,10 @@ import java.time.LocalDateTime;
         })
 public class DiscussionTopicCardView {
 
+    @JsonProperty("topicDetails")
     private DiscussionTopicView discussionTopicView;
+
+    @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
     public DiscussionTopicCardView(Long topicId, String topic, Long userId, LocalDateTime datePosted, LocalDateTime dateLastActive, int views, int likes, int replies, String username) {
