@@ -1,6 +1,7 @@
 package com.hexlindia.drool.discussion.data.repository;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,14 +20,14 @@ class DiscussionReplyRepositoryTest {
     void testFind() {
         DiscussionReplyEntity discussionReplyEntityRetrieved = this.discussionReplyRepository.findById(1L).get();
         assertEquals("Yes, Loreal is better than Lakme", discussionReplyEntityRetrieved.getReply());
-        assertEquals(4L, discussionReplyEntityRetrieved.getUserId());
+        assertEquals(3L, discussionReplyEntityRetrieved.getUserId());
     }
 
     @Test
     void testSave() {
         discussionReplyRepository.save(new DiscussionReplyEntity("No, it is not better", 3L));
 
-        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(3L);
+        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(4L);
         assertTrue(discussionReplyEntityRetrievedOptional.isPresent());
         DiscussionReplyEntity discussionReplyEntityRetrieved = discussionReplyEntityRetrievedOptional.get();
         assertEquals("No, it is not better", discussionReplyEntityRetrieved.getReply());

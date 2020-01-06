@@ -116,7 +116,7 @@ public class DiscussionReplyIT {
         ResponseEntity<DiscussionReplyTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionReplyTo.class);
         DiscussionReplyTo discussionReplyTo = responseEntity.getBody();
         assertEquals(1L, discussionReplyTo.getId());
-        assertEquals(4L, discussionReplyTo.getUserId());
+        assertEquals(3L, discussionReplyTo.getUserId());
         assertEquals(2, discussionReplyTo.getLikes());
     }
 

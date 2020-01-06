@@ -1,6 +1,7 @@
 package com.hexlindia.drool.discussion.data.repository;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,8 +21,8 @@ class DiscussionTopicRepositoryTest {
     void testFind() {
         DiscussionTopicEntity discussionTopicEntityRetrieved = this.discussionTopicRepository.findById(1L).get();
         assertEquals("Are Loreal lip colors better than Lakme or is it the other way around", discussionTopicEntityRetrieved.getTopic());
-        assertEquals(5L, discussionTopicEntityRetrieved.getUserId());
-        assertEquals(1, discussionTopicEntityRetrieved.getDiscussionReplyEntityList().size());
+        assertEquals(1L, discussionTopicEntityRetrieved.getUserId());
+        assertEquals(2, discussionTopicEntityRetrieved.getDiscussionReplyEntityList().size());
     }
 
     @Test

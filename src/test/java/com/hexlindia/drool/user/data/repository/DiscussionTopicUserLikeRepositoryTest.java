@@ -2,7 +2,7 @@ package com.hexlindia.drool.user.data.repository;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicUserLikeEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicUserLikeId;
-import com.hexlindia.drool.discussion.data.repository.DiscussionTopicUserLikeRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicUserLikeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

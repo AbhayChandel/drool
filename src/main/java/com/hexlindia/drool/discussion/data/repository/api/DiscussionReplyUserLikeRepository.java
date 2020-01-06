@@ -1,4 +1,4 @@
-package com.hexlindia.drool.discussion.data.repository;
+package com.hexlindia.drool.discussion.data.repository.api;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;

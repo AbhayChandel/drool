@@ -18,7 +18,7 @@ public class DiscussionTopicControllerAdvice {
     @ResponseBody
     String handleMethodArgumentNotValidException(DataAccessException e) {
         log.error("DataAccessException is thrown with following message: {}" + e.getMessage());
-        return "Not able to create/update at this time. Try again in some time";
+        return "Not able to perform action at this time. Try again in some time";
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

@@ -1,6 +1,7 @@
 package com.hexlindia.drool.discussion.data.repository;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyUserLikeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

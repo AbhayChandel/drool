@@ -113,10 +113,10 @@ public class DiscussionTopicIT {
         ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         DiscussionTopicTo discussionTopicTo = responseEntity.getBody();
         assertEquals(1L, discussionTopicTo.getId());
-        assertEquals(5L, discussionTopicTo.getUserId());
+        assertEquals(1L, discussionTopicTo.getUserId());
         assertEquals(15, discussionTopicTo.getViews());
         assertEquals(12, discussionTopicTo.getLikes());
-        assertEquals(1, discussionTopicTo.getReplies());
+        assertEquals(2, discussionTopicTo.getReplies());
     }
 
     @Test

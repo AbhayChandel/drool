@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserDetailsService jwtUserDetailsService;
     private final JwtValidationFilter jwtValidationFilter;
-    private final String[] unsecuredEndpoints = {"/account/authenticate", "/account/register", "/account/find/email/*", "/profile/find/username/*"};
+    private final String[] unsecuredEndpoints = {"/user/account/authenticate", "/user/account/register", "/user/account/find/email/*", "/user/profile/find/username/*", "/discussion/view/**"};
 
     @Autowired
     public WebSecurityConfig(@Value("${rest.uri.version}") final String restUriVersion, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtValidationFilter jwtValidationFilter) {
@@ -82,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] getUnsecuredUris() {
         String[] unsecuredUris = new String[unsecuredEndpoints.length];
         for (int i = 0; i < unsecuredUris.length; i++) {
-            unsecuredUris[i] = "/" + restUriVersion + "/user" + unsecuredEndpoints[i];
+            unsecuredUris[i] = "/" + restUriVersion + unsecuredEndpoints[i];
         }
         return unsecuredUris;
     }

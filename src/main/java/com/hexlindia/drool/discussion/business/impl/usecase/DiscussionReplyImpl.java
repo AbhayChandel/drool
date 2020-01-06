@@ -7,7 +7,7 @@ import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReplyUserLi
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
-import com.hexlindia.drool.discussion.data.repository.DiscussionReplyRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
 import com.hexlindia.drool.discussion.exception.DiscussionReplyNotFoundException;
 import com.hexlindia.drool.discussion.to.DiscussionReplyTo;
 import com.hexlindia.drool.discussion.to.mapper.DiscussionReplyMapper;
