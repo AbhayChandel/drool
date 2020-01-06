@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReplyUserLike;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
-import com.hexlindia.drool.discussion.data.repository.DiscussionReplyUserLikeRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyUserLikeRepository;
 import com.hexlindia.drool.discussion.exception.DiscussionReplyUserLikeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

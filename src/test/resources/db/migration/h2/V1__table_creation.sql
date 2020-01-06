@@ -70,3 +70,39 @@ CREATE TABLE POST_TYPE
     post_type    VARCHAR(50)
 );
 
+CREATE OR REPLACE VIEW user_profile_card_view AS
+SELECT up.user_account_id AS userId,
+       up.username        AS username
+FROM user_profile up;
+
+CREATE OR REPLACE VIEW discussion_topic_card_view AS
+SELECT topic.id               AS topicId,
+       topic.topic            AS topic,
+       topic.user_id          AS userId,
+       topic.date_posted      AS datePosted,
+       topic.date_last_active AS dateLastActive,
+       topic.views            AS views,
+       topic.likes            AS likes,
+       topic.replies          AS replies,
+       upcard.username        AS username
+FROM discussion_topic topic
+         INNER JOIN user_profile_card_view upcard ON topic.user_id = upcard.userId
+where topic.active = true;
+
+CREATE OR REPLACE VIEW discussion_reply_card_view AS
+SELECT reply.id                  AS replyId,
+       reply.discussion_topic_id AS discussionTopicId,
+       reply.reply               AS reply,
+       reply.user_id             AS userId,
+       reply.date_posted         AS datePosted,
+       reply.likes               AS likes,
+       upcard.username           AS username
+FROM discussion_reply reply
+         INNER JOIN user_profile_card_view upcard ON reply.user_id = upcard.userId
+where reply.active = true;
+
+
+
+
+
+

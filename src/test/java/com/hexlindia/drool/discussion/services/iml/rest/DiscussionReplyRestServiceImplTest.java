@@ -136,7 +136,7 @@ class DiscussionReplyRestServiceImplTest {
                 .andExpect(status().is5xxServerError())
                 .andReturn();
 
-        assertEquals("Not able to create/update at this time. Try again in some time", mvcResult.getResponse().getContentAsString());
+        assertEquals("Not able to perform action at this time. Try again in some time", mvcResult.getResponse().getContentAsString());
     }
 
     @Test

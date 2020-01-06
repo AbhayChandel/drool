@@ -2,7 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyUserLikeId;
-import com.hexlindia.drool.discussion.data.repository.DiscussionReplyUserLikeRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyUserLikeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

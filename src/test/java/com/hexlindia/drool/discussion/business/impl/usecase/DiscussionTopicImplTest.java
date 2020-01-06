@@ -4,7 +4,7 @@ import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopicUserLike;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicEntity;
 import com.hexlindia.drool.discussion.data.entity.DiscussionTopicUserLikeId;
-import com.hexlindia.drool.discussion.data.repository.DiscussionTopicRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
 import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
 import com.hexlindia.drool.discussion.to.mapper.DiscussionTopicMapper;
