@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.discussion.to.DiscussionReplyTo;
 import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +24,8 @@ import java.sql.Timestamp;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@FlywayTestExtension
+@FlywayTest
 public class DiscussionReplyIT {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";

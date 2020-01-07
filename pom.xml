@@ -129,6 +129,12 @@
             <artifactId>httpclient</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb.flyway-test-extensions</groupId>
+            <artifactId>flyway-spring5-test</artifactId>
+            <version>5.2.4</version>
+            <scope>test</scope>
+        </dependency>
         <!-- End of Test Dependencies -->
 
     </dependencies>
