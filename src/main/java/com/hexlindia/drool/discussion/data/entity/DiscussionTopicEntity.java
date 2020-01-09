@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.data.entity;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class DiscussionTopicEntity {
 
     private String topic;
     private Long userId;
-    private Timestamp datePosted;
-    private Timestamp dateLastActive;
+    private LocalDateTime datePosted;
+    private LocalDateTime dateLastActive;
     private int views;
     private int likes;
     private int replies;
@@ -81,19 +81,19 @@ public class DiscussionTopicEntity {
         this.active = active;
     }
 
-    public Timestamp getDatePosted() {
+    public LocalDateTime getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Timestamp datePosted) {
+    public void setDatePosted(LocalDateTime datePosted) {
         this.datePosted = datePosted;
     }
 
-    public Timestamp getDateLastActive() {
+    public LocalDateTime getDateLastActive() {
         return dateLastActive;
     }
 
-    public void setDateLastActive(Timestamp dateLastActive) {
+    public void setDateLastActive(LocalDateTime dateLastActive) {
         this.dateLastActive = dateLastActive;
     }
 

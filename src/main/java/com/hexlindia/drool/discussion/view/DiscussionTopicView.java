@@ -1,19 +1,17 @@
 package com.hexlindia.drool.discussion.view;
 
-import java.time.LocalDateTime;
-
 public class DiscussionTopicView {
 
     private Long topicId;
     private String topic;
     private Long userId;
-    private LocalDateTime datePosted;
-    private LocalDateTime dateLastActive;
+    private String datePosted;
+    private String dateLastActive;
     private int views;
     private int likes;
     private int replies;
 
-    public DiscussionTopicView(Long topicId, String topic, Long userId, LocalDateTime datePosted, LocalDateTime dateLastActive, int views, int likes, int replies) {
+    public DiscussionTopicView(Long topicId, String topic, Long userId, String datePosted, String dateLastActive, int views, int likes, int replies) {
         this.topicId = topicId;
         this.topic = topic;
         this.userId = userId;
@@ -36,11 +34,11 @@ public class DiscussionTopicView {
         return userId;
     }
 
-    public LocalDateTime getDatePosted() {
+    public String getDatePosted() {
         return datePosted;
     }
 
-    public LocalDateTime getDateLastActive() {
+    public String getDateLastActive() {
         return dateLastActive;
     }
 

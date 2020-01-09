@@ -7,7 +7,6 @@ import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SqlResultSetMapping;
-import java.time.LocalDateTime;
 
 @MappedSuperclass
 @SqlResultSetMapping(name = "discussionTopicCardView",
@@ -18,8 +17,8 @@ import java.time.LocalDateTime;
                                 @ColumnResult(name = "topicId", type = Long.class),
                                 @ColumnResult(name = "topic", type = String.class),
                                 @ColumnResult(name = "userId", type = Long.class),
-                                @ColumnResult(name = "datePosted", type = LocalDateTime.class),
-                                @ColumnResult(name = "dateLastActive", type = LocalDateTime.class),
+                                @ColumnResult(name = "datePosted", type = String.class),
+                                @ColumnResult(name = "dateLastActive", type = String.class),
                                 @ColumnResult(name = "views", type = Integer.class),
                                 @ColumnResult(name = "likes", type = Integer.class),
                                 @ColumnResult(name = "replies", type = Integer.class),
@@ -34,7 +33,7 @@ public class DiscussionTopicCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public DiscussionTopicCardView(Long topicId, String topic, Long userId, LocalDateTime datePosted, LocalDateTime dateLastActive, int views, int likes, int replies, String username) {
+    public DiscussionTopicCardView(Long topicId, String topic, Long userId, String datePosted, String dateLastActive, int views, int likes, int replies, String username) {
         this.discussionTopicView = new DiscussionTopicView(topicId, topic, userId, datePosted, dateLastActive, views, likes, replies);
         this.userProfileCardView = new UserProfileCardView(userId, username);
     }

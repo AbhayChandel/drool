@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ class DiscussionTopicRepositoryTest {
     @Test
     void testSave() {
         DiscussionTopicEntity discussionTopicEntity = new DiscussionTopicEntity("Dandruff ke liye sabse acha shampoo kaun sa hai", 3L, true);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        LocalDateTime timestamp = LocalDateTime.now();
         discussionTopicEntity.setDatePosted(timestamp);
         discussionTopicEntity.setDateLastActive(timestamp);
         discussionTopicRepository.save(discussionTopicEntity);

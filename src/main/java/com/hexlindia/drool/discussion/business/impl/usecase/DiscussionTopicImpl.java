@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -37,7 +37,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     @Override
     public DiscussionTopicTo post(DiscussionTopicTo discussionTopicTo) {
         DiscussionTopicEntity discussionTopicEntity = discussionTopicMapper.toEntity(discussionTopicTo);
-        Timestamp timestamp = DateTimeUtil.getCurrentTimestamp();
+        LocalDateTime timestamp = DateTimeUtil.getCurrentTimestamp();
         discussionTopicEntity.setDatePosted(timestamp);
         discussionTopicEntity.setDateLastActive(timestamp);
         discussionTopicEntity = discussionTopicRepository.save(discussionTopicEntity);

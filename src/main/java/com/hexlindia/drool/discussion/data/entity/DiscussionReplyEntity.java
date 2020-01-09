@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.data.entity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "discussion_reply")
@@ -19,7 +19,7 @@ public class DiscussionReplyEntity {
     private String reply;
     private Long userId;
     private boolean active;
-    private Timestamp datePosted;
+    private LocalDateTime datePosted;
     private int likes;
 
     public DiscussionReplyEntity(String reply, Long userId) {
@@ -70,11 +70,11 @@ public class DiscussionReplyEntity {
         this.active = active;
     }
 
-    public Timestamp getDatePosted() {
+    public LocalDateTime getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Timestamp datePosted) {
+    public void setDatePosted(LocalDateTime datePosted) {
         this.datePosted = datePosted;
     }
 
