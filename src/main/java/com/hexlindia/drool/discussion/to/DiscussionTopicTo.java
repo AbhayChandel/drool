@@ -5,7 +5,7 @@ import com.hexlindia.drool.discussion.to.validation.DiscussionTopicUpdateValidat
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DiscussionTopicTo {
@@ -19,8 +19,8 @@ public class DiscussionTopicTo {
     @NotNull(message = "User Id cannot be null", groups = {DiscussionTopicCreateValidation.class})
     private Long userId;
 
-    private Timestamp datePosted;
-    private Timestamp dateLastActive;
+    private LocalDateTime datePosted;
+    private LocalDateTime dateLastActive;
     private int views;
     private int likes;
     private int replies;
@@ -68,19 +68,19 @@ public class DiscussionTopicTo {
         this.topic = topic;
     }
 
-    public Timestamp getDatePosted() {
+    public LocalDateTime getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Timestamp datePosted) {
+    public void setDatePosted(LocalDateTime datePosted) {
         this.datePosted = datePosted;
     }
 
-    public Timestamp getDateLastActive() {
+    public LocalDateTime getDateLastActive() {
         return dateLastActive;
     }
 
-    public void setDateLastActive(Timestamp dateLastActive) {
+    public void setDateLastActive(LocalDateTime dateLastActive) {
         this.dateLastActive = dateLastActive;
     }
 

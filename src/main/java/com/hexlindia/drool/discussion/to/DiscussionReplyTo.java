@@ -5,7 +5,7 @@ import com.hexlindia.drool.discussion.to.validation.DiscussionReplyUpdateValidat
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class DiscussionReplyTo {
 
@@ -21,7 +21,7 @@ public class DiscussionReplyTo {
     @NotNull(message = "User Id cannot be null", groups = {DiscussionReplyPostValidation.class})
     private Long userId;
 
-    private Timestamp datePosted;
+    private LocalDateTime datePosted;
     private int likes;
 
     public DiscussionReplyTo(Long id, Long discussionTopicId, @NotEmpty(message = "Reply cannot be empty") String reply, Long userId) {
@@ -66,11 +66,11 @@ public class DiscussionReplyTo {
         this.userId = userId;
     }
 
-    public Timestamp getDatePosted() {
+    public LocalDateTime getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Timestamp datePosted) {
+    public void setDatePosted(LocalDateTime datePosted) {
         this.datePosted = datePosted;
     }
 

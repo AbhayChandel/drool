@@ -1,6 +1,6 @@
 package com.hexlindia.drool.common.util;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class DateTimeUtil {
 
@@ -8,7 +8,7 @@ public class DateTimeUtil {
         throw new IllegalStateException();
     }
 
-    public static Timestamp getCurrentTimestamp() {
-        return new Timestamp(System.currentTimeMillis());
+    public static LocalDateTime getCurrentTimestamp() {
+        return LocalDateTime.now();
     }
 }

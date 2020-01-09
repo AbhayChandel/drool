@@ -19,7 +19,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -160,7 +160,7 @@ public class DiscussionTopicIT {
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         int likesBeforeIncrement = responseEntity.getBody().getLikes();
-        Timestamp dateLastActiveBeforeIncrement = responseEntity.getBody().getDateLastActive();
+        LocalDateTime dateLastActiveBeforeIncrement = responseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
         activityTo.put("postId", "1");
@@ -171,7 +171,7 @@ public class DiscussionTopicIT {
 
         responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         assertEquals(likesBeforeIncrement + 1, responseEntity.getBody().getLikes());
-        assertTrue(responseEntity.getBody().getDateLastActive().getTime() > dateLastActiveBeforeIncrement.getTime());
+        assertTrue(responseEntity.getBody().getDateLastActive().isAfter(dateLastActiveBeforeIncrement));
 
     }
 
@@ -184,7 +184,7 @@ public class DiscussionTopicIT {
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         int likesBeforeDecrement = responseEntity.getBody().getLikes();
-        Timestamp dateLastActiveBeforeDecrement = responseEntity.getBody().getDateLastActive();
+        LocalDateTime dateLastActiveBeforeDecrement = responseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
         activityTo.put("postId", "1");
@@ -195,7 +195,7 @@ public class DiscussionTopicIT {
 
         responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         assertEquals(likesBeforeDecrement - 1, responseEntity.getBody().getLikes());
-        assertTrue(responseEntity.getBody().getDateLastActive().getTime() > dateLastActiveBeforeDecrement.getTime());
+        assertTrue(responseEntity.getBody().getDateLastActive().isAfter(dateLastActiveBeforeDecrement));
     }
 
     private String getAuthenticationUri() {
