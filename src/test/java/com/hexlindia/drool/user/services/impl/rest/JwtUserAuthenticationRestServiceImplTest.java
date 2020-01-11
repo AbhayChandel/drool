@@ -61,7 +61,7 @@ class JwtUserAuthenticationRestServiceImplTest {
 
     @Test
     void createAuthenticationToken_validCredentials() throws Exception {
-        when(this.jwtUserAuthentication.authenticate(any(), any())).thenReturn("dummyToken");
+        when(this.jwtUserAuthentication.authenticate(any(), any())).thenReturn(null);
         JwtRequest jwtRequest = new JwtRequest();
         jwtRequest.setEmail("shehnaz@gmail.com");
         jwtRequest.setPassword("shehnaz");

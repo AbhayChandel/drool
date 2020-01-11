@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.user.services.JwtResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -66,9 +67,12 @@ class JwtSecurityIT {
         jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class);
+        ResponseEntity<JwtResponse> responseEntity = this.restTemplate.postForEntity(getAuthenticationUri(), request, JwtResponse.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
-        assertNotNull(responseEntity.getBody());
+        JwtResponse jwtResponse = responseEntity.getBody();
+        assertNotNull(jwtResponse.getAuthToken());
+        assertEquals("1", jwtResponse.getAuthenticatedUserDetails().getUserId());
+        assertEquals("priyanka11", jwtResponse.getAuthenticatedUserDetails().getUsername());
     }
 
     private String getAuthenticationUri() {

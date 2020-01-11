@@ -4,7 +4,6 @@ import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.data.repository.UserAccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         Optional<UserAccountEntity> userAuthenticationEntity = userAccountRepository.findByEmail(email);
         if (userAuthenticationEntity.isPresent()) {
             log.info("User with email {} found", email);
-            return new User(userAuthenticationEntity.get().getEmail(), userAuthenticationEntity.get().getPassword(),
+            return new UserDetailsWithId(userAuthenticationEntity.get().getId(), userAuthenticationEntity.get().getEmail(), userAuthenticationEntity.get().getPassword(),
                     new ArrayList<>());
         } else {
             log.warn("User with email {} not found" + email);

@@ -23,7 +23,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
 
     @Override
     public ResponseEntity<JwtResponse> register(@Valid UserRegistrationDetailsTo userRegistrationDetailsTo) {
-        return ResponseEntity.ok(new JwtResponse(userAccount.register(userRegistrationDetailsTo)));
+        return ResponseEntity.ok(userAccount.register(userRegistrationDetailsTo));
     }
 
     @Override

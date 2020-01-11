@@ -27,8 +27,8 @@ class JwtUtilTest {
 
     @Test
     void testGenerateToken() {
-        UserDetails userDetails = new User("Shehnaaz@gmail.com", "password", new ArrayList<>());
-        String token = jwtUtil.generateToken(userDetails);
+        //UserDetails userDetails = new User("Shehnaaz@gmail.com", "password", new ArrayList<>());
+        String token = jwtUtil.generateToken("Shehnaaz@gmail.com");
         assertNotNull(token);
         assertEquals("Shehnaaz@gmail.com", jwtUtil.getUsernameFromToken(token));
     }

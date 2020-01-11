@@ -1,8 +1,8 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
-import com.hexlindia.drool.user.business.JwtUserDetailsService;
 import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.api.usecase.JwtUserAuthentication;
+import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,14 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class JwtUserAuthenticationImplTest {
@@ -29,7 +23,7 @@ class JwtUserAuthenticationImplTest {
     private JwtUserAuthentication jwtUserAuthentication;
 
     @MockBean
-    JwtUserDetailsService jwtUserDetailsServiceMocked;
+    UserProfile userProfileMocked;
 
     @MockBean
     JwtUtil jwtUtilMocked;
@@ -39,17 +33,7 @@ class JwtUserAuthenticationImplTest {
 
     @BeforeEach
     void setUp() {
-        this.jwtUserAuthentication = Mockito.spy(new JwtUserAuthenticationImpl(authenticationManagerMocked, jwtUtilMocked, jwtUserDetailsServiceMocked));
-    }
-
-
-    @Test
-    void authenticate() {
-        UserDetails userDetails = new User("priya.singh@gmail.com", "$2y$12$nfSQJzgpJ3gTu.CczB6BiuceNqA6niFi7EX03p4Ep3205kL5I2pDy", new ArrayList<>());
-        when(jwtUserDetailsServiceMocked.loadUserByUsername("priya.singh@gmail.com")).thenReturn(userDetails);
-        when(jwtUtilMocked.generateToken(userDetails)).thenReturn("token");
-        String token = jwtUserAuthentication.authenticate("priya.singh@gmail.com", "priya");
-        assertNotNull(token);
+        this.jwtUserAuthentication = Mockito.spy(new JwtUserAuthenticationImpl(authenticationManagerMocked, jwtUtilMocked, userProfileMocked));
     }
 
     @Test

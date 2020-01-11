@@ -20,6 +20,6 @@ public class JwtUserAuthenticationRestServiceImpl implements JwtUserAuthenticati
 
     @Override
     public ResponseEntity<JwtResponse> createAuthenticationToken(JwtRequest jwtRequest) {
-        return ResponseEntity.ok(new JwtResponse(jwtUserAuthentication.authenticate(jwtRequest.getEmail(), jwtRequest.getPassword())));
+        return ResponseEntity.ok(jwtUserAuthentication.authenticate(jwtRequest.getEmail(), jwtRequest.getPassword()));
     }
 }
