@@ -123,7 +123,7 @@ class UserAccountRestServiceImplUnsecuredTest {
 
     @Test
     void register_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.userAccount.register(any())).thenReturn("");
+        when(this.userAccount.register(any())).thenReturn(null);
         UserRegistrationDetailsTo userRegistrationDetailsTo = new UserRegistrationDetailsTo("kirti22", "abc@gmail.com", "kirti");
         String requestBody = objectMapper.writeValueAsString(userRegistrationDetailsTo);
         this.mockMvc.perform(MockMvcRequestBuilders.post(getRegisterUri())

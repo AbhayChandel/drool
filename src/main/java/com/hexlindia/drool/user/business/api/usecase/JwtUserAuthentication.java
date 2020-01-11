@@ -1,6 +1,8 @@
 package com.hexlindia.drool.user.business.api.usecase;
 
+import com.hexlindia.drool.user.services.JwtResponse;
+
 public interface JwtUserAuthentication {
 
-    String authenticate(String username, String password);
+    JwtResponse authenticate(String username, String password);
 }

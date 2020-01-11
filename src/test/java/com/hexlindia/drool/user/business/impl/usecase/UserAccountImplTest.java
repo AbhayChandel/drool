@@ -1,12 +1,12 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
+import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.api.to.UserAccountTo;
 import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.to.UserRegistrationDetailsTo;
 import com.hexlindia.drool.user.business.api.to.mapper.RegistrationToUserProfileMapper;
 import com.hexlindia.drool.user.business.api.to.mapper.UserAccountMapper;
 import com.hexlindia.drool.user.business.api.to.mapper.UserRegistrationDetailsMapper;
-import com.hexlindia.drool.user.business.api.usecase.JwtUserAuthentication;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.data.repository.UserAccountRepository;
@@ -39,7 +39,7 @@ class UserAccountImplTest {
     private UserRegistrationDetailsMapper userRegistrationDetailsMapper;
 
     @Mock
-    private JwtUserAuthentication jwtUserAuthentication;
+    private JwtUtil jwtUtil;
 
     @Mock
     private UserProfile userProfile;
@@ -57,7 +57,7 @@ class UserAccountImplTest {
 
     @BeforeEach
     void setUp() {
-        this.userAccountImpl = Mockito.spy(new UserAccountImpl(userAccountRepository, userRegistrationDetailsMapper, jwtUserAuthentication, passwordEncoder, userProfile, registrationToUserProfileMapper, userAccountMapper));
+        this.userAccountImpl = Mockito.spy(new UserAccountImpl(userAccountRepository, userRegistrationDetailsMapper, jwtUtil, passwordEncoder, userProfile, registrationToUserProfileMapper, userAccountMapper));
     }
 
     @Test
@@ -68,9 +68,10 @@ class UserAccountImplTest {
         when(this.userRegistrationDetailsMapper.toEntity(any())).thenReturn(userAuthenticationEntity);
         userAuthenticationEntity.setId(2L);
         when(this.userAccountRepository.saveAndFlush(any())).thenReturn(userAuthenticationEntity);
-        when(this.jwtUserAuthentication.authenticate(any(), any())).thenReturn("");
+        when(this.jwtUtil.generateToken(anyString())).thenReturn(null);
         when(this.registrationToUserProfileMapper.toUserProfileTo(any())).thenReturn(new UserProfileTo());
-        when(this.userProfile.create(any())).thenReturn(null);
+        UserProfileTo userProfileToMocked = new UserProfileTo(1L, "pirya", 0, null, 'M');
+        when(this.userProfile.create(any())).thenReturn(userProfileToMocked);
         userAccountImpl.register(new UserRegistrationDetailsTo("", "", ""));
         ArgumentCaptor<UserAccountEntity> userAuthenticationEntityArgumentCaptor = ArgumentCaptor.forClass(UserAccountEntity.class);
         verify(userAccountRepository, times(1)).saveAndFlush(userAuthenticationEntityArgumentCaptor.capture());
@@ -85,9 +86,10 @@ class UserAccountImplTest {
         when(this.userRegistrationDetailsMapper.toEntity(any())).thenReturn(userAuthenticationEntity);
         userAuthenticationEntity.setId(2L);
         when(this.userAccountRepository.saveAndFlush(any())).thenReturn(userAuthenticationEntity);
-        when(this.jwtUserAuthentication.authenticate(any(), any())).thenReturn("");
-        when(this.registrationToUserProfileMapper.toUserProfileTo(any())).thenReturn(new UserProfileTo());
-        when(this.userProfile.create(any())).thenReturn(null);
+        when(this.jwtUtil.generateToken(anyString())).thenReturn(null);
+        UserProfileTo userProfileToMocked = new UserProfileTo(1L, "pirya", 0, null, 'M');
+        when(this.registrationToUserProfileMapper.toUserProfileTo(any())).thenReturn(userProfileToMocked);
+        when(this.userProfile.create(any())).thenReturn(userProfileToMocked);
         userAccountImpl.register(new UserRegistrationDetailsTo("", "", ""));
         ArgumentCaptor<UserProfileTo> userProfileToArgumentCaptor = ArgumentCaptor.forClass(UserProfileTo.class);
         verify(userProfile, times(1)).create(userProfileToArgumentCaptor.capture());
@@ -120,12 +122,6 @@ class UserAccountImplTest {
         String passwordEncoded = this.userAccountImpl.getEncodedPassword(passwordToEncode);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         assertTrue(bCryptPasswordEncoder.matches(passwordToEncode, passwordEncoded));
-    }
-
-    @Test
-    void getJwtToken_passwordIsEncodedCorrectly() {
-        when(this.jwtUserAuthentication.authenticate(anyString(), anyString())).thenReturn("token");
-        assertEquals("token", this.userAccountImpl.getJwtToken(new UserRegistrationDetailsTo("", "", "")));
     }
 
     @Test

@@ -55,7 +55,7 @@ public class DiscussionReplyIT {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(response);
-        authToken = rootNode.path("token").asText();
+        authToken = rootNode.path("authToken").asText();
     }
 
     /*

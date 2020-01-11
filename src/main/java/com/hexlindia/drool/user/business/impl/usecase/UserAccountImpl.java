@@ -1,17 +1,19 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
+import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.api.to.UserAccountTo;
 import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.to.UserRegistrationDetailsTo;
 import com.hexlindia.drool.user.business.api.to.mapper.RegistrationToUserProfileMapper;
 import com.hexlindia.drool.user.business.api.to.mapper.UserAccountMapper;
 import com.hexlindia.drool.user.business.api.to.mapper.UserRegistrationDetailsMapper;
-import com.hexlindia.drool.user.business.api.usecase.JwtUserAuthentication;
 import com.hexlindia.drool.user.business.api.usecase.UserAccount;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.data.repository.UserAccountRepository;
 import com.hexlindia.drool.user.exception.UserAccountNotFoundException;
+import com.hexlindia.drool.user.services.AuthenticatedUserDetails;
+import com.hexlindia.drool.user.services.JwtResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +31,7 @@ public class UserAccountImpl implements UserAccount {
 
     private final UserRegistrationDetailsMapper userRegistrationDetailsMapper;
 
-    private final JwtUserAuthentication jwtUserAuthentication;
+    private final JwtUtil jwtUtil;
 
     private final UserProfile userProfile;
 
@@ -39,10 +41,10 @@ public class UserAccountImpl implements UserAccount {
     private final UserAccountMapper userAccountMapper;
 
     @Autowired
-    protected UserAccountImpl(UserAccountRepository userAccountRepository, UserRegistrationDetailsMapper userRegistrationDetailsMapper, JwtUserAuthentication jwtUserAuthentication, PasswordEncoder passwordEncoder, UserProfile userProfile, RegistrationToUserProfileMapper registrationToUserProfileMapper, UserAccountMapper userAccountMapper) {
+    protected UserAccountImpl(UserAccountRepository userAccountRepository, UserRegistrationDetailsMapper userRegistrationDetailsMapper, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserProfile userProfile, RegistrationToUserProfileMapper registrationToUserProfileMapper, UserAccountMapper userAccountMapper) {
         this.userAccountRepository = userAccountRepository;
         this.userRegistrationDetailsMapper = userRegistrationDetailsMapper;
-        this.jwtUserAuthentication = jwtUserAuthentication;
+        this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.userProfile = userProfile;
         this.registrationToUserProfileMapper = registrationToUserProfileMapper;
@@ -50,14 +52,14 @@ public class UserAccountImpl implements UserAccount {
     }
 
     @Override
-    public String register(UserRegistrationDetailsTo userRegistrationDetailsTo) {
+    public JwtResponse register(UserRegistrationDetailsTo userRegistrationDetailsTo) {
         UserAccountEntity userAccountEntity = userAccountRepository.saveAndFlush(getUserAuthenticationEntity(userRegistrationDetailsTo));
         UserProfileTo userProfileTo = registrationToUserProfileMapper.toUserProfileTo(userRegistrationDetailsTo);
         userProfileTo.setId(userAccountEntity.getId());
         userProfileTo.setCity(null);
         userProfileTo.setGender('N');
-        userProfile.create(userProfileTo);
-        return getJwtToken(userRegistrationDetailsTo);
+        userProfileTo = userProfile.create(userProfileTo);
+        return new JwtResponse(jwtUtil.generateToken(userAccountEntity.getEmail()), new AuthenticatedUserDetails(userProfileTo.getId().toString(), userProfileTo.getUsername()));
     }
 
     @Override
@@ -82,9 +84,5 @@ public class UserAccountImpl implements UserAccount {
 
     String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
-    }
-
-    String getJwtToken(UserRegistrationDetailsTo userRegistrationDetailsTo) {
-        return jwtUserAuthentication.authenticate(userRegistrationDetailsTo.getEmail(), userRegistrationDetailsTo.getPassword());
     }
 }
