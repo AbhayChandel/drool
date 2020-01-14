@@ -82,10 +82,10 @@ class DiscussionViewRestServiceImplTest {
     }
 
     private String getfindDiscussionTopicCardViewByIdUri() {
-        return "/" + restUriVersion + "/discussion/view/topic/id";
+        return "/" + restUriVersion + "/view/discussion/topic/id";
     }
 
     private String getfindDiscussionPageViewByIdUri() {
-        return "/" + restUriVersion + "/discussion/view/page/id";
+        return "/" + restUriVersion + "/view/discussion/page/id";
     }
 }
