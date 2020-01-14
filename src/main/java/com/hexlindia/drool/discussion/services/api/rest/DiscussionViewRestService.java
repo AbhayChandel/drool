@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/${rest.uri.version}/discussion/view")
+@RequestMapping("/${rest.uri.version}/view/discussion")
 public interface DiscussionViewRestService {
 
     @GetMapping(value = "/topic/id/{id}")
