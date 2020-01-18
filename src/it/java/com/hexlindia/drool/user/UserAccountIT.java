@@ -68,7 +68,7 @@ class UserAccountIT {
         assertEquals(500, responseEntity.getStatusCodeValue());
         assertEquals("Not able to register user at this time. Try again in some time.", responseEntity.getBody());
 
-        headers.add("Authorization", "Bearer " + this.authToken);
+        //headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/priyanka99", HttpMethod.GET, httpEntity, String.class);
         Assertions.assertEquals(404, responseEntityProile.getStatusCodeValue());
@@ -152,11 +152,11 @@ class UserAccountIT {
     }
 
     private String getAuthenticationUri() {
-        return "/" + restUriVersion + "/user/account/authenticate";
+        return "/" + restUriVersion + "/accessall/user/account/authenticate";
     }
 
     private String getRegisterUri() {
-        return "/" + restUriVersion + "/user/account/register";
+        return "/" + restUriVersion + "/accessall/user/account/register";
     }
 
     private String getUserProfileFindByIdUri() {
@@ -164,10 +164,10 @@ class UserAccountIT {
     }
 
     private String getFindEmailUri() {
-        return "/" + restUriVersion + "/user/account/find/email";
+        return "/" + restUriVersion + "/accessall/user/account/find/email";
     }
 
     private String getUserProfileFindByUsernameUri() {
-        return "/" + restUriVersion + "/user/profile/find/username";
+        return "/" + restUriVersion + "/accessall/user/profile/find/username";
     }
 }

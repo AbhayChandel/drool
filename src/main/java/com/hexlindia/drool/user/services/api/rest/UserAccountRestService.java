@@ -6,7 +6,7 @@ import com.hexlindia.drool.user.services.JwtResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/${rest.uri.version}/user/account")
+@RequestMapping("/${rest.uri.version}/accessall/user/account")
 public interface UserAccountRestService {
 
     @PostMapping(value = "/register")

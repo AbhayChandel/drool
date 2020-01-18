@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserProfileRestServiceImpl implements UserProfileRestService {
 
+    private final UserProfile userProfile;
+
     @Autowired
-    private UserProfile userProfile;
+    UserProfileRestServiceImpl(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
 
     @Override
     public ResponseEntity<UserProfileTo> update(UserProfileTo userProfileTo) {

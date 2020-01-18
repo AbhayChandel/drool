@@ -152,7 +152,7 @@ class UserAccountRestServiceImplUnsecuredTest {
 
 
     private String getRegisterUri() {
-        return "/" + restUriVersion + "/user/account/register";
+        return "/" + restUriVersion + "/accessall/user/account/register";
     }
 
 

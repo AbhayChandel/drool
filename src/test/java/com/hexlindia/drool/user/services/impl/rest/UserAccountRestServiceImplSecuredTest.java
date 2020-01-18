@@ -72,6 +72,6 @@ class UserAccountRestServiceImplSecuredTest {
     }
 
     private String getFindEmailUri() {
-        return "/" + restUriVersion + "/user/account/find/email";
+        return "/" + restUriVersion + "/accessall/user/account/find/email";
     }
 }

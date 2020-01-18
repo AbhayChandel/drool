@@ -208,7 +208,7 @@ public class DiscussionReplyIT {
 
 
     private String getAuthenticationUri() {
-        return "/" + restUriVersion + "/user/account/authenticate";
+        return "/" + restUriVersion + "/accessall/user/account/authenticate";
     }
 
     private String getPostUri() {

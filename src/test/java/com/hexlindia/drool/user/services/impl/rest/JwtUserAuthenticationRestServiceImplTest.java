@@ -72,6 +72,6 @@ class JwtUserAuthenticationRestServiceImplTest {
     }
 
     private String getAuthenticationUri() {
-        return "/" + restUriVersion + "/user/account/authenticate";
+        return "/" + restUriVersion + "/accessall/user/account/authenticate";
     }
 }

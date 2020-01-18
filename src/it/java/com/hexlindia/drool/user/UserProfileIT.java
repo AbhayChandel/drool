@@ -89,7 +89,7 @@ public class UserProfileIT {
     }
 
     private String getAuthenticationUri() {
-        return "/" + restUriVersion + "/user/account/authenticate";
+        return "/" + restUriVersion + "/accessall/user/account/authenticate";
     }
 
     private String getUserProfileFindByIdUri() {
@@ -97,7 +97,7 @@ public class UserProfileIT {
     }
 
     private String getFindUsernameUri() {
-        return "/" + restUriVersion + "/user/profile/find/username";
+        return "/" + restUriVersion + "/accessall/user/profile/find/username";
     }
 
     private String getUpdateUri() {

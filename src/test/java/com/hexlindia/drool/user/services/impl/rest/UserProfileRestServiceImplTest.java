@@ -141,7 +141,7 @@ class UserProfileRestServiceImplTest {
     }
 
     private String getFindUsernameUri() {
-        return "/" + restUriVersion + "/user/profile/find/username";
+        return "/" + restUriVersion + "/accessall/user/profile/find/username";
     }
 
     private String getUpdateUri() {

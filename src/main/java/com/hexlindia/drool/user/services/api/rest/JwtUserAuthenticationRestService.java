@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/${rest.uri.version}/user/account")
+@RequestMapping("/${rest.uri.version}/accessall/user/account")
 public interface JwtUserAuthenticationRestService {
 
     @PostMapping(value = "/authenticate")
