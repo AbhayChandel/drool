@@ -59,7 +59,7 @@ public class UserAccountImpl implements UserAccount {
         userProfileTo.setCity(null);
         userProfileTo.setGender('N');
         userProfileTo = userProfile.create(userProfileTo);
-        return new JwtResponse(jwtUtil.generateToken(userAccountEntity.getEmail()), new AuthenticatedUserDetails(userProfileTo.getId().toString(), userProfileTo.getUsername()));
+        return new JwtResponse(jwtUtil.generateToken(userAccountEntity.getEmail()), new AuthenticatedUserDetails(userProfileTo.getId(), userProfileTo.getUsername()));
     }
 
     @Override

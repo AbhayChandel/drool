@@ -71,7 +71,7 @@ class JwtSecurityIT {
         assertEquals(200, responseEntity.getStatusCodeValue());
         JwtResponse jwtResponse = responseEntity.getBody();
         assertNotNull(jwtResponse.getAuthToken());
-        assertEquals("1", jwtResponse.getAuthenticatedUserDetails().getUserId());
+        assertEquals(1, jwtResponse.getAuthenticatedUserDetails().getUserId());
         assertEquals("priyanka11", jwtResponse.getAuthenticatedUserDetails().getUsername());
     }
 
