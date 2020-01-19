@@ -40,6 +40,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     public DiscussionReplyTo post(DiscussionReplyTo discussionReplyTo) {
         DiscussionReplyEntity discussionReplyEntity = discussionReplyMapper.toEntity(discussionReplyTo);
         discussionReplyEntity.setDatePosted(DateTimeUtil.getCurrentTimestamp());
+        discussionReplyEntity.setActive(true);
         discussionReplyEntity = this.discussionReplyRepository.save(discussionReplyEntity);
         log.debug("Discussion Reply: '{}', id: '{}' for Discussion ID: {} posted", discussionReplyEntity.getReply(), discussionReplyEntity.getId(), discussionReplyTo.getDiscussionTopicId());
         discussionTopic.saveReply(discussionReplyEntity, discussionReplyTo.getDiscussionTopicId());
