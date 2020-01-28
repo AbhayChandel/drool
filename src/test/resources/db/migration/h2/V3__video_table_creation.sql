@@ -10,7 +10,6 @@ CREATE TABLE video
     likes           INT     default 0,
     date_posted     TIMESTAMP,
     views           INT     default 0,
-    comments        INT     default 0,
     post_type       INT                                  NOT NULL,
     active          BOOLEAN default true                 NOT NULL,
     CONSTRAINT video_pk PRIMARY KEY (id)
@@ -41,11 +40,6 @@ CREATE TABLE video_comment_user_like
     video_comment_id BIGINT NOT NULL
 );
 
-CREATE OR REPLACE VIEW user_profile_card_view AS
-SELECT up.user_account_id AS userId,
-       up.username        AS username
-FROM user_profile up;
-
 CREATE OR REPLACE VIEW video_card_view AS
 SELECT video.id                                  AS videoId,
        video.title                               AS title,
@@ -55,10 +49,13 @@ SELECT video.id                                  AS videoId,
        video.views                               AS views,
        video.likes                               AS likes,
        video.description                         AS description,
+       count(comment.id)                         AS commentCount,
        upcard.username                           AS username
 FROM video video
          INNER JOIN user_profile_card_view upcard ON video.user_id = upcard.userId
-where video.active;
+         LEFT JOIN video_comment comment on video.id = comment.video_id
+where video.active
+  and comment.active;
 
 CREATE OR REPLACE VIEW video_comment_card_view AS
 SELECT comment.id                                             AS commentId,
@@ -71,3 +68,16 @@ SELECT comment.id                                             AS commentId,
 FROM video_comment comment
          INNER JOIN user_profile_card_view upcard ON comment.user_id = upcard.userId
 where comment.active;
+
+insert into video(id, title, user_id, source_video_id, description, likes, date_posted, views, post_type, active)
+values (1, 'Reviewed Lakme 9to5 lipcolor', 1, 'M7lc1UVf-VE', 'I have tried to swatch all the shades of 9to5 lipcolor',
+        10, now(), 200, 7, true);
+
+insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
+values (1, 1, 2, now(), 2, 'Great job. I really like all your videos', true);
+
+insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
+values (2, 1, 3, now(), 5, 'Oh what a great review', false);
+
+insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
+values (3, 1, 3, now(), 12, 'Oh what a useless review. Hated it', true);
