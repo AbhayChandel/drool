@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MetaFieldValueFormatter {
 
-    public MetaFieldValueFormatter() {
+    private MetaFieldValueFormatter() {
         throw new IllegalStateException("Utility class");
     }
 
