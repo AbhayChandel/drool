@@ -14,7 +14,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @FlywayTestExtension
@@ -43,15 +44,15 @@ public class DiscussionViewIT {
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<DiscussionTopicCardView> responseEntity = restTemplate.exchange(getfindDiscussionTopicCardViewByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicCardView.class);
         DiscussionTopicCardView discussionTopicCardView = responseEntity.getBody();
-        assertEquals(1L, discussionTopicCardView.getDiscussionTopicView().getTopicId());
+        assertEquals("1", discussionTopicCardView.getDiscussionTopicView().getTopicId());
         assertNotNull(discussionTopicCardView.getDiscussionTopicView().getTopic());
-        assertEquals(1L, discussionTopicCardView.getDiscussionTopicView().getUserId());
+        assertEquals("1", discussionTopicCardView.getDiscussionTopicView().getUserId());
         assertNotNull(discussionTopicCardView.getDiscussionTopicView().getDatePosted());
         assertNotNull(discussionTopicCardView.getDiscussionTopicView().getDateLastActive());
-        assertTrue(discussionTopicCardView.getDiscussionTopicView().getViews() >= 15);
-        assertEquals(12, discussionTopicCardView.getDiscussionTopicView().getLikes());
-        assertEquals(2, discussionTopicCardView.getDiscussionTopicView().getReplies());
-        assertEquals(1L, discussionTopicCardView.getUserProfileCardView().getUserId());
+        assertEquals("154.5k", discussionTopicCardView.getDiscussionTopicView().getViews());
+        assertEquals("12.7k", discussionTopicCardView.getDiscussionTopicView().getLikes());
+        assertEquals("234", discussionTopicCardView.getDiscussionTopicView().getReplies());
+        assertEquals("1", discussionTopicCardView.getUserProfileCardView().getUserId());
         assertEquals("priyanka11", discussionTopicCardView.getUserProfileCardView().getUsername());
     }
 
@@ -67,13 +68,13 @@ public class DiscussionViewIT {
         DiscussionPageView discussionPageView = responseEntity.getBody();
         assertEquals(2, discussionPageView.getDiscussionReplyCardViewList().size());
         DiscussionReplyCardView discussionReplyCardView = discussionPageView.getDiscussionReplyCardViewList().get(0);
-        assertEquals(1L, discussionReplyCardView.getDiscussionReplyView().getReplyId());
-        assertEquals(1L, discussionReplyCardView.getDiscussionReplyView().getDiscussionTopicId());
+        assertEquals("1", discussionReplyCardView.getDiscussionReplyView().getReplyId());
+        assertEquals("1", discussionReplyCardView.getDiscussionReplyView().getDiscussionTopicId());
         assertNotNull(discussionReplyCardView.getDiscussionReplyView().getReply());
-        assertEquals(3L, discussionReplyCardView.getDiscussionReplyView().getUserId());
+        assertEquals("3", discussionReplyCardView.getDiscussionReplyView().getUserId());
         assertNotNull(discussionReplyCardView.getDiscussionReplyView().getDatePosted());
-        assertEquals(2, discussionReplyCardView.getDiscussionReplyView().getLikes());
-        assertEquals(3L, discussionReplyCardView.getUserProfileCardView().getUserId());
+        assertEquals("2.4k", discussionReplyCardView.getDiscussionReplyView().getLikes());
+        assertEquals("3", discussionReplyCardView.getUserProfileCardView().getUserId());
         assertEquals("sonam31", discussionReplyCardView.getUserProfileCardView().getUsername());
     }
 

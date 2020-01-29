@@ -118,9 +118,9 @@ public class DiscussionTopicIT {
         DiscussionTopicTo discussionTopicTo = responseEntity.getBody();
         assertEquals(1L, discussionTopicTo.getId());
         assertEquals(1L, discussionTopicTo.getUserId());
-        assertEquals(15, discussionTopicTo.getViews());
-        assertEquals(12, discussionTopicTo.getLikes());
-        assertEquals(2, discussionTopicTo.getReplies());
+        assertEquals(154564, discussionTopicTo.getViews());
+        assertEquals(12765, discussionTopicTo.getLikes());
+        assertEquals(234, discussionTopicTo.getReplies());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class DiscussionTopicIT {
         ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         DiscussionTopicTo discussionTopicTo = responseEntity.getBody();
         assertEquals(1L, discussionTopicTo.getId());
-        assertEquals(16, discussionTopicTo.getViews());
+        assertEquals(154565, discussionTopicTo.getViews());
     }
 
     @Test

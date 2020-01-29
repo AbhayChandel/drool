@@ -1,12 +1,14 @@
 package com.hexlindia.drool.discussion.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.common.view.UserProfileCardView;
 
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SqlResultSetMapping;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @SqlResultSetMapping(name = "discussionReplyCardView",
@@ -18,7 +20,7 @@ import javax.persistence.SqlResultSetMapping;
                                 @ColumnResult(name = "discussionTopicId", type = Long.class),
                                 @ColumnResult(name = "reply", type = String.class),
                                 @ColumnResult(name = "userId", type = Long.class),
-                                @ColumnResult(name = "datePosted", type = String.class),
+                                @ColumnResult(name = "datePosted", type = LocalDateTime.class),
                                 @ColumnResult(name = "likes", type = Integer.class),
                                 @ColumnResult(name = "username", type = String.class)
                         })
@@ -31,9 +33,12 @@ public class DiscussionReplyCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public DiscussionReplyCardView(Long replyId, Long discussionTopicId, String reply, Long userId, String datePosted, int likes, String username) {
-        this.discussionReplyView = new DiscussionReplyView(replyId, discussionTopicId, reply, userId, datePosted, likes);
-        this.userProfileCardView = new UserProfileCardView(userId, username);
+    public DiscussionReplyCardView(Long replyId, Long discussionTopicId, String reply, Long userId, LocalDateTime datePosted, Integer likes, String username) {
+        this.discussionReplyView = new DiscussionReplyView(Long.toString(replyId), Long.toString(discussionTopicId), reply, Long.toString(userId), MetaFieldValueFormatter.getDateTimeInDayMonCommaYear(datePosted), MetaFieldValueFormatter.getCompactFormat(likes));
+        this.userProfileCardView = new UserProfileCardView(Long.toString(userId), username);
+    }
+
+    public DiscussionReplyCardView() {
     }
 
     public DiscussionReplyView getDiscussionReplyView() {

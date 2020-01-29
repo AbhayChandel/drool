@@ -13,7 +13,7 @@ public interface DiscussionReplyMapper {
     DiscussionReplyEntity toEntity(DiscussionReplyTo discussionReplyTo);
 
     @Mapping(target = "discussionTopicId", source = "discussionTopicEntity.id")
-    @Mapping(target = "datePosted", source = "datePosted", dateFormat = "dd-MMM-yyyy hh:mm a")
+    @Mapping(target = "datePosted", source = "datePosted", dateFormat = "d MMM, yyyy h:mm a")
     DiscussionReplyTo toTransferObject(DiscussionReplyEntity discussionReplyEntity);
 
     List<DiscussionReplyTo> toTransferObjectList(List<DiscussionReplyEntity> discussionReplyEntityList);
