@@ -34,7 +34,7 @@ CREATE TABLE discussion_topic
     CONSTRAINT discussion_topic_pk PRIMARY KEY (id)
 );
 
-ALTER SEQUENCE discussion_topic_id_seq RESTART WITH 10000001;
+ALTER SEQUENCE discussion_topic_id_seq RESTART WITH 20000001;
 
 CREATE TABLE discussion_topic_user_like
 (
@@ -42,7 +42,7 @@ CREATE TABLE discussion_topic_user_like
     topic_id BIGINT NOT NULL
 );
 
-ALTER SEQUENCE discussion_reply_id_seq RESTART WITH 10000001;
+ALTER SEQUENCE discussion_reply_id_seq RESTART WITH 21000001;
 
 CREATE TABLE discussion_reply
 (
@@ -65,7 +65,8 @@ CREATE TABLE discussion_reply_user_like
 CREATE TABLE POST_TYPE
 (
     post_type_id INT,
-    post_type    VARCHAR(50)
+    post_type    VARCHAR(10),
+    descritpion  VARCHAR(50)
 );
 
 CREATE OR REPLACE VIEW user_profile_card_view AS
