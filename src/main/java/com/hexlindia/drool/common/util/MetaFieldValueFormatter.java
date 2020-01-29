@@ -6,6 +6,10 @@ import java.time.format.DateTimeFormatter;
 
 public class MetaFieldValueFormatter {
 
+    private MetaFieldValueFormatter() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getCompactFormat(Integer number) {
         if (number == null) {
             return "";
