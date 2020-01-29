@@ -71,15 +71,4 @@ FROM video_comment comment
          INNER JOIN user_profile_card_view upcard ON comment.user_id = upcard.userId
 where comment.active;
 
-insert into video(id, title, user_id, source_video_id, description, likes, date_posted, views, post_type, active)
-values (1, 'Reviewed Lakme 9to5 lipcolor', 1, 'M7lc1UVf-VE', 'I have tried to swatch all the shades of 9to5 lipcolor',
-        10, now(), 200, 7, true);
 
-insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (1, 1, 2, now(), 2, 'Great job. I really like all your videos', true);
-
-insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (2, 1, 3, now(), 5, 'Oh what a great review', false);
-
-insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (3, 1, 3, now(), 12, 'Oh what a useless review. Hated it', true);
