@@ -48,6 +48,7 @@ public class VideoViewIT {
         ResponseEntity<VideoCardView> responseEntity = restTemplate.exchange(getfindVideoCardViewByIdUri() + "/1", HttpMethod.GET, httpEntity, VideoCardView.class);
         VideoCardView videoCardView = responseEntity.getBody();
         assertEquals("1", videoCardView.getVideoView().getVideoId());
+        assertEquals("vdg", videoCardView.getVideoView().getPostType());
         assertEquals("Reviewed Lakme 9to5 lipcolor", videoCardView.getVideoView().getTitle());
         assertEquals("1", videoCardView.getVideoView().getUserId());
         assertEquals("M7lc1UVf-VE", videoCardView.getVideoView().getSourceVideoId());
@@ -71,6 +72,7 @@ public class VideoViewIT {
 
         VideoCardView videoCardView = videoPageView.getVideoCardView();
         assertEquals("1", videoCardView.getVideoView().getVideoId());
+        assertEquals("vdg", videoCardView.getVideoView().getPostType());
         assertEquals("Reviewed Lakme 9to5 lipcolor", videoCardView.getVideoView().getTitle());
         assertEquals("1", videoCardView.getVideoView().getUserId());
         assertEquals("M7lc1UVf-VE", videoCardView.getVideoView().getSourceVideoId());

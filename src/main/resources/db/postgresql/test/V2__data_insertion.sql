@@ -27,20 +27,20 @@ values (1,
         'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better',
         1, now(), 3);
 
-insert into POST_TYPE(post_type_id, post_type)
-values (1, 'Topic');
-insert into POST_TYPE(post_type_id, post_type)
-values (2, 'Reply');
-insert into POST_TYPE(post_type_id, post_type)
-values (3, 'Comment');
-insert into POST_TYPE(post_type_id, post_type)
-values (4, 'Text Review');
-insert into POST_TYPE(post_type_id, post_type)
-values (5, 'Video Review');
-insert into POST_TYPE(post_type_id, post_type)
-values (6, 'Text Guide');
-insert into POST_TYPE(post_type_id, post_type)
-values (7, 'Video Guide');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (1, 'dit', 'Discussion topic');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (2, 'dir', 'Discussion reply');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (3, 'vdc', 'Video comment');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (4, 'txr', 'Text Review');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (5, 'vdr', 'Video Review');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (6, 'txg', 'Text Guide');
+insert into POST_TYPE(post_type_id, post_type, descritpion)
+values (7, 'vdg', 'Video Guide');
 
 insert into discussion_topic_user_like(user_id, topic_id)
 values (5, 5);

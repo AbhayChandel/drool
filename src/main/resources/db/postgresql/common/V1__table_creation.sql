@@ -65,7 +65,8 @@ CREATE TABLE discussion_reply_user_like
 CREATE TABLE POST_TYPE
 (
     post_type_id INT,
-    post_type    VARCHAR(50)
+    post_type    VARCHAR(10),
+    descritpion  VARCHAR(50)
 );
 
 CREATE OR REPLACE VIEW user_profile_card_view AS

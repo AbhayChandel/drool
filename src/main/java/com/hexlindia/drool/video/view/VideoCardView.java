@@ -15,6 +15,7 @@ import javax.persistence.SqlResultSetMapping;
                         targetClass = VideoCardView.class,
                         columns = {
                                 @ColumnResult(name = "videoId", type = Long.class),
+                                @ColumnResult(name = "postType", type = String.class),
                                 @ColumnResult(name = "title", type = String.class),
                                 @ColumnResult(name = "userId", type = Long.class),
                                 @ColumnResult(name = "sourceVideoId", type = String.class),
@@ -35,8 +36,8 @@ public class VideoCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public VideoCardView(Long videoId, String title, Long userId, String sourceVideoId, String datePosted, int views, int likes, String description, Integer commentCount, String username) {
-        videoView = new VideoView(Long.toString(videoId), title, Long.toString(userId), sourceVideoId, datePosted, Integer.toString(views), Integer.toString(likes), description, Integer.toString(commentCount));
+    public VideoCardView(Long videoId, String postType, String title, Long userId, String sourceVideoId, String datePosted, int views, int likes, String description, Integer commentCount, String username) {
+        videoView = new VideoView(Long.toString(videoId), postType, title, Long.toString(userId), sourceVideoId, datePosted, Integer.toString(views), Integer.toString(likes), description, Integer.toString(commentCount));
         userProfileCardView = new UserProfileCardView(userId, username);
 
     }

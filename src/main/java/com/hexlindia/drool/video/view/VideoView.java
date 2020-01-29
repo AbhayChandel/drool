@@ -3,6 +3,7 @@ package com.hexlindia.drool.video.view;
 public class VideoView {
 
     private String videoId;
+    private String postType;
     private String title;
     private String userId;
     private String sourceVideoId;
@@ -12,8 +13,9 @@ public class VideoView {
     private String description;
     private String commentCount;
 
-    public VideoView(String videoId, String title, String userId, String sourceVideoId, String datePosted, String views, String likes, String description, String commentCount) {
+    public VideoView(String videoId, String postType, String title, String userId, String sourceVideoId, String datePosted, String views, String likes, String description, String commentCount) {
         this.videoId = videoId;
+        this.postType = postType;
         this.title = title;
         this.userId = userId;
         this.sourceVideoId = sourceVideoId;
@@ -29,6 +31,10 @@ public class VideoView {
 
     public String getVideoId() {
         return videoId;
+    }
+
+    public String getPostType() {
+        return postType;
     }
 
     public String getTitle() {

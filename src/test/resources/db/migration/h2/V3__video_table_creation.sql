@@ -42,6 +42,7 @@ CREATE TABLE video_comment_user_like
 
 CREATE OR REPLACE VIEW video_card_view AS
 SELECT video.id                                  AS videoId,
+       pt.post_type                              As postType,
        video.title                               AS title,
        video.user_id                             AS userId,
        video.source_video_id                     AS sourceVideoId,
@@ -53,6 +54,7 @@ SELECT video.id                                  AS videoId,
        upcard.username                           AS username
 FROM video video
          INNER JOIN user_profile_card_view upcard ON video.user_id = upcard.userId
+         INNER JOIN POST_TYPE pt ON video.post_type = pt.post_type_id
          LEFT JOIN video_comment comment on video.id = comment.video_id
 where video.active
   and comment.active;

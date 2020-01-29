@@ -23,6 +23,7 @@ class VideoViewRepositoryImplTest {
         VideoCardView videoCardView = videoViewRepository.getVideoCardView(1L);
         assertNotNull(videoCardView);
         assertEquals("1", videoCardView.getVideoView().getVideoId());
+        assertEquals("vdg", videoCardView.getVideoView().getPostType());
         assertEquals("Reviewed Lakme 9to5 lipcolor", videoCardView.getVideoView().getTitle());
         assertEquals("1", videoCardView.getVideoView().getUserId());
         assertEquals("M7lc1UVf-VE", videoCardView.getVideoView().getSourceVideoId());
