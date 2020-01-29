@@ -121,7 +121,7 @@ public class DiscussionReplyIT {
         DiscussionReplyTo discussionReplyTo = responseEntity.getBody();
         assertEquals(1L, discussionReplyTo.getId());
         assertEquals(3L, discussionReplyTo.getUserId());
-        assertEquals(2, discussionReplyTo.getLikes());
+        assertEquals(2457, discussionReplyTo.getLikes());
     }
 
     @Test

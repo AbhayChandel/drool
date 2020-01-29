@@ -1,13 +1,5 @@
 insert into video(id, title, user_id, source_video_id, description, likes, date_posted, views, post_type, active)
-values (1, 'KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty', 1, 'AU3h3qPK2tU', 'LET''S TALK!
-Instagram- https://www.instagram.com/aninditacha...
-business enquires only- aninditachh@gmail.com
-
-KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty
-
-- NOT SPONSORED -
-
-hey guys! so katrina kaif launched her makeup line with nykaa & you guys requested me to review the products. I hope this video is helpful. xx
+values (1, 'KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty', 1, 'AU3h3qPK2tU', 'KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty Hey guys! so katrina kaif launched her makeup line with nykaa & you guys requested me to review the products. I hope this video is helpful. xx
 
 LINKS-
 KAY BEAUTY- https://nyk0.page.link/jisk
@@ -20,15 +12,11 @@ https://nyk0.page.link/M496
 
 music- Song: Hold Me Majestic Color
 Music promoted by Majestic Casual
-Video Link: https://youtu.be/vf_S0-V6wTE
-
-aninditachakravarty,anindita,chakravarty,makeup,anindita chakravarty makeup,anindita chakravarty,katrina,kaif,nykaa,haul,makeup,review,kay,beauty,review,complete,review,kay beauty,kay,beauty,honest,review,kay beauty,not sponsored,how,to,thatquirkymiss
-
-FTC- Some links are affiliate links which means I earn a small commison if you purchase anything using those links. This helps me to be able to make new videos for you to enjoy. Thank you for supporting my channel!',
+Video Link: https://youtu.be/vf_S0-V6wTE',
         4000, now(), 124308, 5, true);
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (1, 1, 1, now(), 353,
+values (1, 1, 1, now(), 3533,
         'I  liked your review... And also agree with the price point it''s really expensive,  but just wanna say don''t compare Kay beauty products packaging to Jeffree star and others... Makeup Brand should reflect the personality of a person.. Katrina Kaif is a person who likes her makeup to be simple and minimalistic so she wants that her minimalistic personality should reflect in her brand ..',
         true);
 
@@ -48,12 +36,7 @@ values (4, 1, 1, now(), 368, 'ALSO pls stop this behaviour, you can''t look this
 
 
 insert into video(id, title, user_id, source_video_id, description, likes, date_posted, views, post_type, active)
-values (2, 'How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage', 2, 'QW46ldTDiBY', 'Download app here:
-
-https://mlpl.link/hBNHH
-
-
-Product Links
+values (2, 'How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage', 2, 'QW46ldTDiBY', 'Product Links
 
 Stay Quirky Makeup Primer (27 g)
 https://mlpl.link/3ut3A
@@ -78,35 +61,21 @@ https://mlpl.link/z1jsV
 
 Stay Quirky Translucent Powder, Longer Love Makin'' - Get Down & Dirty (8 g)
 https://mlpl.link/IsXLO
-
-
-•••••••••••••••••••••••••••••••••••••••••••••• ••••••••••••••••••••••••••••••••••••••••••••••• Stalk me👇👇👇
- 🙌 Facebook : https://m.facebook.com/deepanwita.dut...
-
-🔷🔷Instagram : https://www.instagram.com/princess_ch...
-
-💄💄Roposo: https://www.roposo.com/profile/chicku...
-
-👾 👾Twitter : https://mobile.twitter.com/deepanwita...
-
  Love,
  Chicku
 Xoxo
-----------------------------------------------------------------------------------------------------------------
-
-🙏Disclaimer🙏 :
 
 All the contents (from thumbnail to video) have been created by me,Deepanwita Dutta©. Don''t use anything without my permission.The information provided on this channel and its videos is for general purposes only and shouldn''t be conisidered as proffesional advice. We are trying to provide a perfect, valid, specific, detail information.Make Sure to Do a patch test each time before trying a new product or any kind Of DIY. 😘Thanks for watching 😘',
         29000, now(), 3718868, 7, true);
 
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (5, 2, 1, now(), 83,
+values (5, 2, 1, now(), 830,
         'Always make up  free skin is best.  Make up spoils the real beauty ...Be natural..Don''t use these kind of make up products.. Full of chemicals. Good for nothing.',
         true);
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (6, 2, 3, now(), 124,
+values (6, 2, 3, now(), 1240,
         'It''ll be good to see in phone camera, but in reality it''ll look like a joker.... Experienced', false);
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
@@ -114,7 +83,7 @@ values (7, 2, 1, now(), 10, 'Mam daily makeup karte h to kya or kaise skin ko cl
         true);
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
-values (8, 2, 3, now(), 56, 'The shade is too light', true);
+values (8, 2, 3, now(), 5600, 'The shade is too light', true);
 
 insert into video_comment(id, video_id, user_id, date_posted, likes, comment, active)
 values (9, 2, 1, now(), 10,

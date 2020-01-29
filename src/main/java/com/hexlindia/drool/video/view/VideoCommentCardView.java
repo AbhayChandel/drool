@@ -33,9 +33,9 @@ public class VideoCommentCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public VideoCommentCardView(Long commentId, Long videoId, String comment, Long userId, LocalDateTime datePosted, int likes, String username) {
-        videoCommentView = new VideoCommentView(Long.toString(commentId), Long.toString(videoId), comment, Long.toString(userId), MetaFieldValueFormatter.getDateTimeInDayMonCommaYear(datePosted), Integer.toString(likes));
-        userProfileCardView = new UserProfileCardView(userId, username);
+    public VideoCommentCardView(Long commentId, Long videoId, String comment, Long userId, LocalDateTime datePosted, Integer likes, String username) {
+        videoCommentView = new VideoCommentView(Long.toString(commentId), Long.toString(videoId), comment, Long.toString(userId), MetaFieldValueFormatter.getDateTimeInDayMonCommaYear(datePosted), MetaFieldValueFormatter.getCompactFormat(likes));
+        userProfileCardView = new UserProfileCardView(Long.toString(userId), username);
     }
 
     public VideoCommentCardView() {

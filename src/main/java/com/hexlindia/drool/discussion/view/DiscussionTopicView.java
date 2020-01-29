@@ -2,16 +2,16 @@ package com.hexlindia.drool.discussion.view;
 
 public class DiscussionTopicView {
 
-    private Long topicId;
+    private String topicId;
     private String topic;
-    private Long userId;
+    private String userId;
     private String datePosted;
     private String dateLastActive;
-    private int views;
-    private int likes;
-    private int replies;
+    private String views;
+    private String likes;
+    private String replies;
 
-    public DiscussionTopicView(Long topicId, String topic, Long userId, String datePosted, String dateLastActive, int views, int likes, int replies) {
+    public DiscussionTopicView(String topicId, String topic, String userId, String datePosted, String dateLastActive, String views, String likes, String replies) {
         this.topicId = topicId;
         this.topic = topic;
         this.userId = userId;
@@ -22,7 +22,7 @@ public class DiscussionTopicView {
         this.replies = replies;
     }
 
-    public Long getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 
@@ -30,7 +30,7 @@ public class DiscussionTopicView {
         return topic;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -42,15 +42,15 @@ public class DiscussionTopicView {
         return dateLastActive;
     }
 
-    public int getViews() {
+    public String getViews() {
         return views;
     }
 
-    public int getLikes() {
+    public String getLikes() {
         return likes;
     }
 
-    public int getReplies() {
+    public String getReplies() {
         return replies;
     }
 }

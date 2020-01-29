@@ -38,9 +38,9 @@ public class VideoCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public VideoCardView(Long videoId, String postType, String title, Long userId, String sourceVideoId, LocalDateTime datePosted, int views, int likes, String description, Integer commentCount, String username) {
-        videoView = new VideoView(Long.toString(videoId), postType, title, Long.toString(userId), sourceVideoId, MetaFieldValueFormatter.getDateInDayMonCommaYear(datePosted.toLocalDate()), Integer.toString(views), Integer.toString(likes), description, Integer.toString(commentCount));
-        userProfileCardView = new UserProfileCardView(userId, username);
+    public VideoCardView(Long videoId, String postType, String title, Long userId, String sourceVideoId, LocalDateTime datePosted, Integer views, Integer likes, String description, Integer commentCount, String username) {
+        videoView = new VideoView(Long.toString(videoId), postType, title, Long.toString(userId), sourceVideoId, MetaFieldValueFormatter.getDateInDayMonCommaYear(datePosted.toLocalDate()), MetaFieldValueFormatter.getCompactFormat(views), MetaFieldValueFormatter.getCompactFormat(likes), description, MetaFieldValueFormatter.getCompactFormat(commentCount));
+        userProfileCardView = new UserProfileCardView(Long.toString(userId), username);
 
     }
 

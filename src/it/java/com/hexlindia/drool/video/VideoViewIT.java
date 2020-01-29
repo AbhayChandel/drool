@@ -53,8 +53,8 @@ public class VideoViewIT {
         assertEquals("1", videoCardView.getVideoView().getUserId());
         assertEquals("M7lc1UVf-VE", videoCardView.getVideoView().getSourceVideoId());
         assertEquals("I have tried to swatch all the shades of 9to5 lipcolor", videoCardView.getVideoView().getDescription());
-        assertEquals("10", videoCardView.getVideoView().getLikes());
-        assertEquals("200", videoCardView.getVideoView().getViews());
+        assertEquals("1.4k", videoCardView.getVideoView().getLikes());
+        assertEquals("245.6k", videoCardView.getVideoView().getViews());
         assertEquals("2", videoCardView.getVideoView().getCommentCount());
         assertEquals("priyanka11", videoCardView.getUserProfileCardView().getUsername());
     }
@@ -77,8 +77,8 @@ public class VideoViewIT {
         assertEquals("1", videoCardView.getVideoView().getUserId());
         assertEquals("M7lc1UVf-VE", videoCardView.getVideoView().getSourceVideoId());
         assertEquals("I have tried to swatch all the shades of 9to5 lipcolor", videoCardView.getVideoView().getDescription());
-        assertEquals("10", videoCardView.getVideoView().getLikes());
-        assertEquals("200", videoCardView.getVideoView().getViews());
+        assertEquals("1.4k", videoCardView.getVideoView().getLikes());
+        assertEquals("245.6k", videoCardView.getVideoView().getViews());
         assertEquals("2", videoCardView.getVideoView().getCommentCount());
         assertEquals("priyanka11", videoCardView.getUserProfileCardView().getUsername());
 
@@ -89,7 +89,7 @@ public class VideoViewIT {
         assertEquals("Great job. I really like all your videos", videoCommentCardView.getVideoCommentView().getComment());
         assertEquals("1", videoCommentCardView.getVideoCommentView().getVideoId());
         assertEquals("2", videoCommentCardView.getVideoCommentView().getUserId());
-        assertEquals("2", videoCommentCardView.getVideoCommentView().getLikes());
+        assertEquals("55.6k", videoCommentCardView.getVideoCommentView().getLikes());
         assertEquals("priya21", videoCommentCardView.getUserProfileCardView().getUsername());
 
     }

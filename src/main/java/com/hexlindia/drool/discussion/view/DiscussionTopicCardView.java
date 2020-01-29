@@ -35,9 +35,9 @@ public class DiscussionTopicCardView {
     @JsonProperty("userCard")
     private UserProfileCardView userProfileCardView;
 
-    public DiscussionTopicCardView(Long topicId, String topic, Long userId, LocalDateTime datePosted, LocalDateTime dateLastActive, int views, int likes, int replies, String username) {
-        this.discussionTopicView = new DiscussionTopicView(topicId, topic, userId, MetaFieldValueFormatter.getDateInDayMonCommaYear(datePosted.toLocalDate()), MetaFieldValueFormatter.getDateInDayMonCommaYear(dateLastActive.toLocalDate()), views, likes, replies);
-        this.userProfileCardView = new UserProfileCardView(userId, username);
+    public DiscussionTopicCardView(Long topicId, String topic, Long userId, LocalDateTime datePosted, LocalDateTime dateLastActive, Integer views, Integer likes, Integer replies, String username) {
+        this.discussionTopicView = new DiscussionTopicView(Long.toString(topicId), topic, Long.toString(userId), MetaFieldValueFormatter.getDateInDayMonCommaYear(datePosted.toLocalDate()), MetaFieldValueFormatter.getDateInDayMonCommaYear(dateLastActive.toLocalDate()), MetaFieldValueFormatter.getCompactFormat(views), MetaFieldValueFormatter.getCompactFormat(likes), MetaFieldValueFormatter.getCompactFormat(replies));
+        this.userProfileCardView = new UserProfileCardView(Long.toString(userId), username);
     }
 
     DiscussionTopicCardView() {
