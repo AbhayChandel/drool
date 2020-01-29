@@ -42,17 +42,17 @@ CREATE TABLE video_comment_user_like
 );
 
 CREATE OR REPLACE VIEW video_card_view AS
-SELECT video.id                                  AS videoId,
-       pt.post_type                              As postType,
-       video.title                               AS title,
-       video.user_id                             AS userId,
-       video.source_video_id                     AS sourceVideoId,
-       to_char(video.date_posted, 'DD-Mon-YYYY') AS datePosted,
-       video.views                               AS views,
-       video.likes                               AS likes,
-       video.description                         AS description,
-       count(comment.id)                         AS commentCount,
-       upcard.username                           AS username
+SELECT video.id              AS videoId,
+       pt.post_type          As postType,
+       video.title           AS title,
+       video.user_id         AS userId,
+       video.source_video_id AS sourceVideoId,
+       video.date_posted     AS datePosted,
+       video.views           AS views,
+       video.likes           AS likes,
+       video.description     AS description,
+       count(comment.id)     AS commentCount,
+       upcard.username       AS username
 FROM video video
          INNER JOIN user_profile_card_view upcard ON video.user_id = upcard.userId
          INNER JOIN POST_TYPE pt ON video.post_type = pt.post_type_id
@@ -62,13 +62,13 @@ where video.active
 group by video.id, upcard.username, pt.post_type;
 
 CREATE OR REPLACE VIEW video_comment_card_view AS
-SELECT comment.id                                             AS commentId,
-       comment.video_id                                       AS videoId,
-       comment.comment                                        AS comment,
-       comment.user_id                                        AS userId,
-       to_char(comment.date_posted, 'DD-Mon-YYYY HH12:MI AM') AS datePosted,
-       comment.likes                                          AS likes,
-       upcard.username                                        AS username
+SELECT comment.id          AS commentId,
+       comment.video_id    AS videoId,
+       comment.comment     AS comment,
+       comment.user_id     AS userId,
+       comment.date_posted AS datePosted,
+       comment.likes       AS likes,
+       upcard.username     AS username
 FROM video_comment comment
          INNER JOIN user_profile_card_view upcard ON comment.user_id = upcard.userId
 where comment.active;
