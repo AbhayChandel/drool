@@ -119,7 +119,7 @@ public class DiscussionTopicIT {
         assertEquals(1L, discussionTopicTo.getId());
         assertEquals(1L, discussionTopicTo.getUserId());
         assertEquals(154564, discussionTopicTo.getViews());
-        assertEquals(12765, discussionTopicTo.getLikes());
+        assertEquals(12754, discussionTopicTo.getLikes());
         assertEquals(234, discussionTopicTo.getReplies());
     }
 
@@ -158,19 +158,18 @@ public class DiscussionTopicIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        int likesBeforeIncrement = responseEntity.getBody().getLikes();
+        ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         LocalDateTime dateLastActiveBeforeIncrement = responseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
-        activityTo.put("postId", "1");
+        activityTo.put("postId", "2");
         activityTo.put("currentUserId", "5");
         HttpEntity<String> request = new HttpEntity<>(activityTo.toString(), headers);
-        ResponseEntity responseEntityPut = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, request, DiscussionTopicTo.class);
+        ResponseEntity<String> responseEntityPut = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, request, String.class);
         assertEquals(200, responseEntityPut.getStatusCodeValue());
+        assertEquals("5k", responseEntityPut.getBody());
 
-        responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertEquals(likesBeforeIncrement + 1, responseEntity.getBody().getLikes());
+        responseEntity = restTemplate.exchange(getFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         assertTrue(responseEntity.getBody().getDateLastActive().isAfter(dateLastActiveBeforeIncrement));
 
     }
@@ -182,19 +181,18 @@ public class DiscussionTopicIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        int likesBeforeDecrement = responseEntity.getBody().getLikes();
+        ResponseEntity<DiscussionTopicTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/3", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         LocalDateTime dateLastActiveBeforeDecrement = responseEntity.getBody().getDateLastActive();
 
         JSONObject activityTo = new JSONObject();
-        activityTo.put("postId", "1");
-        activityTo.put("currentUserId", "5");
+        activityTo.put("postId", "3");
+        activityTo.put("currentUserId", "2");
         HttpEntity<String> request = new HttpEntity<>(activityTo.toString(), headers);
-        ResponseEntity responseEntityPut = restTemplate.exchange(getLikesDecrementUri(), HttpMethod.PUT, request, DiscussionTopicTo.class);
+        ResponseEntity<String> responseEntityPut = restTemplate.exchange(getLikesDecrementUri(), HttpMethod.PUT, request, String.class);
         assertEquals(200, responseEntityPut.getStatusCodeValue());
+        assertEquals("12.9k", responseEntityPut.getBody());
 
-        responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertEquals(likesBeforeDecrement - 1, responseEntity.getBody().getLikes());
+        responseEntity = restTemplate.exchange(getFindByIdUri() + "/3", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
         assertTrue(responseEntity.getBody().getDateLastActive().isAfter(dateLastActiveBeforeDecrement));
     }
 

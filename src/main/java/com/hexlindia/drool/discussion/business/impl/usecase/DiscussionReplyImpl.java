@@ -2,6 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.common.util.DateTimeUtil;
+import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReply;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReplyUserLike;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
@@ -61,23 +62,24 @@ public class DiscussionReplyImpl implements DiscussionReply {
 
     @Override
     @Transactional
-    public void incrementLikesByOne(ActivityTo activityTo) {
+    public String incrementLikesByOne(ActivityTo activityTo) {
         DiscussionReplyEntity discussionReplyEntity = findInRepository("Reply likes increment", activityTo.getPostId());
         discussionReplyEntity.setLikes(discussionReplyEntity.getLikes() + 1);
         discussionReplyRepository.save(discussionReplyEntity);
         discussionReplyUserLike.save(new DiscussionReplyUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
-
         discussionTopic.setLastDateActiveToNow(discussionReplyEntity.getDiscussionTopicEntity().getId());
+        return MetaFieldValueFormatter.getCompactFormat(discussionReplyEntity.getLikes());
     }
 
     @Override
-    public void decrementLikesByOne(ActivityTo activityTo) {
+    @Transactional
+    public String decrementLikesByOne(ActivityTo activityTo) {
         DiscussionReplyEntity discussionReplyEntity = findInRepository("Topic likes decrement", activityTo.getPostId());
         discussionReplyEntity.setLikes(discussionReplyEntity.getLikes() - 1);
         discussionReplyRepository.save(discussionReplyEntity);
         discussionReplyUserLike.remove(new DiscussionReplyUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
-
         discussionTopic.setLastDateActiveToNow(discussionReplyEntity.getDiscussionTopicEntity().getId());
+        return MetaFieldValueFormatter.getCompactFormat(discussionReplyEntity.getLikes());
     }
 
     @Override

@@ -33,7 +33,7 @@ class DiscussionTopicRepositoryTest {
         discussionTopicEntity.setDateLastActive(timestamp);
         discussionTopicRepository.save(discussionTopicEntity);
 
-        Optional<DiscussionTopicEntity> discussionTopicEntityRetrievedOptional = this.discussionTopicRepository.findById(2L);
+        Optional<DiscussionTopicEntity> discussionTopicEntityRetrievedOptional = this.discussionTopicRepository.findById(4L);
         assertTrue(discussionTopicEntityRetrievedOptional.isPresent());
         DiscussionTopicEntity discussionTopicEntityRetrieved = discussionTopicEntityRetrievedOptional.get();
         assertEquals("Dandruff ke liye sabse acha shampoo kaun sa hai", discussionTopicEntityRetrieved.getTopic());

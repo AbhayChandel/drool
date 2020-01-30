@@ -14,9 +14,9 @@ public interface DiscussionTopic {
 
     void incrementViewsByOne(Long id);
 
-    void incrementLikesByOne(ActivityTo activityTo);
+    String incrementLikesByOne(ActivityTo activityTo);
 
-    void decrementLikesByOne(ActivityTo activityTo);
+    String decrementLikesByOne(ActivityTo activityTo);
 
     void incrementRepliesByOne(Long id);
 

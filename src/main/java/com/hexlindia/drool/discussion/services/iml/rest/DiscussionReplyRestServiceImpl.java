@@ -40,13 +40,11 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
 
     @Override
     public ResponseEntity<String> incrementLikesCount(ActivityTo activityTo) {
-        discussionReply.incrementLikesByOne(activityTo);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(discussionReply.incrementLikesByOne(activityTo));
     }
 
     @Override
     public ResponseEntity<String> decrementLikesCount(ActivityTo activityTo) {
-        discussionReply.decrementLikesByOne(activityTo);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(discussionReply.decrementLikesByOne(activityTo));
     }
 }
