@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestService {
 
+    private final DiscussionTopic discussionTopic;
+
     @Autowired
-    DiscussionTopic discussionTopic;
+    public DiscussionTopicRestServiceImpl(DiscussionTopic discussionTopic) {
+        this.discussionTopic = discussionTopic;
+    }
 
     @Override
     public ResponseEntity<DiscussionTopicTo> post(@Validated(DiscussionTopicCreateValidation.class) DiscussionTopicTo discussionTopicTo) {
@@ -35,14 +39,12 @@ public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestServic
 
     @Override
     public ResponseEntity<String> incrementLikesCount(ActivityTo activityTo) {
-        discussionTopic.incrementLikesByOne(activityTo);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(discussionTopic.incrementLikesByOne(activityTo));
     }
 
     @Override
     public ResponseEntity<String> decrementLikesCount(ActivityTo activityTo) {
-        discussionTopic.decrementLikesByOne(activityTo);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(discussionTopic.decrementLikesByOne(activityTo));
     }
 
     @Override

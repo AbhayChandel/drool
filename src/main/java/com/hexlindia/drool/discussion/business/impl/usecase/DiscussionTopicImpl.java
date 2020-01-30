@@ -2,6 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.common.util.DateTimeUtil;
+import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopicUserLike;
 import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
@@ -66,24 +67,24 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     @Transactional
-    public void incrementLikesByOne(ActivityTo activityTo) {
+    public String incrementLikesByOne(ActivityTo activityTo) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic likes increment", activityTo.getPostId());
         discussionTopicEntity.setLikes(discussionTopicEntity.getLikes() + 1);
         discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
-        discussionTopicRepository.save(discussionTopicEntity);
-
+        discussionTopicMapper.toTransferObject(discussionTopicRepository.save(discussionTopicEntity));
         discussionTopicUserLike.save(new DiscussionTopicUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
+        return MetaFieldValueFormatter.getCompactFormat(discussionTopicEntity.getLikes());
     }
 
     @Override
     @Transactional
-    public void decrementLikesByOne(ActivityTo activityTo) {
+    public String decrementLikesByOne(ActivityTo activityTo) {
         DiscussionTopicEntity discussionTopicEntity = findInRepository("Topic likes decrement", activityTo.getPostId());
         discussionTopicEntity.setLikes(discussionTopicEntity.getLikes() - 1);
         discussionTopicEntity.setDateLastActive(DateTimeUtil.getCurrentTimestamp());
         discussionTopicRepository.save(discussionTopicEntity);
-
         discussionTopicUserLike.remove(new DiscussionTopicUserLikeId(activityTo.getCurrentUserId(), activityTo.getPostId()));
+        return MetaFieldValueFormatter.getCompactFormat(discussionTopicEntity.getLikes());
     }
 
     @Override

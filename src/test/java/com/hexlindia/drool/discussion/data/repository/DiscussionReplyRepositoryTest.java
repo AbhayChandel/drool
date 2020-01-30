@@ -27,7 +27,7 @@ class DiscussionReplyRepositoryTest {
     void testSave() {
         discussionReplyRepository.save(new DiscussionReplyEntity("No, it is not better", 3L));
 
-        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(4L);
+        Optional<DiscussionReplyEntity> discussionReplyEntityRetrievedOptional = this.discussionReplyRepository.findById(6L);
         assertTrue(discussionReplyEntityRetrievedOptional.isPresent());
         DiscussionReplyEntity discussionReplyEntityRetrieved = discussionReplyEntityRetrievedOptional.get();
         assertEquals("No, it is not better", discussionReplyEntityRetrieved.getReply());

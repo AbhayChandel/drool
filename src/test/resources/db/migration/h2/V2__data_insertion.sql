@@ -14,7 +14,7 @@ insert into user_profile(user_account_id, username, mobile, city, gender)
 values (3, 'sonam31', 7654321098, 'Jaipur', 'F');
 
 insert into discussion_topic(topic, user_id, date_posted, date_last_active, views, likes, replies)
-values ('Are Loreal lip colors better than Lakme or is it the other way around', 1, now(), now(), 154564, 12765, 234);
+values ('Are Loreal lip colors better than Lakme or is it the other way around', 1, now(), now(), 154564, 12754, 234);
 
 insert into discussion_reply(discussion_topic_id, reply, user_id, date_posted, likes)
 values (1, 'Yes, Loreal is better than Lakme', 3, now(), 2457);
@@ -24,6 +24,22 @@ values (1, 'No, Loreal is better than Lakme', 2, false, now(), 2);
 
 insert into discussion_reply(discussion_topic_id, reply, user_id, active, date_posted, likes)
 values (1, 'It is not a straight answer', 1, true, now(), 2);
+
+
+
+insert into discussion_topic(topic, user_id, date_posted, date_last_active, views, likes, replies)
+values ('How to get fairer skin', 1, now(), now(), 154564, 4999, 234);
+
+insert into discussion_reply(discussion_topic_id, reply, user_id, active, date_posted, likes)
+values (2, 'Try natural remedies. Do not try cosmetics.', 1, true, now(), 99);
+
+insert into discussion_reply(discussion_topic_id, reply, user_id, active, date_posted, likes)
+values (2, 'Use some natual herbal creams', 1, true, now(), 2000);
+
+
+
+insert into discussion_topic(topic, user_id, date_posted, date_last_active, views, likes, replies)
+values ('How to apply conditioner', 1, now(), now(), 154564, 13000, 234);
 
 insert into POST_TYPE(post_type_id, post_type, descritpion)
 values (1, 'dit', 'Discussion topic');
@@ -46,7 +62,14 @@ insert into discussion_topic_user_like(user_id, topic_id)
 values (5, 1);
 insert into discussion_topic_user_like(user_id, topic_id)
 values (6, 6);
+insert into discussion_topic_user_like(user_id, topic_id)
+values (2, 3);
 
-insert into discussion_reply_user_like(user_id, reply_id) values(7, 7);
-insert into discussion_reply_user_like(user_id, reply_id) values(5, 1);
-insert into discussion_reply_user_like(user_id, reply_id) values(8, 8);
+insert into discussion_reply_user_like(user_id, reply_id)
+values (7, 7);
+insert into discussion_reply_user_like(user_id, reply_id)
+values (5, 1);
+insert into discussion_reply_user_like(user_id, reply_id)
+values (8, 8);
+insert into discussion_reply_user_like(user_id, reply_id)
+values (5, 5);

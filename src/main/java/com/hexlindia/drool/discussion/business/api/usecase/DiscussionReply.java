@@ -11,9 +11,9 @@ public interface DiscussionReply {
 
     DiscussionReplyTo updateReply(DiscussionReplyTo discussionReplyTo);
 
-    void incrementLikesByOne(ActivityTo activityTo);
+    String incrementLikesByOne(ActivityTo activityTo);
 
-    void decrementLikesByOne(ActivityTo activityTo);
+    String decrementLikesByOne(ActivityTo activityTo);
 
     DiscussionReplyTo deactivateReply(Long id);
 }
