@@ -24,6 +24,7 @@ public class DiscussionTopicTo {
     private int views;
     private int likes;
     private int replies;
+    private boolean active;
 
     private List<DiscussionReplyTo> discussionReplyToList;
 
@@ -43,6 +44,15 @@ public class DiscussionTopicTo {
 
     public DiscussionTopicTo() {
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
 
     public Long getId() {
         return id;
