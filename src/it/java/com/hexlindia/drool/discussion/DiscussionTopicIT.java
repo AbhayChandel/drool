@@ -74,6 +74,7 @@ public class DiscussionTopicIT {
         ResponseEntity<DiscussionTopicTo> responseEntity = this.restTemplate.postForEntity(getCreateUri(), request, DiscussionTopicTo.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
         DiscussionTopicTo discussionTopicToRetrieved = responseEntity.getBody();
+        assertTrue(discussionTopicToRetrieved.isActive());
         assertEquals("A new topic needs to be created", discussionTopicToRetrieved.getTopic());
         assertEquals(55L, discussionTopicToRetrieved.getUserId());
         assertEquals(0, discussionTopicToRetrieved.getLikes());

@@ -41,6 +41,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
         LocalDateTime timestamp = DateTimeUtil.getCurrentTimestamp();
         discussionTopicEntity.setDatePosted(timestamp);
         discussionTopicEntity.setDateLastActive(timestamp);
+        discussionTopicEntity.setActive(true);
         discussionTopicEntity = discussionTopicRepository.save(discussionTopicEntity);
         log.debug("DiscussionTopic: '{}', id: '{}' created", discussionTopicEntity.getTopic(), discussionTopicEntity.getId());
         return discussionTopicMapper.toTransferObject(discussionTopicEntity);

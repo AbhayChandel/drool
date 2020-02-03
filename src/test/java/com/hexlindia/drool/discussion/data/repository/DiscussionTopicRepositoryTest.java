@@ -36,6 +36,7 @@ class DiscussionTopicRepositoryTest {
         Optional<DiscussionTopicEntity> discussionTopicEntityRetrievedOptional = this.discussionTopicRepository.findById(4L);
         assertTrue(discussionTopicEntityRetrievedOptional.isPresent());
         DiscussionTopicEntity discussionTopicEntityRetrieved = discussionTopicEntityRetrievedOptional.get();
+        assertTrue(discussionTopicEntityRetrieved.isActive());
         assertEquals("Dandruff ke liye sabse acha shampoo kaun sa hai", discussionTopicEntityRetrieved.getTopic());
         assertEquals(3L, discussionTopicEntityRetrieved.getUserId());
         assertEquals(timestamp, discussionTopicEntity.getDatePosted());

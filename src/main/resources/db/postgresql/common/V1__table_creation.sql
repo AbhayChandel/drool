@@ -30,7 +30,7 @@ CREATE TABLE discussion_topic
     views            INT     default 0,
     likes            INT     default 0,
     replies          INT     default 0,
-    active           BOOLEAN default true NOT NULL,
+    active           boolean DEFAULT TRUE NOT NULL,
     CONSTRAINT discussion_topic_pk PRIMARY KEY (id)
 );
 
