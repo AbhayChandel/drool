@@ -17,6 +17,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.*;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -44,7 +46,7 @@ public class VideoViewsIT {
     @BeforeEach
     public void setUp() {
         VideoDoc videoDoc = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
-                new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"),
+                Arrays.asList(new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"), new ProductRef("pqr", "Chambor", "kajal"), new ProductRef("xyz", "Tom Ford Vetiver", "fragrance")),
                 new UserRef("123", "shabana"));
         populatedVideoId = this.mongoTemplate.insert(videoDoc).getId();
     }
@@ -62,9 +64,10 @@ public class VideoViewsIT {
         assertEquals("This video will be prepoulated for testing", videoDto.getTitle());
         assertEquals("This video is inserted as part of testing with MongoDB", videoDto.getDescription());
         assertEquals("vQ765gh", videoDto.getSourceId());
-        assertEquals("abc", videoDto.getProductRefDto().getId());
-        assertEquals("Lakme 9to5 Lipcolor", videoDto.getProductRefDto().getName());
-        assertEquals("lipcolor", videoDto.getProductRefDto().getType());
+        assertEquals(3, videoDto.getProductRefDtoList().size());
+        assertEquals("abc", videoDto.getProductRefDtoList().get(0).getId());
+        assertEquals("Lakme 9to5 Lipcolor", videoDto.getProductRefDtoList().get(0).getName());
+        assertEquals("lipcolor", videoDto.getProductRefDtoList().get(0).getType());
         assertEquals("123", videoDto.getUserRefDto().getId());
         assertEquals("shabana", videoDto.getUserRefDto().getUsername());
     }

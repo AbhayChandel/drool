@@ -24,19 +24,19 @@ public class VideoDto {
     private int likes;
     private int views;
 
-    @NotNull(message = "Product is not tagged for the video", groups = {VideoInsertValidation.class})
-    private ProductRefDto productRefDto;
+    @NotEmpty(message = "Product(s) are not tagged for the video", groups = {VideoInsertValidation.class})
+    private List<ProductRefDto> productRefDtoList;
 
     @NotNull(message = "User info is missing", groups = {VideoInsertValidation.class})
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
 
-    public VideoDto(String type, String title, String description, String sourceId, ProductRefDto productRefDto, UserRefDto userRefDto) {
+    public VideoDto(String type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
         this.description = description;
         this.sourceId = sourceId;
-        this.productRefDto = productRefDto;
+        this.productRefDtoList = productRefDtoList;
         this.userRefDto = userRefDto;
     }
 
@@ -107,12 +107,12 @@ public class VideoDto {
         this.views = views;
     }
 
-    public ProductRefDto getProductRefDto() {
-        return productRefDto;
+    public List<ProductRefDto> getProductRefDtoList() {
+        return productRefDtoList;
     }
 
-    public void setProductRefDto(ProductRefDto productRefDto) {
-        this.productRefDto = productRefDto;
+    public void setProductRefDtoList(List<ProductRefDto> productRefDtoList) {
+        this.productRefDtoList = productRefDtoList;
     }
 
     public UserRefDto getUserRefDto() {

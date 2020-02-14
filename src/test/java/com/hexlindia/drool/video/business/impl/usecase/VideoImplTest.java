@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +43,7 @@ class VideoImplTest {
     @Test
     void insert_PassingObjectToRepositoryLayer() {
         VideoDoc videoDocMock = new VideoDoc("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRef("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef("123", "shabana"));
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
         when(this.videoRepositoryMock.insert((VideoDoc) any())).thenReturn(videoDocMock);
@@ -53,9 +54,10 @@ class VideoImplTest {
         assertEquals("L'oreal Collosal Kajal Review", videoDocArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDocArgumentCaptor.getValue().getDescription());
         assertEquals("vQ765gh", videoDocArgumentCaptor.getValue().getSourceId());
-        assertEquals("abc", videoDocArgumentCaptor.getValue().getProductRef().getId());
-        assertEquals("Loreal Kajal", videoDocArgumentCaptor.getValue().getProductRef().getName());
-        assertEquals("kajal", videoDocArgumentCaptor.getValue().getProductRef().getType());
+        assertEquals(2, videoDocArgumentCaptor.getValue().getProductRefList().size());
+        assertEquals("abc", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getId());
+        assertEquals("Loreal Kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getName());
+        assertEquals("kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getType());
         assertEquals("123", videoDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", videoDocArgumentCaptor.getValue().getUserRef().getUsername());
     }
@@ -65,7 +67,7 @@ class VideoImplTest {
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(new VideoDoc());
         when(this.videoRepositoryMock.insert((VideoDoc) any())).thenReturn(new VideoDoc());
         VideoDto videoDtoMock = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         videoDtoMock.setId("456");
         when(this.videoDocDtoMapperMock.toDto(any())).thenReturn(videoDtoMock);

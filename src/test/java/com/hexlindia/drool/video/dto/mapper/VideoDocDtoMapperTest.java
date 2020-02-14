@@ -25,9 +25,8 @@ class VideoDocDtoMapperTest {
 
     @Test
     void toDoc() {
-        ProductRefDto productRefDto = new ProductRefDto("p123", "Carolina Herrera 212", "fragrance");
         UserRefDto userRefDto = new UserRefDto("u1123", "User123");
-        VideoDto videoDto = new VideoDto("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", productRefDto, userRefDto);
+        VideoDto videoDto = new VideoDto("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRefDto("p123", "Carolina Herrera 212", "fragrance")), userRefDto);
         videoDto.setActive(true);
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
 
@@ -36,9 +35,9 @@ class VideoDocDtoMapperTest {
         assertEquals("Review of Carolina Herrera 212", videoDoc.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDoc.getDescription());
         assertEquals("ch212", videoDoc.getSourceId());
-        assertEquals("p123", videoDoc.getProductRef().getId());
-        assertEquals("Carolina Herrera 212", videoDoc.getProductRef().getName());
-        assertEquals("fragrance", videoDoc.getProductRef().getType());
+        assertEquals("p123", videoDoc.getProductRefList().get(0).getId());
+        assertEquals("Carolina Herrera 212", videoDoc.getProductRefList().get(0).getName());
+        assertEquals("fragrance", videoDoc.getProductRefList().get(0).getType());
         assertEquals("u1123", videoDoc.getUserRef().getId());
         assertEquals("User123", videoDoc.getUserRef().getUsername());
     }
@@ -46,9 +45,8 @@ class VideoDocDtoMapperTest {
     @Test
     void toDto() {
 
-        ProductRef productRef = new ProductRef("p123", "Carolina Herrera 212", "fragrance");
         UserRef userRef = new UserRef("u1123", "User123");
-        VideoDoc videoDoc = new VideoDoc("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", productRef, userRef);
+        VideoDoc videoDoc = new VideoDoc("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRef("p123", "Carolina Herrera 212", "fragrance")), userRef);
         videoDoc.setActive(false);
         videoDoc.setId("v123");
         VideoComment videoComment13 = new VideoComment(new UserRef("2", "priya21"), LocalDateTime.now(), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
@@ -64,9 +62,9 @@ class VideoDocDtoMapperTest {
         assertEquals("Review of Carolina Herrera 212", videoDto.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDto.getDescription());
         assertEquals("ch212", videoDto.getSourceId());
-        assertEquals("p123", videoDto.getProductRefDto().getId());
-        assertEquals("Carolina Herrera 212", videoDto.getProductRefDto().getName());
-        assertEquals("fragrance", videoDto.getProductRefDto().getType());
+        assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
+        assertEquals("Carolina Herrera 212", videoDto.getProductRefDtoList().get(0).getName());
+        assertEquals("fragrance", videoDto.getProductRefDtoList().get(0).getType());
         assertEquals("u1123", videoDto.getUserRefDto().getId());
         assertEquals("User123", videoDto.getUserRefDto().getUsername());
         assertEquals(2, videoDto.getVideoCommentDtoList().size());

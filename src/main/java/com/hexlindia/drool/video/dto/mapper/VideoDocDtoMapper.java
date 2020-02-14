@@ -8,11 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {ProductRefMapper.class, UserRefMapper.class, VideoCommentMapper.class})
 public interface VideoDocDtoMapper {
 
-    @Mapping(target = "productRef", source = "productRefDto")
+    @Mapping(target = "productRefList", source = "productRefDtoList")
     @Mapping(target = "userRef", source = "userRefDto")
     VideoDoc toDoc(VideoDto videoDto);
 
-    @Mapping(target = "productRefDto", source = "productRef")
+    @Mapping(target = "productRefDtoList", source = "productRefList")
     @Mapping(target = "userRefDto", source = "userRef")
     @Mapping(target = "videoCommentDtoList", source = "videoCommentList")
     VideoDto toDto(VideoDoc videoDoc);

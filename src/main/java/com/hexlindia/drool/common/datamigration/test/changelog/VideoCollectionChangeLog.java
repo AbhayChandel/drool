@@ -31,7 +31,7 @@ public class VideoCollectionChangeLog {
                 "music- Song: Hold Me Majestic Color\n" +
                 "Music promoted by Majestic Casual\n" +
                 "Video Link: https://youtu.be/vf_S0-V6wTE", "AU3h3qPK2tU",
-                new ProductRef("p123", "Blue De Chanel Eau De Parfum", "fragrance"),
+                Arrays.asList(new ProductRef("p123", "Blue De Chanel Eau De Parfum", "fragrance")),
                 new UserRef("1", "shabana"));
         videoDoc1.setLikes(4000);
         videoDoc1.setViews(124308);
@@ -78,7 +78,7 @@ public class VideoCollectionChangeLog {
                 "Xoxo\n" +
                 "\n" +
                 "All the contents (from thumbnail to video) have been created by me,Deepanwita Dutta©. Don't use anything without my permission.The information provided on this channel and its videos is for general purposes only and shouldn't be conisidered as proffesional advice. We are trying to provide a perfect, valid, specific, detail information.Make Sure to Do a patch test each time before trying a new product or any kind Of DIY. \uD83D\uDE18Thanks for watching \uD83D\uDE18", "QW46ldTDiBY",
-                new ProductRef("p123", "L O'real Clossal Eyeliner", "eyeliner"),
+                Arrays.asList(new ProductRef("p123", "L O'real Clossal Eyeliner", "eyeliner"), new ProductRef("p456", "Chambor Black Eyeliner", "eyeliner")),
                 new UserRef("456", "priyanaka"));
         videoDoc2.setLikes(29000);
         videoDoc2.setViews(3718868);

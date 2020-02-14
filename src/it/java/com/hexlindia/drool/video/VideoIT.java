@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,10 +61,17 @@ public class VideoIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
-        JSONObject ProductRefDto = new JSONObject();
-        ProductRefDto.put("id", "p123");
-        ProductRefDto.put("name", "Tom Ford Vetiver");
-        ProductRefDto.put("type", "Fragrance");
+        JSONObject productRefDto1 = new JSONObject();
+        productRefDto1.put("id", "p123");
+        productRefDto1.put("name", "Tom Ford Vetiver");
+        productRefDto1.put("type", "Fragrance");
+        JSONObject productRefDto2 = new JSONObject();
+        productRefDto2.put("id", "p456");
+        productRefDto2.put("name", "Tom Ford Black");
+        productRefDto2.put("type", "Fragrance");
+        JSONArray productRefDtoList = new JSONArray();
+        productRefDtoList.put(productRefDto1);
+        productRefDtoList.put(productRefDto2);
         JSONObject UserRefDto = new JSONObject();
         UserRefDto.put("id", "u123");
         UserRefDto.put("username", "user123");
@@ -72,7 +80,7 @@ public class VideoIT {
         videoDoc.put("title", "Review for Tom Ford Vetiver");
         videoDoc.put("description", "This is an honest review of Tom Ford Vetiver");
         videoDoc.put("sourceId", "s123");
-        videoDoc.put("productRefDto", ProductRefDto);
+        videoDoc.put("productRefDtoList", productRefDtoList);
         videoDoc.put("userRefDto", UserRefDto);
 
         HttpEntity<String> request = new HttpEntity<>(videoDoc.toString(), headers);
@@ -85,9 +93,10 @@ public class VideoIT {
         assertEquals("Review for Tom Ford Vetiver", videoDto.getTitle());
         assertEquals("This is an honest review of Tom Ford Vetiver", videoDto.getDescription());
         assertEquals("s123", videoDto.getSourceId());
-        assertEquals("p123", videoDto.getProductRefDto().getId());
-        assertEquals("Tom Ford Vetiver", videoDto.getProductRefDto().getName());
-        assertEquals("Fragrance", videoDto.getProductRefDto().getType());
+        assertEquals(2, videoDto.getProductRefDtoList().size());
+        assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
+        assertEquals("Tom Ford Vetiver", videoDto.getProductRefDtoList().get(0).getName());
+        assertEquals("Fragrance", videoDto.getProductRefDtoList().get(0).getType());
         assertEquals("u123", videoDto.getUserRefDto().getId());
         assertEquals("user123", videoDto.getUserRefDto().getUsername());
     }
