@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;
-import org.flywaydb.test.annotation.FlywayTest;
-import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
-@FlywayTestExtension
-@FlywayTest
 public class VideoIT {
 
     @Value("${rest.uri.version}")
