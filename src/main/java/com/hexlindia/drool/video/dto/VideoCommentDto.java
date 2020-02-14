@@ -36,4 +36,20 @@ public class VideoCommentDto {
     public int getLikes() {
         return likes;
     }
+
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
+    }
+
+    public void setDatePosted(LocalDateTime datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 }

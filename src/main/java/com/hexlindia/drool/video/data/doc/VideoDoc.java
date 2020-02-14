@@ -75,4 +75,40 @@ public class VideoDoc {
     public List<VideoComment> getVideoCommentList() {
         return videoCommentList;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public void setProductRef(ProductRef productRef) {
+        this.productRef = productRef;
+    }
+
+    public void setUserRef(UserRef userRef) {
+        this.userRef = userRef;
+    }
+
+    public void setVideoCommentList(List<VideoComment> videoCommentList) {
+        this.videoCommentList = videoCommentList;
+    }
 }

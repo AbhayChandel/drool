@@ -29,6 +29,42 @@ public class VideoDto {
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public void setProductRefDto(ProductRefDto productRefDto) {
+        this.productRefDto = productRefDto;
+    }
+
+    public void setUserRefDto(UserRefDto userRefDto) {
+        this.userRefDto = userRefDto;
+    }
+
+    public void setVideoCommentDtoList(List<VideoCommentDto> videoCommentDtoList) {
+        this.videoCommentDtoList = videoCommentDtoList;
+    }
+
     public VideoDto(String type, String title, String description, String sourceId, ProductRefDto productRefDto, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
@@ -84,4 +120,6 @@ public class VideoDto {
     public List<VideoCommentDto> getVideoCommentDtoList() {
         return videoCommentDtoList;
     }
+
+
 }
