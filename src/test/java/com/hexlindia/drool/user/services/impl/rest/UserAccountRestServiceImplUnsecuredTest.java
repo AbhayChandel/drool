@@ -146,7 +146,7 @@ class UserAccountRestServiceImplUnsecuredTest {
                 .andExpect(status().is5xxServerError())
                 .andReturn();
 
-        assertEquals("Not able to register user at this time. Try again in some time.", mvcResult.getResponse().getContentAsString());
+        assertEquals("Not able to perform action at this time. Try again in some time.", mvcResult.getResponse().getContentAsString());
     }
 
 

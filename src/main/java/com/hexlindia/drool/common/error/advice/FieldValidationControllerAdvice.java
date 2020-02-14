@@ -21,7 +21,7 @@ public class FieldValidationControllerAdvice {
     ErrorResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ErrorResult errorResult = new ErrorResult();
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-            log.error("Validation exception for field {0}: {1}", fieldError.getField(), fieldError.getDefaultMessage());
+            log.error("Validation exception for field {}: {}", fieldError.getField(), fieldError.getDefaultMessage());
             errorResult.getFieldValidationErrors()
                     .add(new FieldValidationError(fieldError.getField(),
                             fieldError.getDefaultMessage()));
