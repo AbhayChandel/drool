@@ -4,7 +4,6 @@ import com.hexlindia.drool.user.exception.UserAccountNotFoundException;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
 import com.hexlindia.drool.user.services.impl.rest.JwtUserAuthenticationRestServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,13 +22,13 @@ public class UserAuthenticationRestServiceAdvice {
         return "Wrong Username or Password";
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
     @ResponseBody
     String handleMethodArgumentNotValidException(DataAccessException e) {
         log.error("DataAccessException is thrown with following message: {}" + e.getMessage());
         return "Not able to register user at this time. Try again in some time.";
-    }
+    }*/
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserAccountNotFoundException.class)

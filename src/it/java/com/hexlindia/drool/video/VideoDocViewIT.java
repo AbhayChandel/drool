@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @FlywayTestExtension
 @FlywayTest
-public class VideoViewIT {
+public class VideoDocViewIT {
 
     @Value("${rest.uri.version}")
     String restUriVersion;

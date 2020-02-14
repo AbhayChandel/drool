@@ -46,7 +46,7 @@ class UserAccountIT {
         HttpEntity<String> request = new HttpEntity<>(userRegistrationDetails.toString(), headers);
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(500, responseEntity.getStatusCodeValue());
-        assertEquals("Not able to register user at this time. Try again in some time.", responseEntity.getBody());
+        assertEquals("Not able to perform action at this time. Try again in some time.", responseEntity.getBody());
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/priyanka99", HttpMethod.GET, httpEntity, String.class);
@@ -69,7 +69,7 @@ class UserAccountIT {
         HttpEntity<String> request = new HttpEntity<>(userRegistrationDetails.toString(), headers);
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(500, responseEntity.getStatusCodeValue());
-        assertEquals("Not able to register user at this time. Try again in some time.", responseEntity.getBody());
+        assertEquals("Not able to perform action at this time. Try again in some time.", responseEntity.getBody());
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/priyanka11@gmail.com", HttpMethod.GET, httpEntity, String.class);
