@@ -13,6 +13,8 @@ public class VideoDto {
     @NotEmpty(message = "Video type is missing", groups = {VideoInsertValidation.class})
     private String type;
 
+    private boolean active;
+
     @NotEmpty(message = "Video title is missing", groups = {VideoInsertValidation.class})
     private String title;
     private String description;
@@ -29,42 +31,6 @@ public class VideoDto {
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
-
-    public void setProductRefDto(ProductRefDto productRefDto) {
-        this.productRefDto = productRefDto;
-    }
-
-    public void setUserRefDto(UserRefDto userRefDto) {
-        this.userRefDto = userRefDto;
-    }
-
-    public void setVideoCommentDtoList(List<VideoCommentDto> videoCommentDtoList) {
-        this.videoCommentDtoList = videoCommentDtoList;
-    }
-
     public VideoDto(String type, String title, String description, String sourceId, ProductRefDto productRefDto, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
@@ -77,49 +43,91 @@ public class VideoDto {
     public VideoDto() {
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getSourceId() {
         return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
     public int getLikes() {
         return likes;
     }
 
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     public int getViews() {
         return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 
     public ProductRefDto getProductRefDto() {
         return productRefDto;
     }
 
+    public void setProductRefDto(ProductRefDto productRefDto) {
+        this.productRefDto = productRefDto;
+    }
+
     public UserRefDto getUserRefDto() {
         return userRefDto;
+    }
+
+    public void setUserRefDto(UserRefDto userRefDto) {
+        this.userRefDto = userRefDto;
     }
 
     public List<VideoCommentDto> getVideoCommentDtoList() {
         return videoCommentDtoList;
     }
 
-
+    public void setVideoCommentDtoList(List<VideoCommentDto> videoCommentDtoList) {
+        this.videoCommentDtoList = videoCommentDtoList;
+    }
 }
