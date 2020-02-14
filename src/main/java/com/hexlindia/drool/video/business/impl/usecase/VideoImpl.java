@@ -33,7 +33,7 @@ public class VideoImpl implements Video {
     }
 
     private VideoDoc findInRepository(String action, String id) {
-        Optional<VideoDoc> videoDocOptional = videoRepository.findById(id);
+        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(id);
         if (videoDocOptional.isPresent()) {
             return videoDocOptional.get();
         }

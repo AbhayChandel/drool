@@ -11,6 +11,7 @@ public class VideoDoc {
     @Id
     private String id;
     private String type;
+    private boolean active;
     private String title;
     private String description;
     private String sourceId;
@@ -22,6 +23,7 @@ public class VideoDoc {
 
     public VideoDoc(String type, String title, String description, String sourceId, ProductRef productRef, UserRef userRef) {
         this.type = type;
+        this.active = true;
         this.title = title;
         this.description = description;
         this.sourceId = sourceId;
@@ -44,68 +46,76 @@ public class VideoDoc {
         return type;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getSourceId() {
-        return sourceId;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public ProductRef getProductRef() {
-        return productRef;
-    }
-
-    public UserRef getUserRef() {
-        return userRef;
-    }
-
-    public List<VideoComment> getVideoCommentList() {
-        return videoCommentList;
-    }
-
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSourceId() {
+        return sourceId;
     }
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public int getViews() {
+        return views;
     }
 
     public void setViews(int views) {
         this.views = views;
     }
 
+    public ProductRef getProductRef() {
+        return productRef;
+    }
+
     public void setProductRef(ProductRef productRef) {
         this.productRef = productRef;
     }
 
+    public UserRef getUserRef() {
+        return userRef;
+    }
+
     public void setUserRef(UserRef userRef) {
         this.userRef = userRef;
+    }
+
+    public List<VideoComment> getVideoCommentList() {
+        return videoCommentList;
     }
 
     public void setVideoCommentList(List<VideoComment> videoCommentList) {

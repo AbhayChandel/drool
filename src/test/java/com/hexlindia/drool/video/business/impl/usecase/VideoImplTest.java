@@ -76,16 +76,16 @@ class VideoImplTest {
 
     @Test
     void findById_testPassingEntityToRepository() {
-        when(this.videoRepositoryMock.findById("abc")).thenReturn(Optional.of(new VideoDoc()));
+        when(this.videoRepositoryMock.findByIdAndActiveTrue("abc")).thenReturn(Optional.of(new VideoDoc()));
         videoImplSpy.findById("abc");
         ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(videoRepositoryMock, times(1)).findById(idArgumentCaptor.capture());
+        verify(videoRepositoryMock, times(1)).findByIdAndActiveTrue(idArgumentCaptor.capture());
         assertEquals("abc", idArgumentCaptor.getValue());
     }
 
     @Test
     void findById_testFindUnavailableVideo() {
-        when(this.videoRepositoryMock.findById("abc")).thenReturn(Optional.empty());
+        when(this.videoRepositoryMock.findByIdAndActiveTrue("abc")).thenReturn(Optional.empty());
         Assertions.assertThrows(VideoNotFoundException.class, () -> videoImplSpy.findById("abc"));
     }
 
