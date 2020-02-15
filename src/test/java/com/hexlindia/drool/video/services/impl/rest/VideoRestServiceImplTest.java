@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -62,7 +64,7 @@ class VideoRestServiceImplTest {
     @Test
     void insert_missingParameterType() throws Exception {
         VideoDto videoDto = new VideoDto("", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -79,7 +81,7 @@ class VideoRestServiceImplTest {
     @Test
     void insert_missingParameterTitle() throws Exception {
         VideoDto videoDto = new VideoDto("review", "", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -96,7 +98,7 @@ class VideoRestServiceImplTest {
     @Test
     void insert_missingParameterSourceId() throws Exception {
         VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -113,7 +115,7 @@ class VideoRestServiceImplTest {
     @Test
     void insert_missingParameterProductRef() throws Exception {
         VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                null,
+                Arrays.asList(),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -123,14 +125,14 @@ class VideoRestServiceImplTest {
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
         ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
-        assertEquals("productRefDto", responseErrorResult.getFieldValidationErrors().get(0).getField());
-        assertEquals("Product is not tagged for the video", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+        assertEquals("productRefDtoList", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Product(s) are not tagged for the video", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
     }
 
     @Test
     void insert_missingParameterUserRef() throws Exception {
         VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 null);
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -148,7 +150,7 @@ class VideoRestServiceImplTest {
     void insert_ParametersArePassedToBusinessLayer() throws Exception {
         when(this.videoMock.insert(any())).thenReturn(null);
         VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
         this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
@@ -160,9 +162,9 @@ class VideoRestServiceImplTest {
         assertEquals("L'oreal Collosal Kajal Review", videoDtoArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDtoArgumentCaptor.getValue().getDescription());
         assertEquals("vQ765gh", videoDtoArgumentCaptor.getValue().getSourceId());
-        assertEquals("abc", videoDtoArgumentCaptor.getValue().getProductRefDto().getId());
-        assertEquals("Loreal Kajal", videoDtoArgumentCaptor.getValue().getProductRefDto().getName());
-        assertEquals("kajal", videoDtoArgumentCaptor.getValue().getProductRefDto().getType());
+        assertEquals("abc", videoDtoArgumentCaptor.getValue().getProductRefDtoList().get(0).getId());
+        assertEquals("Loreal Kajal", videoDtoArgumentCaptor.getValue().getProductRefDtoList().get(0).getName());
+        assertEquals("kajal", videoDtoArgumentCaptor.getValue().getProductRefDtoList().get(0).getType());
         assertEquals("123", videoDtoArgumentCaptor.getValue().getUserRefDto().getId());
         assertEquals("shabana", videoDtoArgumentCaptor.getValue().getUserRefDto().getUsername());
     }
@@ -170,7 +172,7 @@ class VideoRestServiceImplTest {
     @Test
     void insert_errorInInsertingVideo() throws Exception {
         VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                new ProductRefDto("abc", "Loreal Kajal", "kajal"),
+                Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         doThrow(new DataIntegrityViolationException("")).when(this.videoMock).insert(any());
         String requestBody = objectMapper.writeValueAsString(videoDto);

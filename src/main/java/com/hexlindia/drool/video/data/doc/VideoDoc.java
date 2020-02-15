@@ -17,17 +17,17 @@ public class VideoDoc {
     private String sourceId;
     private int likes;
     private int views;
-    private ProductRef productRef;
+    private List<ProductRef> productRefList;
     private UserRef userRef;
     private List<VideoComment> videoCommentList;
 
-    public VideoDoc(String type, String title, String description, String sourceId, ProductRef productRef, UserRef userRef) {
+    public VideoDoc(String type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
         this.type = type;
         this.active = true;
         this.title = title;
         this.description = description;
         this.sourceId = sourceId;
-        this.productRef = productRef;
+        this.productRefList = productRefList;
         this.userRef = userRef;
     }
 
@@ -98,12 +98,12 @@ public class VideoDoc {
         this.views = views;
     }
 
-    public ProductRef getProductRef() {
-        return productRef;
+    public List<ProductRef> getProductRefList() {
+        return productRefList;
     }
 
-    public void setProductRef(ProductRef productRef) {
-        this.productRef = productRef;
+    public void setProductRefList(List<ProductRef> productRefList) {
+        this.productRefList = productRefList;
     }
 
     public UserRef getUserRef() {

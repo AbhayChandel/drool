@@ -11,6 +11,9 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,8 +37,11 @@ public class VideoDocRepositoryTest {
     public void test_Insert() {
 
 
+        ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
+        ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
+        List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
         VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
-                new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"),
+                productRefList,
                 new UserRef("123", "shabana"));
         videoDoc = videoRepository.insert(videoDoc);
         Assert.notNull(videoDoc.getId(), "");
@@ -53,12 +59,15 @@ public class VideoDocRepositoryTest {
 
     @BeforeEach
     public void setUp() {
+        ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
+        ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
+        List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
         VideoDoc videoDocActive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
-                new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"),
+                productRefList,
                 new UserRef("123", "shabana"));
 
         VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
-                new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"),
+                productRefList,
                 new UserRef("123", "shabana"));
         videoDocInactive.setActive(false);
         populatedActiveVideoId = this.mongoTemplate.insert(videoDocActive).getId();

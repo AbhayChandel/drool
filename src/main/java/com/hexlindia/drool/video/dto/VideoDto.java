@@ -21,22 +21,22 @@ public class VideoDto {
 
     @NotEmpty(message = "Video Source ID is missing", groups = {VideoInsertValidation.class})
     private String sourceId;
-    private int likes;
-    private int views;
+    private String likes;
+    private String views;
 
-    @NotNull(message = "Product is not tagged for the video", groups = {VideoInsertValidation.class})
-    private ProductRefDto productRefDto;
+    @NotEmpty(message = "Product(s) are not tagged for the video", groups = {VideoInsertValidation.class})
+    private List<ProductRefDto> productRefDtoList;
 
     @NotNull(message = "User info is missing", groups = {VideoInsertValidation.class})
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
 
-    public VideoDto(String type, String title, String description, String sourceId, ProductRefDto productRefDto, UserRefDto userRefDto) {
+    public VideoDto(String type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
         this.description = description;
         this.sourceId = sourceId;
-        this.productRefDto = productRefDto;
+        this.productRefDtoList = productRefDtoList;
         this.userRefDto = userRefDto;
     }
 
@@ -91,28 +91,28 @@ public class VideoDto {
         this.sourceId = sourceId;
     }
 
-    public int getLikes() {
+    public String getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(String likes) {
         this.likes = likes;
     }
 
-    public int getViews() {
+    public String getViews() {
         return views;
     }
 
-    public void setViews(int views) {
+    public void setViews(String views) {
         this.views = views;
     }
 
-    public ProductRefDto getProductRefDto() {
-        return productRefDto;
+    public List<ProductRefDto> getProductRefDtoList() {
+        return productRefDtoList;
     }
 
-    public void setProductRefDto(ProductRefDto productRefDto) {
-        this.productRefDto = productRefDto;
+    public void setProductRefDtoList(List<ProductRefDto> productRefDtoList) {
+        this.productRefDtoList = productRefDtoList;
     }
 
     public UserRefDto getUserRefDto() {

@@ -1,15 +1,13 @@
 package com.hexlindia.drool.video.dto;
 
-import java.time.LocalDateTime;
-
 public class VideoCommentDto {
 
     private UserRefDto userRefDto;
-    private LocalDateTime datePosted;
+    private String datePosted;
     private String comment;
-    private int likes;
+    private String likes;
 
-    public VideoCommentDto(UserRefDto userRefDto, LocalDateTime datePosted, String comment, int likes) {
+    public VideoCommentDto(UserRefDto userRefDto, String datePosted, String comment, String likes) {
         this.userRefDto = userRefDto;
         this.datePosted = datePosted;
         this.comment = comment;
@@ -27,11 +25,11 @@ public class VideoCommentDto {
         this.userRefDto = userRefDto;
     }
 
-    public LocalDateTime getDatePosted() {
+    public String getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(LocalDateTime datePosted) {
+    public void setDatePosted(String datePosted) {
         this.datePosted = datePosted;
     }
 
@@ -43,11 +41,11 @@ public class VideoCommentDto {
         this.comment = comment;
     }
 
-    public int getLikes() {
+    public String getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(String likes) {
         this.likes = likes;
     }
 }
