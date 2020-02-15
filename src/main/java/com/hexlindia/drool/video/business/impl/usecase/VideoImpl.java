@@ -2,32 +2,31 @@ package com.hexlindia.drool.video.business.impl.usecase;
 
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Component
 public class VideoImpl implements Video {
 
     private final VideoDocDtoMapper videoDocDtoMapper;
 
-    private final VideoRepository videoRepository;
+    private final VideoTemplateRepository videoTemplateRepository;
 
-    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoRepository videoRepository) {
+    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository) {
         this.videoDocDtoMapper = videoDocDtoMapper;
-        this.videoRepository = videoRepository;
+        this.videoTemplateRepository = videoTemplateRepository;
     }
 
     @Override
     public VideoDto insert(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
         videoDoc.setDatePosted(LocalDateTime.now());
-        return videoDocDtoMapper.toDto(videoRepository.insert(videoDoc));
+        return videoDocDtoMapper.toDto(videoTemplateRepository.insert(videoDoc));
     }
 
     @Override
@@ -36,9 +35,9 @@ public class VideoImpl implements Video {
     }
 
     private VideoDoc findInRepository(String action, String id) {
-        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(id);
-        if (videoDocOptional.isPresent()) {
-            return videoDocOptional.get();
+        VideoDoc videoDoc = videoTemplateRepository.findByIdAndActiveTrue(id);
+        if (videoDoc != null) {
+            return videoDoc;
         }
         StringBuilder errorMessage = new StringBuilder(action);
         errorMessage.append(" failed. Video with id " + id + " not found");
