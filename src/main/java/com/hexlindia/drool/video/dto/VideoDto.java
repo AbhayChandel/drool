@@ -21,8 +21,8 @@ public class VideoDto {
 
     @NotEmpty(message = "Video Source ID is missing", groups = {VideoInsertValidation.class})
     private String sourceId;
-    private int likes;
-    private int views;
+    private String likes;
+    private String views;
 
     @NotEmpty(message = "Product(s) are not tagged for the video", groups = {VideoInsertValidation.class})
     private List<ProductRefDto> productRefDtoList;
@@ -91,19 +91,19 @@ public class VideoDto {
         this.sourceId = sourceId;
     }
 
-    public int getLikes() {
+    public String getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(String likes) {
         this.likes = likes;
     }
 
-    public int getViews() {
+    public String getViews() {
         return views;
     }
 
-    public void setViews(int views) {
+    public void setViews(String views) {
         this.views = views;
     }
 

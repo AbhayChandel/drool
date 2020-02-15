@@ -49,10 +49,12 @@ class VideoDocDtoMapperTest {
         VideoDoc videoDoc = new VideoDoc("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRef("p123", "Carolina Herrera 212", "fragrance")), userRef);
         videoDoc.setActive(false);
         videoDoc.setId("v123");
+        videoDoc.setViews(94587656);
+        videoDoc.setLikes(1546);
         VideoComment videoComment13 = new VideoComment(new UserRef("2", "priya21"), LocalDateTime.now(), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
-        videoComment13.setLikes(133);
+        videoComment13.setLikes(13333);
         VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
-        videoComment14.setLikes(76);
+        videoComment14.setLikes(760000);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment13, videoComment14);
         videoDoc.setVideoCommentList(videoCommentList1);
         VideoDto videoDto = videoDocDtoMapper.toDto(videoDoc);
@@ -62,11 +64,15 @@ class VideoDocDtoMapperTest {
         assertEquals("Review of Carolina Herrera 212", videoDto.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDto.getDescription());
         assertEquals("ch212", videoDto.getSourceId());
+        assertEquals("94.5M", videoDto.getViews());
+        assertEquals("1.5k", videoDto.getLikes());
         assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
         assertEquals("Carolina Herrera 212", videoDto.getProductRefDtoList().get(0).getName());
         assertEquals("fragrance", videoDto.getProductRefDtoList().get(0).getType());
         assertEquals("u1123", videoDto.getUserRefDto().getId());
         assertEquals("User123", videoDto.getUserRefDto().getUsername());
         assertEquals(2, videoDto.getVideoCommentDtoList().size());
+        assertEquals("13.3k", videoDto.getVideoCommentDtoList().get(0).getLikes());
+        assertEquals("760k", videoDto.getVideoCommentDtoList().get(1).getLikes());
     }
 }
