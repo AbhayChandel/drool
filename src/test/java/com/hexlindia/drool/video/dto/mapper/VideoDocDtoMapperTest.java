@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,9 +52,12 @@ class VideoDocDtoMapperTest {
         videoDoc.setId("v123");
         videoDoc.setViews(94587656);
         videoDoc.setLikes(1546);
-        VideoComment videoComment13 = new VideoComment(new UserRef("2", "priya21"), LocalDateTime.now(), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        videoDoc.setDatePosted(LocalDateTime.parse("2020-02-04 19:00", formatter));
+
+        VideoComment videoComment13 = new VideoComment(new UserRef("2", "priya21"), LocalDateTime.parse("2020-02-05 09:00", formatter), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
         videoComment13.setLikes(13333);
-        VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
+        VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.parse("2020-02-15 21:30", formatter), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
         videoComment14.setLikes(760000);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment13, videoComment14);
         videoDoc.setVideoCommentList(videoCommentList1);
@@ -64,6 +68,7 @@ class VideoDocDtoMapperTest {
         assertEquals("Review of Carolina Herrera 212", videoDto.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDto.getDescription());
         assertEquals("ch212", videoDto.getSourceId());
+        assertEquals("4 Feb, 2020", videoDto.getDatePosted());
         assertEquals("94.5M", videoDto.getViews());
         assertEquals("1.5k", videoDto.getLikes());
         assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
@@ -73,6 +78,8 @@ class VideoDocDtoMapperTest {
         assertEquals("User123", videoDto.getUserRefDto().getUsername());
         assertEquals(2, videoDto.getVideoCommentDtoList().size());
         assertEquals("13.3k", videoDto.getVideoCommentDtoList().get(0).getLikes());
+        assertEquals("5 Feb, 2020 9:00 AM", videoDto.getVideoCommentDtoList().get(0).getDatePosted());
         assertEquals("760k", videoDto.getVideoCommentDtoList().get(1).getLikes());
+        assertEquals("15 Feb, 2020 9:30 PM", videoDto.getVideoCommentDtoList().get(1).getDatePosted());
     }
 }

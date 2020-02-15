@@ -65,12 +65,15 @@ public class VideoDocRepositoryTest {
         VideoDoc videoDocActive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
+        videoDocActive.setActive(true);
+        videoDocActive = this.mongoTemplate.insert(videoDocActive);
+        populatedActiveVideoId = videoDocActive.getId();
 
         VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
         videoDocInactive.setActive(false);
-        populatedActiveVideoId = this.mongoTemplate.insert(videoDocActive).getId();
+
         populatedInactiveVideoId = this.mongoTemplate.insert(videoDocInactive).getId();
 
     }

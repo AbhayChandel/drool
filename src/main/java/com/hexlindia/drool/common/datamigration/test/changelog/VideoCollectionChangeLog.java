@@ -35,6 +35,8 @@ public class VideoCollectionChangeLog {
                 new UserRef("1", "shabana"));
         videoDoc1.setLikes(4000);
         videoDoc1.setViews(124308);
+        videoDoc1.setActive(true);
+        videoDoc1.setDatePosted(LocalDateTime.now());
 
         VideoComment videoComment11 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "ALSO pls stop this behaviour, you can't look this good ok, teach me makeup");
         videoComment11.setLikes(368);
@@ -82,6 +84,8 @@ public class VideoCollectionChangeLog {
                 new UserRef("456", "priyanaka"));
         videoDoc2.setLikes(29000);
         videoDoc2.setViews(3718868);
+        videoDoc2.setActive(true);
+        videoDoc2.setDatePosted(LocalDateTime.now());
 
         VideoComment videoComment21 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "It looks fine on camera but we all know how in reality a lighter foundation makes us look. It definitely makes us grey or look whitish");
         videoComment21.setLikes(10);

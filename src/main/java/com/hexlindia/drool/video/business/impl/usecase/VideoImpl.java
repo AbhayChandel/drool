@@ -8,6 +8,7 @@ import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -24,7 +25,9 @@ public class VideoImpl implements Video {
 
     @Override
     public VideoDto insert(VideoDto videoDto) {
-        return videoDocDtoMapper.toDto(videoRepository.insert(videoDocDtoMapper.toDoc(videoDto)));
+        VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
+        videoDoc.setDatePosted(LocalDateTime.now());
+        return videoDocDtoMapper.toDto(videoRepository.insert(videoDoc));
     }
 
     @Override
