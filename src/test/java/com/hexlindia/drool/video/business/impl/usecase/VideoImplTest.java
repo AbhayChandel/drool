@@ -3,7 +3,7 @@ package com.hexlindia.drool.video.business.impl.usecase;
 import com.hexlindia.drool.video.data.doc.ProductRef;
 import com.hexlindia.drool.video.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.ProductRefDto;
 import com.hexlindia.drool.video.dto.UserRefDto;
 import com.hexlindia.drool.video.dto.VideoDto;
@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,11 +32,11 @@ class VideoImplTest {
     private VideoDocDtoMapper videoDocDtoMapperMock;
 
     @Mock
-    private VideoRepository videoRepositoryMock;
+    private VideoTemplateRepository videoTemplateRepository;
 
     @BeforeEach
     void setUp() {
-        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoRepositoryMock));
+        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoTemplateRepository));
     }
 
     @Test
@@ -46,10 +45,10 @@ class VideoImplTest {
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef("123", "shabana"));
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoRepositoryMock.insert((VideoDoc) any())).thenReturn(videoDocMock);
+        when(this.videoTemplateRepository.insert((VideoDoc) any())).thenReturn(videoDocMock);
         this.videoImplSpy.insert(null);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
-        verify(this.videoRepositoryMock, times(1)).insert(videoDocArgumentCaptor.capture());
+        verify(this.videoTemplateRepository, times(1)).insert(videoDocArgumentCaptor.capture());
         assertEquals("review", videoDocArgumentCaptor.getValue().getType());
         assertEquals("L'oreal Collosal Kajal Review", videoDocArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDocArgumentCaptor.getValue().getDescription());
@@ -65,7 +64,7 @@ class VideoImplTest {
     @Test
     void insert_ObjectReturnedFromRepositoryLayerIsReceived() {
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(new VideoDoc());
-        when(this.videoRepositoryMock.insert((VideoDoc) any())).thenReturn(new VideoDoc());
+        when(this.videoTemplateRepository.insert((VideoDoc) any())).thenReturn(new VideoDoc());
         VideoDto videoDtoMock = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
@@ -78,16 +77,16 @@ class VideoImplTest {
 
     @Test
     void findById_testPassingEntityToRepository() {
-        when(this.videoRepositoryMock.findByIdAndActiveTrue("abc")).thenReturn(Optional.of(new VideoDoc()));
+        when(this.videoTemplateRepository.findByIdAndActiveTrue("abc")).thenReturn(new VideoDoc());
         videoImplSpy.findById("abc");
         ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(videoRepositoryMock, times(1)).findByIdAndActiveTrue(idArgumentCaptor.capture());
+        verify(videoTemplateRepository, times(1)).findByIdAndActiveTrue(idArgumentCaptor.capture());
         assertEquals("abc", idArgumentCaptor.getValue());
     }
 
     @Test
     void findById_testFindUnavailableVideo() {
-        when(this.videoRepositoryMock.findByIdAndActiveTrue("abc")).thenReturn(Optional.empty());
+        when(this.videoTemplateRepository.findByIdAndActiveTrue("abc")).thenReturn(null);
         Assertions.assertThrows(VideoNotFoundException.class, () -> videoImplSpy.findById("abc"));
     }
 
