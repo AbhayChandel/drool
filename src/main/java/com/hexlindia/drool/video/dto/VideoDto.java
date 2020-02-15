@@ -21,6 +21,7 @@ public class VideoDto {
 
     @NotEmpty(message = "Video Source ID is missing", groups = {VideoInsertValidation.class})
     private String sourceId;
+    private String datePosted;
     private String likes;
     private String views;
 
@@ -89,6 +90,14 @@ public class VideoDto {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(String datePosted) {
+        this.datePosted = datePosted;
     }
 
     public String getLikes() {

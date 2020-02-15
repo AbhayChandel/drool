@@ -22,6 +22,7 @@ public abstract class VideoDocDtoMapper {
 
     @AfterMapping
     protected void thisIsCalledBeforeMappingIsDone(VideoDoc videoDoc, @MappingTarget VideoDto videoDto) {
+        videoDto.setDatePosted(MetaFieldValueFormatter.getDateInDayMonCommaYear(videoDoc.getDatePosted()));
         videoDto.setLikes(MetaFieldValueFormatter.getCompactFormat(videoDoc.getLikes()));
         videoDto.setViews(MetaFieldValueFormatter.getCompactFormat(videoDoc.getViews()));
     }

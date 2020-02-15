@@ -3,6 +3,7 @@ package com.hexlindia.drool.video.data.doc;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "videos")
@@ -15,6 +16,7 @@ public class VideoDoc {
     private String title;
     private String description;
     private String sourceId;
+    private LocalDateTime datePosted;
     private int likes;
     private int views;
     private List<ProductRef> productRefList;
@@ -23,7 +25,6 @@ public class VideoDoc {
 
     public VideoDoc(String type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
         this.type = type;
-        this.active = true;
         this.title = title;
         this.description = description;
         this.sourceId = sourceId;
@@ -80,6 +81,14 @@ public class VideoDoc {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public LocalDateTime getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(LocalDateTime datePosted) {
+        this.datePosted = datePosted;
     }
 
     public int getLikes() {
