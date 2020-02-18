@@ -3,58 +3,66 @@ package com.hexlindia.drool.video.data.repository.impl;
 import com.hexlindia.drool.video.data.doc.ProductRef;
 import com.hexlindia.drool.video.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@DataMongoTest
-public class VideoDocRepositoryTest {
+@SpringBootTest
+public class VideoTemplateRepositoryTest {
 
-    private final VideoRepository videoRepository;
-
+    private final VideoTemplateRepository videoTemplateRepository;
     private final MongoTemplate mongoTemplate;
 
-    private String populatedActiveVideoId = "";
-    private String populatedInactiveVideoId = "";
+    private VideoLikeUnlikeDto activeVideo;
+    private VideoLikeUnlikeDto inactiveVideo;
 
     @Autowired
-    public VideoDocRepositoryTest(VideoRepository videoRepository, MongoTemplate mongoTemplate) {
-        this.videoRepository = videoRepository;
+    public VideoTemplateRepositoryTest(VideoTemplateRepository videoTemplateRepository, MongoTemplate mongoTemplate) {
+        this.videoTemplateRepository = videoTemplateRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
     @Test
     public void test_Insert() {
-
-
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
         VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
-        videoDoc = videoRepository.insert(videoDoc);
-        Assert.notNull(videoDoc.getId(), "");
+        videoDoc = videoTemplateRepository.insert(videoDoc);
+        assertNotNull(videoDoc.getId());
     }
 
     @Test
     public void test_findByIdActiveTrue() {
-        assertTrue(videoRepository.findByIdAndActiveTrue(populatedActiveVideoId).isPresent());
+        assertNotNull(videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()));
     }
 
     @Test
     public void test_findByIdActiveFalse() {
-        assertFalse(videoRepository.findByIdAndActiveTrue(populatedInactiveVideoId).isPresent());
+        assertNull(videoTemplateRepository.findByIdAndActiveTrue(inactiveVideo.getVideoId()));
+    }
+
+    @Test
+    public void test_IncrementLikes() {
+        videoTemplateRepository.incrementLikes(activeVideo);
+        assertEquals(1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
+    }
+
+    @Test
+    public void test_DecrementLikes() {
+        videoTemplateRepository.decrementLikes(activeVideo);
+        assertEquals(-1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
     }
 
     @BeforeEach
@@ -67,14 +75,20 @@ public class VideoDocRepositoryTest {
                 new UserRef("123", "shabana"));
         videoDocActive.setActive(true);
         videoDocActive = this.mongoTemplate.insert(videoDocActive);
-        populatedActiveVideoId = videoDocActive.getId();
+        activeVideo = new VideoLikeUnlikeDto();
+        activeVideo.setVideoId(videoDocActive.getId());
+        activeVideo.setVideoTitle(videoDocActive.getTitle());
+        activeVideo.setUserId(videoDocActive.getUserRef().getId());
 
         VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
         videoDocInactive.setActive(false);
 
-        populatedInactiveVideoId = this.mongoTemplate.insert(videoDocInactive).getId();
+        inactiveVideo = new VideoLikeUnlikeDto();
+        inactiveVideo.setVideoId(videoDocInactive.getId());
+        inactiveVideo.setVideoTitle(videoDocInactive.getTitle());
+        inactiveVideo.setUserId(videoDocInactive.getUserRef().getId());
 
     }
 }
