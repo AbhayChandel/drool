@@ -7,6 +7,7 @@ import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.ProductRefDto;
 import com.hexlindia.drool.video.dto.UserRefDto;
 import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,7 +185,159 @@ class VideoRestServiceImplTest {
         assertEquals("Not able to perform action at this time. Try again in some time.", mvcResult.getResponse().getContentAsString());
     }
 
+    @Test
+    void incrementLikes_HttpMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getIncrementLikesUri()))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void incrementLikes_missingRequestObject() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getIncrementLikesUri())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void incrementLikes_missingParameterUserId() throws Exception {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setVideoId("v1");
+        videoLikeUnlikeDto.setVideoTitle("Dummy video title");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getIncrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("userId", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("User Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void incrementLikes_missingParameterVideoId() throws Exception {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setUserId("987");
+        videoLikeUnlikeDto.setVideoTitle("Dummy video title");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getIncrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("videoId", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Video Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void incrementLikes_missingParameterVideoTitle() throws Exception {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setUserId("987");
+        videoLikeUnlikeDto.setVideoId("v1");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getIncrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("videoTitle", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Video title is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void incrementLikes_ParametersArePassedToBusinessLayer() throws Exception {
+        when(this.videoMock.incrementLikes(any())).thenReturn(true);
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setUserId("987");
+        videoLikeUnlikeDto.setVideoId("v1");
+        videoLikeUnlikeDto.setVideoTitle("Dummy video title");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getIncrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        ArgumentCaptor<VideoLikeUnlikeDto> videoLikeUnlikeDtoArgumentCaptor = ArgumentCaptor.forClass(VideoLikeUnlikeDto.class);
+        verify(this.videoMock, times(1)).incrementLikes(videoLikeUnlikeDtoArgumentCaptor.capture());
+        assertEquals("987", videoLikeUnlikeDtoArgumentCaptor.getValue().getUserId());
+        assertEquals("v1", videoLikeUnlikeDtoArgumentCaptor.getValue().getVideoId());
+        assertEquals("Dummy video title", videoLikeUnlikeDtoArgumentCaptor.getValue().getVideoTitle());
+    }
+
+    @Test
+    void decrementLikes_HttpMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getDecrementLikesUri()))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void decrementLikes_missingRequestObject() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDecrementLikesUri())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void decrementLikes_missingParameterUserId() throws Exception {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setVideoId("v1");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getDecrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("userId", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("User Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void decrementLikes_missingParameterVideoId() throws Exception {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setUserId("987");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getDecrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("videoId", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Video Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void decrementLikes_ParametersArePassedToBusinessLayer() throws Exception {
+        when(this.videoMock.incrementLikes(any())).thenReturn(true);
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setUserId("987");
+        videoLikeUnlikeDto.setVideoId("v1");
+        String requestBody = objectMapper.writeValueAsString(videoLikeUnlikeDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDecrementLikesUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        ArgumentCaptor<VideoLikeUnlikeDto> videoLikeUnlikeDtoArgumentCaptor = ArgumentCaptor.forClass(VideoLikeUnlikeDto.class);
+        verify(this.videoMock, times(1)).decrementLikes(videoLikeUnlikeDtoArgumentCaptor.capture());
+        assertEquals("987", videoLikeUnlikeDtoArgumentCaptor.getValue().getUserId());
+        assertEquals("v1", videoLikeUnlikeDtoArgumentCaptor.getValue().getVideoId());
+    }
+
+
     private String getInsertUri() {
         return "/" + restUriVersion + "/video/insert";
+    }
+
+    private String getIncrementLikesUri() {
+        return "/" + restUriVersion + "/video/likes/increment";
+    }
+
+    private String getDecrementLikesUri() {
+        return "/" + restUriVersion + "/video/likes/decrement";
     }
 }

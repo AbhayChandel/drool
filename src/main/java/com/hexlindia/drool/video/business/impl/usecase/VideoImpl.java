@@ -4,6 +4,7 @@ import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,16 @@ public class VideoImpl implements Video {
     @Override
     public VideoDto findById(String id) {
         return videoDocDtoMapper.toDto(findInRepository("Video search", id));
+    }
+
+    @Override
+    public boolean incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        return videoTemplateRepository.incrementLikes(videoLikeUnlikeDto);
+    }
+
+    @Override
+    public boolean decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        return videoTemplateRepository.decrementLikes(videoLikeUnlikeDto);
     }
 
     private VideoDoc findInRepository(String action, String id) {

@@ -4,6 +4,7 @@ import com.hexlindia.drool.video.data.doc.ProductRef;
 import com.hexlindia.drool.video.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class VideoTemplateRepositoryTest {
     private final VideoTemplateRepository videoTemplateRepository;
     private final MongoTemplate mongoTemplate;
 
-    private String populatedActiveVideoId = "";
-    private String populatedInactiveVideoId = "";
+    private VideoLikeUnlikeDto activeVideo;
+    private VideoLikeUnlikeDto inactiveVideo;
 
     @Autowired
     public VideoTemplateRepositoryTest(VideoTemplateRepository videoTemplateRepository, MongoTemplate mongoTemplate) {
@@ -44,24 +45,24 @@ public class VideoTemplateRepositoryTest {
 
     @Test
     public void test_findByIdActiveTrue() {
-        assertNotNull(videoTemplateRepository.findByIdAndActiveTrue(populatedActiveVideoId));
+        assertNotNull(videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()));
     }
 
     @Test
     public void test_findByIdActiveFalse() {
-        assertNull(videoTemplateRepository.findByIdAndActiveTrue(populatedInactiveVideoId));
+        assertNull(videoTemplateRepository.findByIdAndActiveTrue(inactiveVideo.getVideoId()));
     }
 
     @Test
     public void test_IncrementLikes() {
-        videoTemplateRepository.incrementLikes(populatedActiveVideoId);
-        assertEquals(1, videoTemplateRepository.findByIdAndActiveTrue(populatedActiveVideoId).getLikes());
+        videoTemplateRepository.incrementLikes(activeVideo);
+        assertEquals(1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
     }
 
     @Test
     public void test_DecrementLikes() {
-        videoTemplateRepository.decrementLikes(populatedActiveVideoId);
-        assertEquals(-1, videoTemplateRepository.findByIdAndActiveTrue(populatedActiveVideoId).getLikes());
+        videoTemplateRepository.decrementLikes(activeVideo);
+        assertEquals(-1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
     }
 
     @BeforeEach
@@ -74,14 +75,20 @@ public class VideoTemplateRepositoryTest {
                 new UserRef("123", "shabana"));
         videoDocActive.setActive(true);
         videoDocActive = this.mongoTemplate.insert(videoDocActive);
-        populatedActiveVideoId = videoDocActive.getId();
+        activeVideo = new VideoLikeUnlikeDto();
+        activeVideo.setVideoId(videoDocActive.getId());
+        activeVideo.setVideoTitle(videoDocActive.getTitle());
+        activeVideo.setUserId(videoDocActive.getUserRef().getId());
 
         VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
         videoDocInactive.setActive(false);
 
-        populatedInactiveVideoId = this.mongoTemplate.insert(videoDocInactive).getId();
+        inactiveVideo = new VideoLikeUnlikeDto();
+        inactiveVideo.setVideoId(videoDocInactive.getId());
+        inactiveVideo.setVideoTitle(videoDocInactive.getTitle());
+        inactiveVideo.setUserId(videoDocInactive.getUserRef().getId());
 
     }
 }

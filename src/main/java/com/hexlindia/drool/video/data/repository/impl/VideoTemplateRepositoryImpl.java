@@ -1,7 +1,10 @@
 package com.hexlindia.drool.video.data.repository.impl;
 
+import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,10 +18,12 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
 
     private final MongoOperations mongoOperations;
+    private final UserActivityRepository userActivityRepository;
 
     @Autowired
-    public VideoTemplateRepositoryImpl(MongoOperations mongoOperations) {
+    public VideoTemplateRepositoryImpl(MongoOperations mongoOperations, UserActivityRepository userActivityRepository) {
         this.mongoOperations = mongoOperations;
+        this.userActivityRepository = userActivityRepository;
     }
 
     @Override
@@ -32,14 +37,18 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     }
 
     @Override
-    public void incrementLikes(String id) {
-        mongoOperations.updateFirst(new Query(where("id").is(id)),
+    public boolean incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        mongoOperations.updateFirst(new Query(where("id").is(videoLikeUnlikeDto.getVideoId())),
                 new Update().inc("likes", 1), VideoDoc.class);
+        UpdateResult updateResult = userActivityRepository.addVideoLike(videoLikeUnlikeDto);
+        return updateResult.getModifiedCount() != 0;
     }
 
     @Override
-    public void decrementLikes(String id) {
-        mongoOperations.updateFirst(new Query(where("id").is(id)),
+    public boolean decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        mongoOperations.updateFirst(new Query(where("id").is(videoLikeUnlikeDto.getVideoId())),
                 new Update().inc("likes", -1), VideoDoc.class);
+        UpdateResult updateResult = userActivityRepository.removeVideoLike(videoLikeUnlikeDto);
+        return updateResult.getModifiedCount() != 0;
     }
 }

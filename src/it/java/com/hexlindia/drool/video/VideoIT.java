@@ -15,13 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
@@ -101,11 +97,78 @@ public class VideoIT {
         assertEquals("user123", videoDto.getUserRefDto().getUsername());
     }
 
+    @Test
+    void testVideoLikeInsertedSuccessfully() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        JSONObject videoLikeUnlikeDto = new JSONObject();
+        videoLikeUnlikeDto.put("videoId", "5e4w87ce64787a51asdffsdf073d0915");
+        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
+        videoLikeUnlikeDto.put("userId", "1");
+
+        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertTrue(responseEntity.getBody().booleanValue());
+    }
+
+    @Test
+    void testVideoLikeInsertmultipleSave() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        JSONObject videoLikeUnlikeDto = new JSONObject();
+        videoLikeUnlikeDto.put("videoId", "5e487ce6478sdf7a51asdffg073d0915");
+        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
+        videoLikeUnlikeDto.put("userId", "1");
+
+        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertTrue(responseEntity.getBody().booleanValue());
+
+        responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertFalse(responseEntity.getBody().booleanValue());
+    }
+
+    @Test
+    void testVideoLikeRemovedSuccessfully() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        JSONObject videoLikeUnlikeDto = new JSONObject();
+        videoLikeUnlikeDto.put("videoId", "5e487ce64787a51asdfsdfaf073d0915");
+        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
+        videoLikeUnlikeDto.put("userId", "1");
+
+        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
+        restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getDecrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertTrue(responseEntity.getBody().booleanValue());
+
+
+    }
+
     private String getAuthenticationUri() {
         return "/" + restUriVersion + "/accessall/user/account/authenticate";
     }
 
     private String getInsertUri() {
         return "/" + restUriVersion + "/video/insert";
+    }
+
+    private String getIncrementLikesUri() {
+        return "/" + restUriVersion + "/video/likes/increment";
+    }
+
+    private String getDecrementLikesUri() {
+        return "/" + restUriVersion + "/video/likes/decrement";
     }
 }

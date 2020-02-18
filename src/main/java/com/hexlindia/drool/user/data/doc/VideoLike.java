@@ -2,16 +2,16 @@ package com.hexlindia.drool.user.data.doc;
 
 public class VideoLike {
 
-    private String id;
+    private String videoId;
     private String title;
 
-    public VideoLike(String id, String title) {
-        this.id = id;
+    public VideoLike(String videoId, String title) {
+        this.videoId = videoId;
         this.title = title;
     }
 
-    public String getId() {
-        return id;
+    public String getVideoId() {
+        return videoId;
     }
 
     public String getTitle() {
