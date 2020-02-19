@@ -251,7 +251,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void incrementLikes_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.videoMock.incrementLikes(any())).thenReturn(true);
+        when(this.videoMock.incrementLikes(any())).thenReturn("123");
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
         videoLikeUnlikeDto.setUserId("987");
         videoLikeUnlikeDto.setVideoId("v1");
@@ -314,7 +314,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void decrementLikes_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.videoMock.incrementLikes(any())).thenReturn(true);
+        when(this.videoMock.incrementLikes(any())).thenReturn("123");
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
         videoLikeUnlikeDto.setUserId("987");
         videoLikeUnlikeDto.setVideoId("v1");

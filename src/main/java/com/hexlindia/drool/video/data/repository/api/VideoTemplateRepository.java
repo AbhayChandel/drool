@@ -8,7 +8,7 @@ public interface VideoTemplateRepository {
 
     VideoDoc findByIdAndActiveTrue(String id);
 
-    boolean incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    boolean decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 }
