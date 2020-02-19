@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +18,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
@@ -102,38 +104,12 @@ public class VideoIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
-        JSONObject videoLikeUnlikeDto = new JSONObject();
-        videoLikeUnlikeDto.put("videoId", "5e4w87ce64787a51asdffsdf073d0915");
-        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
-        videoLikeUnlikeDto.put("userId", "1");
 
-        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+        HttpEntity<String> request = new HttpEntity<>(getVideoLikeUnlikeDto(), headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, String.class);
 
         assertEquals(200, responseEntity.getStatusCodeValue());
-        assertTrue(responseEntity.getBody().booleanValue());
-    }
-
-    @Test
-    void testVideoLikeInsertmultipleSave() throws JSONException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + this.authToken);
-        JSONObject videoLikeUnlikeDto = new JSONObject();
-        videoLikeUnlikeDto.put("videoId", "5e487ce6478sdf7a51asdffg073d0915");
-        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
-        videoLikeUnlikeDto.put("userId", "1");
-
-        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertTrue(responseEntity.getBody().booleanValue());
-
-        responseEntity = restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertFalse(responseEntity.getBody().booleanValue());
+        assertEquals("600", responseEntity.getBody());
     }
 
     @Test
@@ -141,19 +117,56 @@ public class VideoIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
-        JSONObject videoLikeUnlikeDto = new JSONObject();
-        videoLikeUnlikeDto.put("videoId", "5e487ce64787a51asdfsdfaf073d0915");
-        videoLikeUnlikeDto.put("videoTitle", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty");
-        videoLikeUnlikeDto.put("userId", "1");
 
-        HttpEntity<String> request = new HttpEntity<>(videoLikeUnlikeDto.toString(), headers);
-        restTemplate.exchange(getIncrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
+        HttpEntity<String> request = new HttpEntity<>(getVideoLikeUnlikeDto(), headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getDecrementLikesUri(), HttpMethod.PUT, request, String.class);
 
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getDecrementLikesUri(), HttpMethod.PUT, request, Boolean.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
-        assertTrue(responseEntity.getBody().booleanValue());
+        assertEquals("598", responseEntity.getBody());
+    }
+
+    private String getVideoLikeUnlikeDto() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        JSONObject productRefDto1 = new JSONObject();
+        productRefDto1.put("id", "p123");
+        productRefDto1.put("name", "Tom Ford Vetiver");
+        productRefDto1.put("type", "Fragrance");
+        JSONObject productRefDto2 = new JSONObject();
+        productRefDto2.put("id", "p456");
+        productRefDto2.put("name", "Tom Ford Black");
+        productRefDto2.put("type", "Fragrance");
+        JSONArray productRefDtoList = new JSONArray();
+        productRefDtoList.put(productRefDto1);
+        productRefDtoList.put(productRefDto2);
+        JSONObject UserRefDto = new JSONObject();
+        UserRefDto.put("id", "u123");
+        UserRefDto.put("username", "user123");
+        JSONObject videoDoc = new JSONObject();
+        videoDoc.put("type", "review");
+        videoDoc.put("title", "Review for Tom Ford Vetiver");
+        videoDoc.put("description", "This is an honest review of Tom Ford Vetiver");
+        videoDoc.put("sourceId", "s123");
+        videoDoc.put("productRefDtoList", productRefDtoList);
+        videoDoc.put("userRefDto", UserRefDto);
+        videoDoc.put("likes", "599");
+
+        HttpEntity<String> request = new HttpEntity<>(videoDoc.toString(), headers);
+        ResponseEntity<VideoDto> responseEntity = this.restTemplate.postForEntity(getInsertUri(), request, VideoDto.class);
 
 
+        VideoDto videoDto = responseEntity.getBody();
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setVideoId(videoDto.getId());
+        videoLikeUnlikeDto.setVideoTitle(videoDto.getTitle());
+        videoLikeUnlikeDto.setUserId(videoDto.getUserRefDto().getId());
+        try {
+            return new ObjectMapper().writeValueAsString(videoLikeUnlikeDto);
+        } catch (JsonProcessingException e) {
+            log.error("Unable to convert VideoDto object to String: " + e);
+            return "";
+        }
     }
 
     private String getAuthenticationUri() {

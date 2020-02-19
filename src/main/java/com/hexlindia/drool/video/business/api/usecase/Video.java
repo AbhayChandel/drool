@@ -9,7 +9,7 @@ public interface Video {
 
     public VideoDto findById(String id);
 
-    public boolean incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    public String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    public boolean decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 }

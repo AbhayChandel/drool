@@ -15,9 +15,9 @@ public interface VideoRestService {
     ResponseEntity<VideoDto> insert(@RequestBody VideoDto videoDto);
 
     @PutMapping(value = "/likes/increment")
-    ResponseEntity<Boolean> incrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
+    ResponseEntity<String> incrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     @PutMapping(value = "/likes/decrement")
-    ResponseEntity<Boolean> decrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
+    ResponseEntity<String> decrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
 
 }

@@ -28,12 +28,12 @@ public class VideoRestServiceImpl implements VideoRestService {
     }
 
     @Override
-    public ResponseEntity<Boolean> incrementLikes(@Validated(VideoIncrementLikesValidation.class) VideoLikeUnlikeDto videoLikeUnlikeDto) {
+    public ResponseEntity<String> incrementLikes(@Validated(VideoIncrementLikesValidation.class) VideoLikeUnlikeDto videoLikeUnlikeDto) {
         return ResponseEntity.ok(video.incrementLikes(videoLikeUnlikeDto));
     }
 
     @Override
-    public ResponseEntity<Boolean> decrementLikes(@Validated(VideoDecrementLikesValidation.class) VideoLikeUnlikeDto videoLikeUnlikeDto) {
+    public ResponseEntity<String> decrementLikes(@Validated(VideoDecrementLikesValidation.class) VideoLikeUnlikeDto videoLikeUnlikeDto) {
         return ResponseEntity.ok(video.decrementLikes(videoLikeUnlikeDto));
     }
 }

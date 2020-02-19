@@ -36,12 +36,12 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public boolean incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+    public String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         return videoTemplateRepository.incrementLikes(videoLikeUnlikeDto);
     }
 
     @Override
-    public boolean decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+    public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         return videoTemplateRepository.decrementLikes(videoLikeUnlikeDto);
     }
 

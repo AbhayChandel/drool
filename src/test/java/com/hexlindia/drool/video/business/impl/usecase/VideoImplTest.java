@@ -97,7 +97,7 @@ class VideoImplTest {
         videoLikeUnlikeDto.setUserId("987");
         videoLikeUnlikeDto.setVideoId("v1");
         videoLikeUnlikeDto.setVideoTitle("Dummy video title");
-        when(this.videoTemplateRepository.incrementLikes(videoLikeUnlikeDto)).thenReturn(true);
+        when(this.videoTemplateRepository.incrementLikes(videoLikeUnlikeDto)).thenReturn("123");
         videoImplSpy.incrementLikes(videoLikeUnlikeDto);
         ArgumentCaptor<VideoLikeUnlikeDto> videoLikeUnlikeDtoArgumentCaptor = ArgumentCaptor.forClass(VideoLikeUnlikeDto.class);
         verify(videoTemplateRepository, times(1)).incrementLikes(videoLikeUnlikeDtoArgumentCaptor.capture());
@@ -111,7 +111,7 @@ class VideoImplTest {
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
         videoLikeUnlikeDto.setUserId("987");
         videoLikeUnlikeDto.setVideoId("v1");
-        when(this.videoTemplateRepository.decrementLikes(videoLikeUnlikeDto)).thenReturn(true);
+        when(this.videoTemplateRepository.decrementLikes(videoLikeUnlikeDto)).thenReturn("123");
         videoImplSpy.decrementLikes(videoLikeUnlikeDto);
         ArgumentCaptor<VideoLikeUnlikeDto> videoLikeUnlikeDtoArgumentCaptor = ArgumentCaptor.forClass(VideoLikeUnlikeDto.class);
         verify(videoTemplateRepository, times(1)).decrementLikes(videoLikeUnlikeDtoArgumentCaptor.capture());
