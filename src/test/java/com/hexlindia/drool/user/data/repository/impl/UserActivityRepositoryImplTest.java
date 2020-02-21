@@ -1,5 +1,7 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
+import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
@@ -13,8 +15,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Update;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -50,6 +53,12 @@ class UserActivityRepositoryImplTest {
         UpdateResult updateResult = this.userActivityRepository.removeVideoLike(videoLikeUnlikeDto);
         assertEquals(1, updateResult.getMatchedCount());
         assertEquals(1, updateResult.getModifiedCount());
+    }
+
+    @Test
+    void addVideoComment() {
+        UpdateResult updateResult = this.userActivityRepository.addVideoComment("123", new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef("v123", "This is a dummy video for testing comment insetion in UserActivityDoc", "video"), LocalDateTime.now()));
+        assertTrue(updateResult.getModifiedCount() > 0);
     }
 
     @BeforeEach

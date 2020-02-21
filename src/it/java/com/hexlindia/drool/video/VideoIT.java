@@ -3,6 +3,9 @@ package com.hexlindia.drool.video;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.dto.PostRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import lombok.extern.slf4j.Slf4j;
@@ -125,6 +128,25 @@ public class VideoIT {
         assertEquals("598", responseEntity.getBody());
     }
 
+    @Test
+    void testVideoCommentInsertedSuccessfully() throws JSONException, JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "video"));
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setComment("This is a dummy test");
+        HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
+        ResponseEntity<VideoCommentDto> responseEntity = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        VideoCommentDto videoCommentDtoReturned = responseEntity.getBody();
+        assertNotNull(videoCommentDtoReturned);
+        assertNotNull(videoCommentDtoReturned.getId());
+    }
+
     private String getVideoLikeUnlikeDto() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -183,5 +205,9 @@ public class VideoIT {
 
     private String getDecrementLikesUri() {
         return "/" + restUriVersion + "/video/likes/decrement";
+    }
+
+    private String getInsertCommentUri() {
+        return "/" + restUriVersion + "/video/insert/comment";
     }
 }

@@ -1,8 +1,8 @@
 package com.hexlindia.drool.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.video.data.doc.ProductRef;
-import com.hexlindia.drool.video.data.doc.UserRef;
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;

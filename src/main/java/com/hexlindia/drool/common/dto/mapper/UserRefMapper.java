@@ -1,7 +1,7 @@
-package com.hexlindia.drool.video.dto.mapper;
+package com.hexlindia.drool.common.dto.mapper;
 
-import com.hexlindia.drool.video.data.doc.UserRef;
-import com.hexlindia.drool.video.dto.UserRefDto;
+import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

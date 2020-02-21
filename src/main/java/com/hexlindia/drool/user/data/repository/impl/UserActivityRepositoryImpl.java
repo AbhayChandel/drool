@@ -1,5 +1,6 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
+import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
@@ -34,5 +35,10 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
         Query queryVideo = Query.query(Criteria.where("videoId").is(videoLikeUnlikeDto.getVideoId()));
         Update update = new Update().pull("likes.videos", queryVideo);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
+    }
+
+    @Override
+    public UpdateResult addVideoComment(String userId, CommentRef commentRef) {
+        return mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("comments", commentRef), UserActivityDoc.class);
     }
 }

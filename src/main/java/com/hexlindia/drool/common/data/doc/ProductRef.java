@@ -1,4 +1,4 @@
-package com.hexlindia.drool.video.data.doc;
+package com.hexlindia.drool.common.data.doc;
 
 public class ProductRef {
 

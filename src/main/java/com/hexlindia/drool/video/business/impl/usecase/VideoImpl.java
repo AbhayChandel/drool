@@ -1,10 +1,14 @@
 package com.hexlindia.drool.video.business.impl.usecase;
 
+import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import org.springframework.stereotype.Component;
@@ -18,9 +22,15 @@ public class VideoImpl implements Video {
 
     private final VideoTemplateRepository videoTemplateRepository;
 
-    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository) {
+    private final VideoCommentMapper videoCommentMapper;
+
+    private final PostRefMapper postRefMapper;
+
+    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository, VideoCommentMapper videoCommentMapper, PostRefMapper postRefMapper) {
         this.videoDocDtoMapper = videoDocDtoMapper;
         this.videoTemplateRepository = videoTemplateRepository;
+        this.videoCommentMapper = videoCommentMapper;
+        this.postRefMapper = postRefMapper;
     }
 
     @Override
@@ -43,6 +53,14 @@ public class VideoImpl implements Video {
     @Override
     public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         return videoTemplateRepository.decrementLikes(videoLikeUnlikeDto);
+    }
+
+    @Override
+    public VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
+        VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
+        videoTemplateRepository.insertComment(postRefMapper.toDoc(videoCommentDto.getPostRefDto()), videoComment);
+        videoCommentDto.setId(videoComment.getId());
+        return videoCommentDto;
     }
 
     private VideoDoc findInRepository(String action, String id) {

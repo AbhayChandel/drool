@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.services.api.rest;
 
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +20,9 @@ public interface VideoRestService {
 
     @PutMapping(value = "/likes/decrement")
     ResponseEntity<String> decrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
+
+    @PutMapping(value = "/insert/comment")
+    ResponseEntity<VideoCommentDto> insertComment(@RequestBody VideoCommentDto videoCommentDto);
+
 
 }

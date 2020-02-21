@@ -1,5 +1,7 @@
 package com.hexlindia.drool.video.data.doc;
 
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;

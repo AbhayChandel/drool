@@ -18,9 +18,20 @@ public abstract class VideoCommentMapper {
 
     abstract List<VideoCommentDto> toDtoList(List<VideoComment> videoCommentList);
 
+    @Mapping(target = "userRef", source = "userRefDto")
+    @Mapping(source = "id", target = "id", ignore = true)
+    public abstract VideoComment toDoc(VideoCommentDto videoCommentDto);
+
     @AfterMapping
-    protected void thisIsCalledBeforeMappingIsDone(VideoComment videoComment, @MappingTarget VideoCommentDto videoCommentDto) {
+    protected void thisIsCalledAfterMappingDocToDto(VideoComment videoComment, @MappingTarget VideoCommentDto videoCommentDto) {
         videoCommentDto.setLikes(MetaFieldValueFormatter.getCompactFormat(videoComment.getLikes()));
         videoCommentDto.setDatePosted(MetaFieldValueFormatter.getDateTimeInDayMonCommaYear(videoComment.getDatePosted()));
+    }
+
+    @AfterMapping
+    protected void thisIsCalledAfterMappingDtoToDoc(VideoCommentDto videoCommentDto, @MappingTarget VideoComment videoComment) {
+        if (videoCommentDto.getId() != null) {
+            videoComment.setId(videoCommentDto.getId());
+        }
     }
 }

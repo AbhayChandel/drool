@@ -1,11 +1,11 @@
 package com.hexlindia.drool.video.dto.mapper;
 
-import com.hexlindia.drool.video.data.doc.ProductRef;
-import com.hexlindia.drool.video.data.doc.UserRef;
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.ProductRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.ProductRefDto;
-import com.hexlindia.drool.video.dto.UserRefDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

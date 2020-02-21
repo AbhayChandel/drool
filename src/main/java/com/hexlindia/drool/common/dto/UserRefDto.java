@@ -1,4 +1,4 @@
-package com.hexlindia.drool.video.dto;
+package com.hexlindia.drool.common.dto;
 
 public class UserRefDto {
 
