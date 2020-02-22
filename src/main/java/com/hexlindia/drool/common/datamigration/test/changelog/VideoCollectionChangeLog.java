@@ -2,8 +2,8 @@ package com.hexlindia.drool.common.datamigration.test.changelog;
 
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
-import com.hexlindia.drool.video.data.doc.ProductRef;
-import com.hexlindia.drool.video.data.doc.UserRef;
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -47,7 +47,7 @@ public class VideoCollectionChangeLog {
         VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
         videoComment14.setLikes(76);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment11, videoComment12, videoComment13, videoComment14);
-        videoDoc1.setVideoCommentList(videoCommentList1);
+        videoDoc1.setCommentList(videoCommentList1);
 
 
         VideoDoc videoDoc2 = new VideoDoc("guide", "How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage", "Product Links\n" +
@@ -98,7 +98,7 @@ public class VideoCollectionChangeLog {
         VideoComment videoComment25 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "It'll be good to see in phone camera, but in reality it'll look like a joker.... Experienced");
         videoComment25.setLikes(1240);
         List<VideoComment> videoCommentList2 = Arrays.asList(videoComment21, videoComment22, videoComment23, videoComment24, videoComment25);
-        videoDoc2.setVideoCommentList(videoCommentList2);
+        videoDoc2.setCommentList(videoCommentList2);
 
         List<VideoDoc> videoDocs = Arrays.asList(videoDoc1, videoDoc2);
 

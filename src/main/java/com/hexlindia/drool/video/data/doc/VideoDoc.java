@@ -1,5 +1,7 @@
 package com.hexlindia.drool.video.data.doc;
 
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -21,7 +23,7 @@ public class VideoDoc {
     private int views;
     private List<ProductRef> productRefList;
     private UserRef userRef;
-    private List<VideoComment> videoCommentList;
+    private List<VideoComment> commentList;
 
     public VideoDoc(String type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
         this.type = type;
@@ -123,11 +125,11 @@ public class VideoDoc {
         this.userRef = userRef;
     }
 
-    public List<VideoComment> getVideoCommentList() {
-        return videoCommentList;
+    public List<VideoComment> getCommentList() {
+        return commentList;
     }
 
-    public void setVideoCommentList(List<VideoComment> videoCommentList) {
-        this.videoCommentList = videoCommentList;
+    public void setCommentList(List<VideoComment> commentList) {
+        this.commentList = commentList;
     }
 }

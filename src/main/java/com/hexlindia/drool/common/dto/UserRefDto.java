@@ -1,16 +1,21 @@
-package com.hexlindia.drool.video.data.doc;
+package com.hexlindia.drool.common.dto;
 
-public class UserRef {
+import com.hexlindia.drool.common.dto.validation.UserRefEditValidation;
 
+import javax.validation.constraints.NotEmpty;
+
+public class UserRefDto {
+
+    @NotEmpty(message = "User Id is missing", groups = {UserRefEditValidation.class})
     private String id;
     private String username;
 
-    public UserRef(String id, String username) {
+    public UserRefDto(String id, String username) {
         this.id = id;
         this.username = username;
     }
 
-    public UserRef() {
+    public UserRefDto() {
     }
 
     public String getId() {

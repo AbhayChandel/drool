@@ -1,9 +1,13 @@
 package com.hexlindia.drool.video.data.doc;
 
+import com.hexlindia.drool.common.data.doc.UserRef;
+import org.bson.types.ObjectId;
+
 import java.time.LocalDateTime;
 
 public class VideoComment {
 
+    private String id;
     private UserRef userRef;
     private LocalDateTime datePosted;
     private String comment;
@@ -13,9 +17,19 @@ public class VideoComment {
         this.userRef = userRef;
         this.datePosted = datePosted;
         this.comment = comment;
+        this.id = ObjectId.get().toString();
     }
 
     public VideoComment() {
+        this.id = ObjectId.get().toString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public UserRef getUserRef() {

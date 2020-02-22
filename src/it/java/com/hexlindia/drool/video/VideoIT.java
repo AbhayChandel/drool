@@ -3,6 +3,9 @@ package com.hexlindia.drool.video;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.dto.PostRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +21,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
@@ -39,6 +41,8 @@ public class VideoIT {
 
     private String authToken;
 
+    private String videoInsertedId;
+
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
@@ -52,6 +56,38 @@ public class VideoIT {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(response);
         authToken = rootNode.path("authToken").asText();
+    }
+
+    @BeforeEach
+    private void videoInserted() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        JSONObject productRefDto1 = new JSONObject();
+        productRefDto1.put("id", "p123");
+        productRefDto1.put("name", "Tom Ford Vetiver");
+        productRefDto1.put("type", "Fragrance");
+        JSONObject productRefDto2 = new JSONObject();
+        productRefDto2.put("id", "p456");
+        productRefDto2.put("name", "Tom Ford Black");
+        productRefDto2.put("type", "Fragrance");
+        JSONArray productRefDtoList = new JSONArray();
+        productRefDtoList.put(productRefDto1);
+        productRefDtoList.put(productRefDto2);
+        JSONObject UserRefDto = new JSONObject();
+        UserRefDto.put("id", "u123");
+        UserRefDto.put("username", "user123");
+        JSONObject videoDoc = new JSONObject();
+        videoDoc.put("type", "review");
+        videoDoc.put("title", "Review for Tom Ford Vetiver");
+        videoDoc.put("description", "This is an honest review of Tom Ford Vetiver");
+        videoDoc.put("sourceId", "s123");
+        videoDoc.put("productRefDtoList", productRefDtoList);
+        videoDoc.put("userRefDto", UserRefDto);
+
+        HttpEntity<String> request = new HttpEntity<>(videoDoc.toString(), headers);
+        ResponseEntity<VideoDto> responseEntity = this.restTemplate.postForEntity(getInsertUri(), request, VideoDto.class);
+        videoInsertedId = responseEntity.getBody().getId();
     }
 
     @Test
@@ -125,6 +161,50 @@ public class VideoIT {
         assertEquals("598", responseEntity.getBody());
     }
 
+    @Test
+    void testVideoCommentInsertedSuccessfully() throws JSONException, JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setComment("This is a dummy test");
+        HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
+        ResponseEntity<VideoCommentDto> responseEntity = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        VideoCommentDto videoCommentDtoReturned = responseEntity.getBody();
+        assertNotNull(videoCommentDtoReturned);
+        assertNotNull(videoCommentDtoReturned.getId());
+    }
+
+    @Test
+    void testVideoCommentDeletedSuccessfully() throws JSONException, JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setComment("This is a dummy test");
+        HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
+        ResponseEntity<VideoCommentDto> responseEntity = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
+
+        videoCommentDto = new VideoCommentDto();
+        String commentId = responseEntity.getBody().getId();
+        videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, null, null, null, null));
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setId(commentId);
+
+        request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
+        ResponseEntity<Boolean> responseEntityDelete = restTemplate.exchange(getDeleteCommentUri(), HttpMethod.PUT, request, Boolean.class);
+        assertEquals(200, responseEntityDelete.getStatusCodeValue());
+        assertTrue(responseEntityDelete.getBody().booleanValue());
+    }
+
     private String getVideoLikeUnlikeDto() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -183,5 +263,13 @@ public class VideoIT {
 
     private String getDecrementLikesUri() {
         return "/" + restUriVersion + "/video/likes/decrement";
+    }
+
+    private String getInsertCommentUri() {
+        return "/" + restUriVersion + "/video/insert/comment";
+    }
+
+    private String getDeleteCommentUri() {
+        return "/" + restUriVersion + "/video/delete/comment";
     }
 }

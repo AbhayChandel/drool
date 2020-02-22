@@ -1,16 +1,16 @@
-package com.hexlindia.drool.video.dto;
+package com.hexlindia.drool.common.data.doc;
 
-public class UserRefDto {
+public class UserRef {
 
     private String id;
     private String username;
 
-    public UserRefDto(String id, String username) {
+    public UserRef(String id, String username) {
         this.id = id;
         this.username = username;
     }
 
-    public UserRefDto() {
+    public UserRef() {
     }
 
     public String getId() {

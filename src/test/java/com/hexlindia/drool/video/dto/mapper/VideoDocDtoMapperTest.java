@@ -1,11 +1,11 @@
 package com.hexlindia.drool.video.dto.mapper;
 
-import com.hexlindia.drool.video.data.doc.ProductRef;
-import com.hexlindia.drool.video.data.doc.UserRef;
+import com.hexlindia.drool.common.data.doc.ProductRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.ProductRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.ProductRefDto;
-import com.hexlindia.drool.video.dto.UserRefDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ class VideoDocDtoMapperTest {
         VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.parse("2020-02-15 21:30", formatter), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
         videoComment14.setLikes(760000);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment13, videoComment14);
-        videoDoc.setVideoCommentList(videoCommentList1);
+        videoDoc.setCommentList(videoCommentList1);
         VideoDto videoDto = videoDocDtoMapper.toDto(videoDoc);
 
         assertEquals("review", videoDto.getType());
