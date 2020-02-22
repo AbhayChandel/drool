@@ -81,6 +81,7 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("commentList", queryComment);
         UpdateResult commentDeleteResult = mongoOperations.updateFirst(queryVideo, update, VideoDoc.class);
-        return commentDeleteResult.getModifiedCount() > 0;
+        UpdateResult userActivityResult = userActivityRepository.removeVideoComment(videoCommentDto);
+        return (commentDeleteResult.getModifiedCount() > 0 && userActivityResult.getModifiedCount() > 0);
     }
 }
