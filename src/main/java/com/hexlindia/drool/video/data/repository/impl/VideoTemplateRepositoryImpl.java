@@ -7,11 +7,14 @@ import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -22,6 +25,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
+@Slf4j
 public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
 
     private final MongoOperations mongoOperations;
@@ -35,7 +39,9 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
 
     @Override
     public VideoDoc insert(VideoDoc videoDoc) {
-        return this.mongoOperations.insert(videoDoc);
+        videoDoc = this.mongoOperations.insert(videoDoc);
+        userActivityRepository.addVideo(videoDoc);
+        return videoDoc;
     }
 
     @Override
@@ -58,10 +64,23 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     }
 
     @Override
-    public boolean insertComment(PostRef postRef, VideoComment videoComment) {
+    public VideoComment insertComment(PostRef postRef, VideoComment videoComment) {
         videoComment.setDatePosted(LocalDateTime.now());
-        UpdateResult updateResult = mongoOperations.updateFirst(new Query(where("id").is(postRef.getId())), new Update().addToSet("videoCommentList", videoComment), VideoDoc.class);
-        userActivityRepository.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
-        return updateResult.getModifiedCount() > 0;
+        UpdateResult commentInsertResult = mongoOperations.updateFirst(new Query(where("id").is(postRef.getId())), new Update().addToSet("commentList", videoComment), VideoDoc.class);
+        UpdateResult userActivityResult = userActivityRepository.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
+        log.debug("Insert comment modify count: {}. Insert to user activity modify count: {}", commentInsertResult.getModifiedCount(), userActivityResult.getModifiedCount());
+        if (commentInsertResult.getModifiedCount() > 0 && ((userActivityResult.getMatchedCount() > 0 && userActivityResult.getModifiedCount() > 0) || userActivityResult.getUpsertedId() != null)) {
+            return videoComment;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteComment(VideoCommentDto videoCommentDto) {
+        Query queryVideo = Query.query(Criteria.where("_id").is(videoCommentDto.getPostRefDto().getId()));
+        Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
+        Update update = new Update().pull("commentList", queryComment);
+        UpdateResult commentDeleteResult = mongoOperations.updateFirst(queryVideo, update, VideoDoc.class);
+        return commentDeleteResult.getModifiedCount() > 0;
     }
 }

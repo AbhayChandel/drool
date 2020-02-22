@@ -2,7 +2,7 @@ package com.hexlindia.drool.video.dto;
 
 import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
-import com.hexlindia.drool.video.services.validation.VideoInsertValidation;
+import com.hexlindia.drool.video.dto.validation.VideoInsertValidation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

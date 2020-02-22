@@ -2,19 +2,24 @@ package com.hexlindia.drool.video.dto;
 
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
-import com.hexlindia.drool.video.services.validation.VideoCommentInsertValidation;
+import com.hexlindia.drool.video.dto.validation.VideoCommentDeleteValidation;
+import com.hexlindia.drool.video.dto.validation.VideoCommentInsertValidation;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class VideoCommentDto {
 
+    @NotEmpty(message = "Comment Id is missing", groups = {VideoCommentDeleteValidation.class})
     private String id;
 
     @NotNull(message = "Post details are missing", groups = {VideoCommentInsertValidation.class})
+    @Valid
     private PostRefDto postRefDto;
 
     @NotNull(message = "User details are missing", groups = {VideoCommentInsertValidation.class})
+    @Valid
     private UserRefDto userRefDto;
     private String datePosted;
 

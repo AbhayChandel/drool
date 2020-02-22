@@ -19,7 +19,7 @@ public abstract class VideoDocDtoMapper {
 
     @Mapping(target = "productRefDtoList", source = "productRefList")
     @Mapping(target = "userRefDto", source = "userRef")
-    @Mapping(target = "videoCommentDtoList", source = "videoCommentList")
+    @Mapping(target = "videoCommentDtoList", source = "commentList")
     public abstract VideoDto toDto(VideoDoc videoDoc);
 
     @AfterMapping

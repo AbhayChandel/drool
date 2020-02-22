@@ -363,7 +363,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingParameterUserRefDto() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "video"));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getInsertCommentUri())
@@ -380,7 +380,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingParameterComment() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "video"));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getInsertCommentUri())
@@ -399,7 +399,7 @@ class VideoRestServiceImplTest {
     void insertComment_ParametersArePassedToBusinessLayer() throws Exception {
         when(this.videoMock.insertComment(any())).thenReturn(null);
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "video"));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -410,10 +410,96 @@ class VideoRestServiceImplTest {
         verify(this.videoMock, times(1)).insertComment(videoCommentDtoArgumentCaptor.capture());
         assertEquals("p123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
         assertEquals("This is a test post", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
-        assertEquals("video", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
+        assertEquals("guide", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
+        assertEquals("video", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getMedium());
         assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
         assertEquals("username1", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getUsername());
         assertEquals("This is a dummy test", videoCommentDtoArgumentCaptor.getValue().getComment());
+    }
+
+    @Test
+    void deleteComment_HttpMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getDeleteCommentUri()))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void deleteComment_missingRequestObject() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteCommentUri())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteComment_missingParameterCommentId() throws Exception {
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", null, null, null, null));
+        String requestBody = objectMapper.writeValueAsString(videoCommentDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteCommentUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("id", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Comment Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void deleteComment_missingParameterPostId() throws Exception {
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("", null, null, null, null));
+        videoCommentDto.setId("c123");
+        String requestBody = objectMapper.writeValueAsString(videoCommentDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteCommentUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("postRefDto.id", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("Post Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+    @Test
+    void deleteComment_missingParameterUserId() throws Exception {
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setUserRefDto(new UserRefDto("", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", null, null, null, null));
+        videoCommentDto.setId("c123");
+        String requestBody = objectMapper.writeValueAsString(videoCommentDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteCommentUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("userRefDto.id", responseErrorResult.getFieldValidationErrors().get(0).getField());
+        assertEquals("User Id is missing", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
+
+    @Test
+    void deleteComment_ParametersArePassedToBusinessLayer() throws Exception {
+        when(this.videoMock.deleteComment(any())).thenReturn(true);
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", null, null, null, null));
+        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setId("c123");
+        String requestBody = objectMapper.writeValueAsString(videoCommentDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteCommentUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
+        verify(this.videoMock, times(1)).deleteComment(videoCommentDtoArgumentCaptor.capture());
+        assertEquals("p123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
+        assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
+        assertEquals("c123", videoCommentDtoArgumentCaptor.getValue().getId());
     }
 
 
@@ -431,5 +517,9 @@ class VideoRestServiceImplTest {
 
     private String getInsertCommentUri() {
         return "/" + restUriVersion + "/video/insert/comment";
+    }
+
+    private String getDeleteCommentUri() {
+        return "/" + restUriVersion + "/video/delete/comment";
     }
 }

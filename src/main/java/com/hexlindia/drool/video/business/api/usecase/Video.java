@@ -15,4 +15,6 @@ public interface Video {
     public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     VideoCommentDto insertComment(VideoCommentDto videoCommentDto);
+
+    boolean deleteComment(VideoCommentDto videoCommentDto);
 }

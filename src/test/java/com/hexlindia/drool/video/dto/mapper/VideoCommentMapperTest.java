@@ -36,7 +36,7 @@ class VideoCommentMapperTest {
 
     @Test
     void toDoc() {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", "video"), new UserRefDto("987", "sonam99"), "This is a comment to test videoCommentMapper toDoc");
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", "guide", "video", null), new UserRefDto("987", "sonam99"), "This is a comment to test videoCommentMapper toDoc");
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
         assertEquals("987", videoComment.getUserRef().getId());
         assertEquals("sonam99", videoComment.getUserRef().getUsername());

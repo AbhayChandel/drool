@@ -2,7 +2,6 @@ package com.hexlindia.drool.video.business.impl.usecase;
 
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
-import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
@@ -57,10 +56,12 @@ public class VideoImpl implements Video {
 
     @Override
     public VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
-        VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
-        videoTemplateRepository.insertComment(postRefMapper.toDoc(videoCommentDto.getPostRefDto()), videoComment);
-        videoCommentDto.setId(videoComment.getId());
-        return videoCommentDto;
+        return videoCommentMapper.toDto(videoTemplateRepository.insertComment(postRefMapper.toDoc(videoCommentDto.getPostRefDto()), videoCommentMapper.toDoc(videoCommentDto)));
+    }
+
+    @Override
+    public boolean deleteComment(VideoCommentDto videoCommentDto) {
+        return videoTemplateRepository.deleteComment(videoCommentDto);
     }
 
     private VideoDoc findInRepository(String action, String id) {

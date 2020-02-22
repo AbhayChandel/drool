@@ -24,5 +24,8 @@ public interface VideoRestService {
     @PutMapping(value = "/insert/comment")
     ResponseEntity<VideoCommentDto> insertComment(@RequestBody VideoCommentDto videoCommentDto);
 
+    @PutMapping(value = "/delete/comment")
+    ResponseEntity<Boolean> deleteComment(@RequestBody VideoCommentDto videoCommentDto);
+
 
 }

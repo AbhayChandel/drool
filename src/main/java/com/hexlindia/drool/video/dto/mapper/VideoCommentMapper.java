@@ -14,9 +14,9 @@ import java.util.List;
 public abstract class VideoCommentMapper {
 
     @Mapping(target = "userRefDto", source = "userRef")
-    abstract VideoCommentDto toDto(VideoComment videoComment);
+    public abstract VideoCommentDto toDto(VideoComment videoComment);
 
-    abstract List<VideoCommentDto> toDtoList(List<VideoComment> videoCommentList);
+    abstract List<VideoCommentDto> toDtoList(List<VideoComment> commentList);
 
     @Mapping(target = "userRef", source = "userRefDto")
     @Mapping(source = "id", target = "id", ignore = true)

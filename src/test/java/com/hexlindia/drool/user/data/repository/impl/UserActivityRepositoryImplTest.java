@@ -2,9 +2,14 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
+import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.PostRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
+import com.hexlindia.drool.video.data.doc.VideoDoc;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +39,16 @@ class UserActivityRepositoryImplTest {
     }
 
     @Test
+    void addVideo() {
+        UserRef userRef = new UserRef("123", null);
+        VideoDoc videoDoc = new VideoDoc("guide", "This is a dummy video gudie", null, null, null, userRef);
+        videoDoc.setId("v123");
+        videoDoc.setDatePosted(LocalDateTime.now());
+        UpdateResult updateResult = userActivityRepository.addVideo(videoDoc);
+        assertEquals(1, updateResult.getModifiedCount());
+    }
+
+    @Test
     void addVideoLike() {
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
         videoLikeUnlikeDto.setVideoId("pqr");
@@ -57,12 +72,23 @@ class UserActivityRepositoryImplTest {
 
     @Test
     void addVideoComment() {
-        UpdateResult updateResult = this.userActivityRepository.addVideoComment("123", new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef("v123", "This is a dummy video for testing comment insetion in UserActivityDoc", "video"), LocalDateTime.now()));
+        UpdateResult updateResult = this.userActivityRepository.addVideoComment("123", new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef("v123", "This is a dummy video for testing comment insetion in UserActivityDoc", "guide", "video", null), LocalDateTime.now()));
+        assertTrue(updateResult.getModifiedCount() > 0);
+    }
+
+    @Test
+    void removeVideoComment() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto("123", ""), null);
+        videoCommentDto.setId("c123");
+        UpdateResult updateResult = this.userActivityRepository.removeVideoComment(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
     }
 
     @BeforeEach
     public void setUp() {
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.videos", new VideoLike("abc", "This video is part of test setup")), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef("p123", "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
     }
+
+
 }

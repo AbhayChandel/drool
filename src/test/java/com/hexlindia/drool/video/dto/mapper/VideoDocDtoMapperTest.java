@@ -60,7 +60,7 @@ class VideoDocDtoMapperTest {
         VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.parse("2020-02-15 21:30", formatter), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
         videoComment14.setLikes(760000);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment13, videoComment14);
-        videoDoc.setVideoCommentList(videoCommentList1);
+        videoDoc.setCommentList(videoCommentList1);
         VideoDto videoDto = videoDocDtoMapper.toDto(videoDoc);
 
         assertEquals("review", videoDto.getType());

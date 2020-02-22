@@ -135,12 +135,12 @@ class VideoImplTest {
 
     @Test
     void insertComment_testPassingArgumentsToVideoRespository() {
-        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "video");
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("v123", "This is a test post title", "video"), new UserRefDto("u123", "priyanka11"), "This is a comment passed to VideoTemplateRespository");
+        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "guide", "video", null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(null, new UserRefDto("u123", "priyanka11"), "This is a comment passed to VideoTemplateRespository");
         videoCommentDto.setPostRefDto(postRefDtoMocked);
-        when(this.videoTemplateRepositoryMock.insertComment(any(), any())).thenReturn(true);
+        when(this.videoTemplateRepositoryMock.insertComment(any(), any())).thenReturn(null);
         when(this.videoCommentMapperMock.toDoc(videoCommentDto)).thenReturn(new VideoComment(new UserRef("456", "priyanka11"), null, "This is a comment to test videoCommentMapper toDto()"));
-        when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(new PostRef("v123", "This is a test post title", "video"));
+        when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(new PostRef("v123", "This is a test post title", "guide", "video", null));
         videoImplSpy.insertComment(videoCommentDto);
         ArgumentCaptor<VideoComment> videoCommentArgumentCaptor = ArgumentCaptor.forClass(VideoComment.class);
         ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
@@ -154,11 +154,11 @@ class VideoImplTest {
 
     @Test
     void insertComment_testPassingEntityToUserActivityRepository() {
-        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "video");
+        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "guide", "video", null);
         VideoCommentDto videoCommentDto = new VideoCommentDto(postRefDtoMocked, new UserRefDto("u123", "priyanka11"), "This is a comment passed to VideoTemplateRespository");
-        when(this.videoTemplateRepositoryMock.insertComment(any(), any())).thenReturn(true);
+        when(this.videoTemplateRepositoryMock.insertComment(any(), any())).thenReturn(null);
         when(this.videoCommentMapperMock.toDoc(videoCommentDto)).thenReturn(new VideoComment(new UserRef("456", "priyanka11"), null, "This is a comment to test videoCommentMapper toDto()"));
-        when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(new PostRef("v123", "This is a test post title", "video"));
+        when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(new PostRef("v123", "This is a test post title", "guide", "video", null));
         videoImplSpy.insertComment(videoCommentDto);
         ArgumentCaptor<VideoComment> videoCommentArgumentCaptor = ArgumentCaptor.forClass(VideoComment.class);
         ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
@@ -168,6 +168,21 @@ class VideoImplTest {
         assertEquals("456", videoCommentArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("priyanka11", videoCommentArgumentCaptor.getValue().getUserRef().getUsername());
         assertEquals("This is a comment to test videoCommentMapper toDto()", videoCommentArgumentCaptor.getValue().getComment());
+    }
+
+    @Test
+    void deleteComment_testPassingArgumentsToVideoRespository() {
+        PostRefDto postRefDtoMocked = new PostRefDto("v123", null, null, null, null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(null, new UserRefDto("u123", null), null);
+        videoCommentDto.setPostRefDto(postRefDtoMocked);
+        videoCommentDto.setId("c123");
+        when(this.videoTemplateRepositoryMock.deleteComment(any())).thenReturn(true);
+        videoImplSpy.deleteComment(videoCommentDto);
+        ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
+        verify(videoTemplateRepositoryMock, times(1)).deleteComment(videoCommentDtoArgumentCaptor.capture());
+        assertEquals("c123", videoCommentDtoArgumentCaptor.getValue().getId());
+        assertEquals("v123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
+        assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
     }
 
 }

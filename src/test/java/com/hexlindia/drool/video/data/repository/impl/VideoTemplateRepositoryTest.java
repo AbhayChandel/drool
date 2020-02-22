@@ -3,9 +3,12 @@ package com.hexlindia.drool.video.data.repository.impl;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.data.doc.ProductRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.PostRefDto;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -97,8 +100,25 @@ public class VideoTemplateRepositoryTest {
     @Test
     public void test_insertComment() {
         VideoComment videoComment = new VideoComment(new UserRef("123", "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(activeVideo.getVideoId(), "Title for dummy test post", "video");
-        assertTrue(videoTemplateRepository.insertComment(postRef, videoComment));
+        PostRef postRef = new PostRef(activeVideo.getVideoId(), "Title for dummy test post", "guide", "video", null);
+        assertNotNull(videoTemplateRepository.insertComment(postRef, videoComment));
+    }
+
+    @Test
+    public void test_removeComment() {
+        VideoComment videoComment = new VideoComment(new UserRef("123", "priyanka11"), null, "This is a dummy comment to test insertion");
+        PostRef postRef = new PostRef(activeVideo.getVideoId(), "Title for dummy test post", "review", "video", null);
+        videoTemplateRepository.insertComment(postRef, videoComment);
+
+        VideoCommentDto videoCommentDto = new VideoCommentDto();
+        videoCommentDto.setId(videoComment.getId());
+        PostRefDto postRefDto = new PostRefDto();
+        postRefDto.setId(activeVideo.getVideoId());
+        videoCommentDto.setPostRefDto(postRefDto);
+        UserRefDto userRefDto = new UserRefDto();
+        userRefDto.setId("123");
+        videoCommentDto.setUserRefDto(userRefDto);
+        assertTrue(videoTemplateRepository.deleteComment(videoCommentDto));
     }
 
 
