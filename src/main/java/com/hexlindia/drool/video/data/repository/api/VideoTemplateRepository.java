@@ -11,11 +11,15 @@ public interface VideoTemplateRepository {
 
     VideoDoc findByIdAndActiveTrue(String id);
 
-    String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String saveVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String deleteVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     VideoComment insertComment(PostRef postRef, VideoComment videoComment);
 
     boolean deleteComment(VideoCommentDto videoCommentDto);
+
+    String saveCommentLike(VideoCommentDto videoCommentDto);
+
+    String deleteCommentLike(VideoCommentDto videoCommentDto);
 }

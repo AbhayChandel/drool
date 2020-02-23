@@ -45,13 +45,13 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return videoTemplateRepository.incrementLikes(videoLikeUnlikeDto);
+    public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        return videoTemplateRepository.saveVideoLikes(videoLikeUnlikeDto);
     }
 
     @Override
-    public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return videoTemplateRepository.decrementLikes(videoLikeUnlikeDto);
+    public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        return videoTemplateRepository.deleteVideoLikes(videoLikeUnlikeDto);
     }
 
     @Override
@@ -62,6 +62,16 @@ public class VideoImpl implements Video {
     @Override
     public boolean deleteComment(VideoCommentDto videoCommentDto) {
         return videoTemplateRepository.deleteComment(videoCommentDto);
+    }
+
+    @Override
+    public String saveCommentLike(VideoCommentDto videoCommentDto) {
+        return videoTemplateRepository.saveCommentLike(videoCommentDto);
+    }
+
+    @Override
+    public String deleteCommentLike(VideoCommentDto videoCommentDto) {
+        return videoTemplateRepository.deleteCommentLike(videoCommentDto);
     }
 
     private VideoDoc findInRepository(String action, String id) {

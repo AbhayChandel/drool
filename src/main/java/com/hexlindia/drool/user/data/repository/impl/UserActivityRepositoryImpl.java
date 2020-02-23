@@ -2,6 +2,7 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
+import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
@@ -22,10 +23,13 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class UserActivityRepositoryImpl implements UserActivityRepository {
 
     private MongoOperations mongoOperations;
+    private PostRefMapper postRefMapper;
 
-    public UserActivityRepositoryImpl(MongoOperations mongoOperations) {
+    public UserActivityRepositoryImpl(MongoOperations mongoOperations, PostRefMapper postRefMapper) {
         this.mongoOperations = mongoOperations;
+        this.postRefMapper = postRefMapper;
     }
+
 
     private static final String USER_ID = "userId";
 
@@ -58,6 +62,21 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
         Query queryUser = Query.query(Criteria.where(USER_ID).is(videoCommentDto.getUserRefDto().getId()));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("comments", queryComment);
+        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
+    }
+
+    @Override
+    public UpdateResult addCommentLike(VideoCommentDto videoCommentDto) {
+        PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
+        Update update = new Update().addToSet("likes.comments", new CommentRef(videoCommentDto.getId(), videoCommentDto.getComment(), postRef, null));
+        return mongoOperations.upsert(query(where(USER_ID).is(videoCommentDto.getUserRefDto().getId())), update, UserActivityDoc.class);
+    }
+
+    @Override
+    public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
+        Query queryUser = Query.query(Criteria.where(USER_ID).is(videoCommentDto.getUserRefDto().getId()));
+        Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
+        Update update = new Update().pull("likes.comments", queryComment);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
     }
 }

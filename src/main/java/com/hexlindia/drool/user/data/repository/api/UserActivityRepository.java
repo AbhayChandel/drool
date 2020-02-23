@@ -17,4 +17,8 @@ public interface UserActivityRepository {
     UpdateResult addVideoComment(String userId, CommentRef commentRef);
 
     UpdateResult removeVideoComment(VideoCommentDto videoCommentDto);
+
+    UpdateResult addCommentLike(VideoCommentDto videoCommentDto);
+
+    UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto);
 }

@@ -1,13 +1,16 @@
 package com.hexlindia.drool.common.dto;
 
-import com.hexlindia.drool.common.dto.validation.UserRefEditValidation;
+import com.hexlindia.drool.common.dto.validation.UserRefDeleteValidation;
+import com.hexlindia.drool.common.dto.validation.UserRefValidation;
 
 import javax.validation.constraints.NotEmpty;
 
 public class UserRefDto {
 
-    @NotEmpty(message = "User Id is missing", groups = {UserRefEditValidation.class})
+    @NotEmpty(message = "User Id is missing", groups = {UserRefValidation.class, UserRefDeleteValidation.class})
     private String id;
+
+    @NotEmpty(message = "Username is missing", groups = {UserRefValidation.class})
     private String username;
 
     public UserRefDto(String id, String username) {

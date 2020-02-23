@@ -84,10 +84,27 @@ class UserActivityRepositoryImplTest {
         assertTrue(updateResult.getModifiedCount() > 0);
     }
 
+    @Test
+    void addCommentLike() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test insert", "review", "video", null), new UserRefDto("456", "username1"), "This is a test comment");
+        UpdateResult updateResult = this.userActivityRepository.addCommentLike(videoCommentDto);
+        assertEquals(0, updateResult.getMatchedCount());
+        assertNotNull(updateResult.getUpsertedId());
+    }
+
+    @Test
+    void deleteCommentLike() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", null, null, null, null), new UserRefDto("123", null), null);
+        videoCommentDto.setId("c123");
+        UpdateResult updateResult = this.userActivityRepository.deleteCommentLike(videoCommentDto);
+        assertTrue(updateResult.getModifiedCount() > 0);
+    }
+
     @BeforeEach
     public void setUp() {
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.videos", new VideoLike("abc", "This video is part of test setup")), UserActivityDoc.class);
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef("p123", "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef("p123", "a test post", null, null, null), null)), UserActivityDoc.class);
     }
 
 
