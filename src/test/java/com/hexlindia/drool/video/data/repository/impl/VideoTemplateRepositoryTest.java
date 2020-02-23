@@ -27,8 +27,9 @@ public class VideoTemplateRepositoryTest {
     private final VideoTemplateRepository videoTemplateRepository;
     private final MongoTemplate mongoTemplate;
 
-    private VideoLikeUnlikeDto activeVideo;
-    private VideoLikeUnlikeDto inactiveVideo;
+    private VideoLikeUnlikeDto activeVideoLikeUnlikeDto;
+    private VideoLikeUnlikeDto inactiveVideoLikeUnlikeDto;
+    private String insertedVideoCommentId;
 
     @Autowired
     public VideoTemplateRepositoryTest(VideoTemplateRepository videoTemplateRepository, MongoTemplate mongoTemplate) {
@@ -46,21 +47,31 @@ public class VideoTemplateRepositoryTest {
                 new UserRef("123", "shabana"));
         videoDocActive.setActive(true);
         videoDocActive = this.mongoTemplate.insert(videoDocActive);
-        activeVideo = new VideoLikeUnlikeDto();
-        activeVideo.setVideoId(videoDocActive.getId());
-        activeVideo.setVideoTitle(videoDocActive.getTitle());
-        activeVideo.setUserId(videoDocActive.getUserRef().getId());
+        activeVideoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        activeVideoLikeUnlikeDto.setVideoId(videoDocActive.getId());
+        activeVideoLikeUnlikeDto.setVideoTitle(videoDocActive.getTitle());
+        activeVideoLikeUnlikeDto.setUserId(videoDocActive.getUserRef().getId());
 
         VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
         videoDocInactive.setActive(false);
 
-        inactiveVideo = new VideoLikeUnlikeDto();
-        inactiveVideo.setVideoId(videoDocInactive.getId());
-        inactiveVideo.setVideoTitle(videoDocInactive.getTitle());
-        inactiveVideo.setUserId(videoDocInactive.getUserRef().getId());
+        inactiveVideoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        inactiveVideoLikeUnlikeDto.setVideoId(videoDocInactive.getId());
+        inactiveVideoLikeUnlikeDto.setVideoTitle(videoDocInactive.getTitle());
+        inactiveVideoLikeUnlikeDto.setUserId(videoDocInactive.getUserRef().getId());
 
+        VideoComment videoComment = new VideoComment(new UserRef("123", "priyanka11"), null, "This is a dummy comment to test insertion");
+        PostRef postRef = new PostRef(videoDocActive.getId(), "Title for dummy test post", "guide", "video", null);
+        videoComment = videoTemplateRepository.insertComment(postRef, videoComment);
+        insertedVideoCommentId = videoComment.getId();
+
+        PostRefDto postRefDto = new PostRefDto(videoDocActive.getId(), "Title for dummy test post", "guide", "video", null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(postRefDto, new UserRefDto("123", "username1"), "Test comment");
+        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setLikes("0");
+        videoTemplateRepository.saveCommentLike(videoCommentDto);
     }
 
     @Test
@@ -77,48 +88,64 @@ public class VideoTemplateRepositoryTest {
 
     @Test
     public void test_findByIdActiveTrue() {
-        assertNotNull(videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()));
+        assertNotNull(videoTemplateRepository.findByIdAndActiveTrue(activeVideoLikeUnlikeDto.getVideoId()));
     }
 
     @Test
     public void test_findByIdActiveFalse() {
-        assertNull(videoTemplateRepository.findByIdAndActiveTrue(inactiveVideo.getVideoId()));
+        assertNull(videoTemplateRepository.findByIdAndActiveTrue(inactiveVideoLikeUnlikeDto.getVideoId()));
     }
 
     @Test
     public void test_IncrementLikes() {
-        videoTemplateRepository.incrementLikes(activeVideo);
-        assertEquals(1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
+        videoTemplateRepository.saveVideoLikes(activeVideoLikeUnlikeDto);
+        assertEquals(1, videoTemplateRepository.findByIdAndActiveTrue(activeVideoLikeUnlikeDto.getVideoId()).getLikes());
     }
 
     @Test
     public void test_DecrementLikes() {
-        videoTemplateRepository.decrementLikes(activeVideo);
-        assertEquals(-1, videoTemplateRepository.findByIdAndActiveTrue(activeVideo.getVideoId()).getLikes());
+        videoTemplateRepository.deleteVideoLikes(activeVideoLikeUnlikeDto);
+        assertEquals(-1, videoTemplateRepository.findByIdAndActiveTrue(activeVideoLikeUnlikeDto.getVideoId()).getLikes());
     }
 
     @Test
     public void test_insertComment() {
         VideoComment videoComment = new VideoComment(new UserRef("123", "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(activeVideo.getVideoId(), "Title for dummy test post", "guide", "video", null);
+        PostRef postRef = new PostRef(activeVideoLikeUnlikeDto.getVideoId(), "Title for dummy test post", "guide", "video", null);
         assertNotNull(videoTemplateRepository.insertComment(postRef, videoComment));
     }
 
     @Test
     public void test_removeComment() {
         VideoComment videoComment = new VideoComment(new UserRef("123", "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(activeVideo.getVideoId(), "Title for dummy test post", "review", "video", null);
+        PostRef postRef = new PostRef(activeVideoLikeUnlikeDto.getVideoId(), "Title for dummy test post", "review", "video", null);
         videoTemplateRepository.insertComment(postRef, videoComment);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setId(videoComment.getId());
         PostRefDto postRefDto = new PostRefDto();
-        postRefDto.setId(activeVideo.getVideoId());
+        postRefDto.setId(activeVideoLikeUnlikeDto.getVideoId());
         videoCommentDto.setPostRefDto(postRefDto);
         UserRefDto userRefDto = new UserRefDto();
         userRefDto.setId("123");
         videoCommentDto.setUserRefDto(userRefDto);
         assertTrue(videoTemplateRepository.deleteComment(videoCommentDto));
+    }
+
+    @Test
+    public void test_saveCommentLike() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), activeVideoLikeUnlikeDto.getVideoTitle(), null, null, null), new UserRefDto("123", "username1"), null);
+        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setLikes("0");
+        assertEquals("1", videoTemplateRepository.saveCommentLike(videoCommentDto));
+    }
+
+    @Test
+    public void test_deleteCommentLike() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), null, null, null, null), new UserRefDto("123", "username1"), null);
+        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setLikes("1");
+        assertEquals("0", videoTemplateRepository.deleteCommentLike(videoCommentDto));
     }
 
 

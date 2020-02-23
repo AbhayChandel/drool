@@ -10,11 +10,15 @@ public interface Video {
 
     public VideoDto findById(String id);
 
-    public String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     VideoCommentDto insertComment(VideoCommentDto videoCommentDto);
 
     boolean deleteComment(VideoCommentDto videoCommentDto);
+
+    String saveCommentLike(VideoCommentDto videoCommentDto);
+
+    String deleteCommentLike(VideoCommentDto videoCommentDto);
 }

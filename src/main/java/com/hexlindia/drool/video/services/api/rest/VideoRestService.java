@@ -16,16 +16,22 @@ public interface VideoRestService {
     ResponseEntity<VideoDto> insert(@RequestBody VideoDto videoDto);
 
     @PutMapping(value = "/likes/increment")
-    ResponseEntity<String> incrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
+    ResponseEntity<String> incrementVideoLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     @PutMapping(value = "/likes/decrement")
-    ResponseEntity<String> decrementLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
+    ResponseEntity<String> decrementVideoLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     @PutMapping(value = "/insert/comment")
     ResponseEntity<VideoCommentDto> insertComment(@RequestBody VideoCommentDto videoCommentDto);
 
     @PutMapping(value = "/delete/comment")
     ResponseEntity<Boolean> deleteComment(@RequestBody VideoCommentDto videoCommentDto);
+
+    @PutMapping(value = "/comment/likes/increment")
+    ResponseEntity<String> saveCommentLike(@RequestBody VideoCommentDto videoCommentDto);
+
+    @PutMapping(value = "/comment/likes/decrement")
+    ResponseEntity<String> deleteCommentLike(@RequestBody VideoCommentDto videoCommentDto);
 
 
 }

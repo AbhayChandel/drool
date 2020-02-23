@@ -1,7 +1,11 @@
 package com.hexlindia.drool.video.business.impl.usecase;
 
+import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
@@ -10,11 +14,13 @@ import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@Slf4j
 public class VideoImpl implements Video {
 
     private final VideoDocDtoMapper videoDocDtoMapper;
@@ -25,18 +31,27 @@ public class VideoImpl implements Video {
 
     private final PostRefMapper postRefMapper;
 
-    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository, VideoCommentMapper videoCommentMapper, PostRefMapper postRefMapper) {
+    private final UserActivity userActivity;
+
+    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository, VideoCommentMapper videoCommentMapper, PostRefMapper postRefMapper, UserActivity userActivity) {
         this.videoDocDtoMapper = videoDocDtoMapper;
         this.videoTemplateRepository = videoTemplateRepository;
         this.videoCommentMapper = videoCommentMapper;
         this.postRefMapper = postRefMapper;
+        this.userActivity = userActivity;
     }
 
     @Override
     public VideoDto insert(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
         videoDoc.setDatePosted(LocalDateTime.now());
-        return videoDocDtoMapper.toDto(videoTemplateRepository.insert(videoDoc));
+        videoDoc = videoTemplateRepository.insert(videoDoc);
+        if (videoDoc.getId() != null) {
+            userActivity.addVideo(videoDoc);
+            return videoDocDtoMapper.toDto(videoDoc);
+        }
+        log.error("Video not inserted");
+        return null;
     }
 
     @Override
@@ -45,23 +60,63 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public String incrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return videoTemplateRepository.incrementLikes(videoLikeUnlikeDto);
+    public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        String likes = videoTemplateRepository.saveVideoLikes(videoLikeUnlikeDto);
+        userActivity.addVideoLike(videoLikeUnlikeDto);
+        return likes;
     }
 
     @Override
-    public String decrementLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return videoTemplateRepository.decrementLikes(videoLikeUnlikeDto);
+    public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+        String likes = videoTemplateRepository.deleteVideoLikes(videoLikeUnlikeDto);
+        userActivity.deleteVideoLike(videoLikeUnlikeDto);
+        return likes;
     }
 
     @Override
     public VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
-        return videoCommentMapper.toDto(videoTemplateRepository.insertComment(postRefMapper.toDoc(videoCommentDto.getPostRefDto()), videoCommentMapper.toDoc(videoCommentDto)));
+        PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
+        VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
+        videoCommentDto = videoCommentMapper.toDto(videoTemplateRepository.insertComment(postRef, videoComment));
+        if (videoCommentDto != null) {
+            userActivity.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
+            return videoCommentDto;
+        }
+        log.error("Video comment not inserted");
+        return null;
     }
 
     @Override
     public boolean deleteComment(VideoCommentDto videoCommentDto) {
-        return videoTemplateRepository.deleteComment(videoCommentDto);
+        boolean result = videoTemplateRepository.deleteComment(videoCommentDto);
+        if (result) {
+            userActivity.deleteVideoComment(videoCommentDto);
+        } else {
+            log.error("Video comment not deleted");
+        }
+        return result;
+    }
+
+    @Override
+    public String saveCommentLike(VideoCommentDto videoCommentDto) {
+        String likes = videoTemplateRepository.saveCommentLike(videoCommentDto);
+        if (Integer.valueOf(likes) > Integer.valueOf(videoCommentDto.getLikes())) {
+            userActivity.addCommentLike(videoCommentDto);
+        } else {
+            log.error("Video comment like not saved");
+        }
+        return likes;
+    }
+
+    @Override
+    public String deleteCommentLike(VideoCommentDto videoCommentDto) {
+        String likes = videoTemplateRepository.deleteCommentLike(videoCommentDto);
+        if (Integer.valueOf(likes) < Integer.valueOf(videoCommentDto.getLikes())) {
+            userActivity.deleteCommentLike(videoCommentDto);
+        } else {
+            log.error("Video comment like not deleted");
+        }
+        return likes;
     }
 
     private VideoDoc findInRepository(String action, String id) {
