@@ -1,4 +1,4 @@
-package com.hexlindia.drool.user.data.repository.api;
+package com.hexlindia.drool.user.business.api.usecase;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -6,7 +6,7 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
 
-public interface UserActivityRepository {
+public interface UserActivity {
 
     UpdateResult addVideo(VideoDoc videoDoc);
 

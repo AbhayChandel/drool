@@ -65,7 +65,7 @@ class UserActivityRepositoryImplTest {
         videoLikeUnlikeDto.setVideoId("abc");
         videoLikeUnlikeDto.setVideoTitle("Testing removing video like");
         videoLikeUnlikeDto.setUserId("123");
-        UpdateResult updateResult = this.userActivityRepository.removeVideoLike(videoLikeUnlikeDto);
+        UpdateResult updateResult = this.userActivityRepository.deleteVideoLike(videoLikeUnlikeDto);
         assertEquals(1, updateResult.getMatchedCount());
         assertEquals(1, updateResult.getModifiedCount());
     }
@@ -80,7 +80,7 @@ class UserActivityRepositoryImplTest {
     void removeVideoComment() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto("123", ""), null);
         videoCommentDto.setId("c123");
-        UpdateResult updateResult = this.userActivityRepository.removeVideoComment(videoCommentDto);
+        UpdateResult updateResult = this.userActivityRepository.deleteVideoComment(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
     }
 

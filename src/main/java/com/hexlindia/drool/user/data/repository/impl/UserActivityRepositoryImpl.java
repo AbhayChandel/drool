@@ -30,7 +30,6 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
         this.postRefMapper = postRefMapper;
     }
 
-
     private static final String USER_ID = "userId";
 
     @Override
@@ -45,7 +44,7 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     }
 
     @Override
-    public UpdateResult removeVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
+    public UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         Query queryUser = Query.query(Criteria.where(USER_ID).is(videoLikeUnlikeDto.getUserId()));
         Query queryVideo = Query.query(Criteria.where("videoId").is(videoLikeUnlikeDto.getVideoId()));
         Update update = new Update().pull("likes.videos", queryVideo);
@@ -58,7 +57,7 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     }
 
     @Override
-    public UpdateResult removeVideoComment(VideoCommentDto videoCommentDto) {
+    public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
         Query queryUser = Query.query(Criteria.where(USER_ID).is(videoCommentDto.getUserRefDto().getId()));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("comments", queryComment);
