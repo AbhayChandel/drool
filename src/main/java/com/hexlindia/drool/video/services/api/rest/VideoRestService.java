@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/${rest.uri.version}/video")
 public interface VideoRestService {
 
-    @PostMapping("/insert")
-    ResponseEntity<VideoDto> insert(@RequestBody VideoDto videoDto);
+    @PostMapping("/save")
+    ResponseEntity<VideoDto> save(@RequestBody VideoDto videoDto);
 
     @PutMapping(value = "/likes/increment")
     ResponseEntity<String> incrementVideoLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);

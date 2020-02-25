@@ -42,10 +42,10 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public VideoDto insert(VideoDto videoDto) {
+    public VideoDto save(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
         videoDoc.setDatePosted(LocalDateTime.now());
-        videoDoc = videoTemplateRepository.insert(videoDoc);
+        videoDoc = videoTemplateRepository.save(videoDoc);
         if (videoDoc.getId() != null) {
             userActivity.addVideo(videoDoc);
             return videoDocDtoMapper.toDto(videoDoc);

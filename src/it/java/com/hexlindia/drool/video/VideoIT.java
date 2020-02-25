@@ -305,7 +305,7 @@ public class VideoIT {
     }
 
     private String getInsertUri() {
-        return "/" + restUriVersion + "/video/insert";
+        return "/" + restUriVersion + "/video/save";
     }
 
     private String getIncrementLikesUri() {

@@ -7,7 +7,7 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 
 public interface VideoTemplateRepository {
-    VideoDoc insert(VideoDoc videoDoc);
+    VideoDoc save(VideoDoc videoDoc);
 
     VideoDoc findByIdAndActiveTrue(String id);
 

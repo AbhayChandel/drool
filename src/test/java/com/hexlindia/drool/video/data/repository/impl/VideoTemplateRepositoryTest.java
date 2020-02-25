@@ -75,15 +75,29 @@ public class VideoTemplateRepositoryTest {
     }
 
     @Test
-    public void test_Insert() {
+    public void test_SaveInsert() {
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
         VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef("123", "shabana"));
-        videoDoc = videoTemplateRepository.insert(videoDoc);
+        videoDoc = videoTemplateRepository.save(videoDoc);
         assertNotNull(videoDoc.getId());
+    }
+
+    @Test
+    public void test_SaveSave() {
+        ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
+        ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
+        List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
+        VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+                productRefList,
+                new UserRef("123", "shabana"));
+        videoDoc = videoTemplateRepository.save(videoDoc);
+        videoDoc.setSourceId("vQ76");
+        videoDoc = videoTemplateRepository.save(videoDoc);
+        assertEquals("vQ76", videoDoc.getSourceId());
     }
 
     @Test

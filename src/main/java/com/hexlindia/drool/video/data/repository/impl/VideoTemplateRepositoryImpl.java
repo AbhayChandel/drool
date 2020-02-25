@@ -39,8 +39,8 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     }
 
     @Override
-    public VideoDoc insert(VideoDoc videoDoc) {
-        return this.mongoOperations.insert(videoDoc);
+    public VideoDoc save(VideoDoc videoDoc) {
+        return this.mongoOperations.save(videoDoc);
     }
 
     @Override
