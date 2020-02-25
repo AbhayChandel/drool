@@ -59,15 +59,15 @@ class VideoImplTest {
     }
 
     @Test
-    void insert_PassingObjectToRepositoryLayer() {
+    void save_PassingObjectToRepositoryLayer() {
         VideoDoc videoDocMock = new VideoDoc("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef("123", "shabana"));
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoTemplateRepositoryMock.insert((VideoDoc) any())).thenReturn(videoDocMock);
-        this.videoImplSpy.insert(null);
+        when(this.videoTemplateRepositoryMock.save((VideoDoc) any())).thenReturn(videoDocMock);
+        this.videoImplSpy.save(null);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
-        verify(this.videoTemplateRepositoryMock, times(1)).insert(videoDocArgumentCaptor.capture());
+        verify(this.videoTemplateRepositoryMock, times(1)).save(videoDocArgumentCaptor.capture());
         assertEquals("review", videoDocArgumentCaptor.getValue().getType());
         assertEquals("L'oreal Collosal Kajal Review", videoDocArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDocArgumentCaptor.getValue().getDescription());
@@ -81,15 +81,15 @@ class VideoImplTest {
     }
 
     @Test
-    void insert_PassingObjectToUserActivity() {
+    void save_PassingObjectToUserActivity() {
         VideoDoc videoDocMock = new VideoDoc("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef("123", "shabana"));
         videoDocMock.setId("v123");
         videoDocMock.setDatePosted(LocalDateTime.now());
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoTemplateRepositoryMock.insert((VideoDoc) any())).thenReturn(videoDocMock);
-        this.videoImplSpy.insert(null);
+        when(this.videoTemplateRepositoryMock.save((VideoDoc) any())).thenReturn(videoDocMock);
+        this.videoImplSpy.save(null);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
         verify(this.userActivityMock, times(1)).addVideo(videoDocArgumentCaptor.capture());
         assertEquals("v123", videoDocArgumentCaptor.getValue().getId());
