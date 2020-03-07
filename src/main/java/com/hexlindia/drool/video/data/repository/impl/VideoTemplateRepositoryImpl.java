@@ -8,11 +8,14 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -20,12 +23,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @Slf4j
 public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
+
+    private static final String VIDEO_COLLECTION_NAME = "videos";
 
     private final MongoOperations mongoOperations;
     private final UserActivityRepository userActivityRepository;
@@ -46,6 +52,23 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     @Override
     public VideoDoc findByIdAndActiveTrue(String id) {
         return mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+    }
+
+    @Override
+    public VideoThumbnailDataAggregation getLatestThreeVideosByUser(String userId) {
+
+        MatchOperation matchUserVideos = match(new Criteria("userRef._id").is(userId).andOperator(new Criteria("active").is(true)));
+        FacetOperation facet = facet(sort(Sort.Direction.DESC, "datePosted"), limit(3)).as("videoThumbnailList")
+                .and(count().as("totalVideoCount")).as("count");
+        ProjectionOperation project = project("videoThumbnailList", "count.totalVideoCount");
+
+        AggregationResults<VideoThumbnailDataAggregation> results = this.mongoOperations.aggregate(Aggregation.newAggregation(
+                matchUserVideos,
+                facet,
+                project
+        ), VIDEO_COLLECTION_NAME, VideoThumbnailDataAggregation.class);
+
+        return results.getUniqueMappedResult();
     }
 
     @Override

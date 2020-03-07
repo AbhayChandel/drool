@@ -1,11 +1,13 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
+import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
 import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.to.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.entity.UserProfileEntity;
 import com.hexlindia.drool.user.data.repository.UserProfileRepository;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
+import com.hexlindia.drool.video.business.api.usecase.Video;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,10 +22,13 @@ public class UserProfileImpl implements UserProfile {
 
     private final UserProfileMapper userProfileMapper;
 
+    private final Video video;
+
     @Autowired
-    UserProfileImpl(UserProfileRepository userProfileRepository, UserProfileMapper userProfileMapper) {
+    UserProfileImpl(UserProfileRepository userProfileRepository, UserProfileMapper userProfileMapper, Video video) {
         this.userProfileRepository = userProfileRepository;
         this.userProfileMapper = userProfileMapper;
+        this.video = video;
     }
 
     @Override
@@ -58,5 +63,10 @@ public class UserProfileImpl implements UserProfile {
         UserProfileEntity userProfileEntity = this.userProfileRepository.save(userProfileMapper.toEntity(userProfileTo));
         log.debug("User profile after update {}", userProfileEntity);
         return this.userProfileMapper.toTransferObject(userProfileEntity);
+    }
+
+    @Override
+    public ContributionSummaryDto getContributionSummary(String userId) {
+        return new ContributionSummaryDto(video.getLatestThreeVideoThumbnails(userId));
     }
 }
