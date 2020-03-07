@@ -1,5 +1,6 @@
 package com.hexlindia.drool.user.business.api.usecase;
 
+import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
 import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 
 public interface UserProfile {
@@ -11,4 +12,6 @@ public interface UserProfile {
     UserProfileTo findByUsername(String username);
 
     UserProfileTo update(UserProfileTo userProfileTo);
+
+    ContributionSummaryDto getContributionSummary(String userId);
 }

@@ -15,6 +15,7 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
+import com.hexlindia.drool.video.dto.mapper.VideoThumbnailDataMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,9 +54,12 @@ class VideoImplTest {
     @Mock
     private PostRefMapper postRefMapperMock;
 
+    @Mock
+    private VideoThumbnailDataMapper videoThumbnailDataMapperMock;
+
     @BeforeEach
     void setUp() {
-        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoTemplateRepositoryMock, videoCommentMapperMock, postRefMapperMock, userActivityMock));
+        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoTemplateRepositoryMock, videoCommentMapperMock, postRefMapperMock, userActivityMock, videoThumbnailDataMapperMock));
     }
 
     @Test
@@ -119,6 +123,16 @@ class VideoImplTest {
     void findById_testFindUnavailableVideo() {
         when(this.videoTemplateRepositoryMock.findByIdAndActiveTrue("abc")).thenReturn(null);
         Assertions.assertThrows(VideoNotFoundException.class, () -> videoImplSpy.findById("abc"));
+    }
+
+    @Test
+    void getLatestThree_testPassingEntityToRepository() {
+        when(this.videoTemplateRepositoryMock.getLatestThreeVideosByUser("abc")).thenReturn(null);
+        Assertions.assertThrows(VideoNotFoundException.class, () -> videoImplSpy.findById("abc"));
+        this.videoImplSpy.getLatestThreeVideoThumbnails("abc");
+        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(videoTemplateRepositoryMock, times(1)).getLatestThreeVideosByUser(userIdArgumentCaptor.capture());
+        assertEquals("abc", userIdArgumentCaptor.getValue());
     }
 
     @Test

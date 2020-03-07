@@ -6,6 +6,7 @@ import com.hexlindia.drool.user.business.api.to.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.data.entity.UserProfileEntity;
 import com.hexlindia.drool.user.data.repository.UserProfileRepository;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
+import com.hexlindia.drool.video.business.api.usecase.Video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +33,12 @@ class UserProfileImplTest {
     @Mock
     private UserProfileRepository userProfileRepository;
 
+    @Mock
+    private Video videoMock;
+
     @BeforeEach
     void setUp() {
-        this.userProfileImpl = Mockito.spy(new UserProfileImpl(this.userProfileRepository, this.userProfileMapperMocked));
+        this.userProfileImpl = Mockito.spy(new UserProfileImpl(this.userProfileRepository, this.userProfileMapperMocked, this.videoMock));
     }
 
     @Test
@@ -144,6 +148,15 @@ class UserProfileImplTest {
         doThrow(new DataIntegrityViolationException("")).when(this.userProfileRepository).save(any());
         when(this.userProfileMapperMocked.toEntity(any())).thenReturn(null);
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> userProfileImpl.update(null));
+    }
+
+    @Test
+    void contributionSummary_testPassingArgumentsToRepository() {
+        when(this.videoMock.getLatestThreeVideoThumbnails("123")).thenReturn(null);
+        userProfileImpl.getContributionSummary("123");
+        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(videoMock, times(1)).getLatestThreeVideoThumbnails(userIdArgumentCaptor.capture());
+        assertEquals("123", userIdArgumentCaptor.getValue());
     }
 
 }

@@ -8,11 +8,10 @@ import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
-import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoDto;
-import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.video.dto.*;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
+import com.hexlindia.drool.video.dto.mapper.VideoThumbnailDataMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,12 +32,15 @@ public class VideoImpl implements Video {
 
     private final UserActivity userActivity;
 
-    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository, VideoCommentMapper videoCommentMapper, PostRefMapper postRefMapper, UserActivity userActivity) {
+    private final VideoThumbnailDataMapper videoThumbnailDataMapper;
+
+    public VideoImpl(VideoDocDtoMapper videoDocDtoMapper, VideoTemplateRepository videoTemplateRepository, VideoCommentMapper videoCommentMapper, PostRefMapper postRefMapper, UserActivity userActivity, VideoThumbnailDataMapper videoThumbnailDataMapper) {
         this.videoDocDtoMapper = videoDocDtoMapper;
         this.videoTemplateRepository = videoTemplateRepository;
         this.videoCommentMapper = videoCommentMapper;
         this.postRefMapper = postRefMapper;
         this.userActivity = userActivity;
+        this.videoThumbnailDataMapper = videoThumbnailDataMapper;
     }
 
     @Override
@@ -57,6 +59,13 @@ public class VideoImpl implements Video {
     @Override
     public VideoDto findById(String id) {
         return videoDocDtoMapper.toDto(findInRepository("Video search", id));
+    }
+
+    @Override
+    public VideoThumbnailDataDto getLatestThreeVideoThumbnails(String userId) {
+        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoTemplateRepository.getLatestThreeVideosByUser(userId);
+        return videoThumbnailDataMapper.toDto(videoThumbnailDataAggregation);
+
     }
 
     @Override

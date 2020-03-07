@@ -10,12 +10,15 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +49,26 @@ public class VideoTemplateRepositoryTest {
                 productRefList,
                 new UserRef("123", "shabana"));
         videoDocActive.setActive(true);
+        videoDocActive.setDatePosted(LocalDateTime.parse("16-08-2016 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
         videoDocActive = this.mongoTemplate.insert(videoDocActive);
+        VideoDoc videoDocActive2 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+                productRefList,
+                new UserRef("123", "shabana"));
+        videoDocActive2.setActive(true);
+        videoDocActive2.setDatePosted(LocalDateTime.parse("10-08-2017 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+        videoDocActive = this.mongoTemplate.insert(videoDocActive2);
+        VideoDoc videoDocActive3 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+                productRefList,
+                new UserRef("123", "shabana"));
+        videoDocActive3.setActive(true);
+        videoDocActive3.setDatePosted(LocalDateTime.parse("10-08-2018 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+        videoDocActive = this.mongoTemplate.insert(videoDocActive3);
+        VideoDoc videoDocActive4 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+                productRefList,
+                new UserRef("123", "shabana"));
+        videoDocActive4.setActive(true);
+        videoDocActive4.setDatePosted(LocalDateTime.parse("10-08-2019 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+        videoDocActive = this.mongoTemplate.insert(videoDocActive4);
         activeVideoLikeUnlikeDto = new VideoLikeUnlikeDto();
         activeVideoLikeUnlikeDto.setVideoId(videoDocActive.getId());
         activeVideoLikeUnlikeDto.setVideoTitle(videoDocActive.getTitle());
@@ -108,6 +130,12 @@ public class VideoTemplateRepositoryTest {
     @Test
     public void test_findByIdActiveFalse() {
         assertNull(videoTemplateRepository.findByIdAndActiveTrue(inactiveVideoLikeUnlikeDto.getVideoId()));
+    }
+
+    @Test
+    public void test_getLatestThreeByUser() {
+        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoTemplateRepository.getLatestThreeVideosByUser("123");
+        assertEquals(3, videoThumbnailDataAggregation.getVideoThumbnailList().size());
     }
 
     @Test

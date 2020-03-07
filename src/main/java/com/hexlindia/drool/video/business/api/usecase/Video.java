@@ -3,6 +3,7 @@ package com.hexlindia.drool.video.business.api.usecase;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
 
 public interface Video {
 
@@ -21,4 +22,6 @@ public interface Video {
     String saveCommentLike(VideoCommentDto videoCommentDto);
 
     String deleteCommentLike(VideoCommentDto videoCommentDto);
+
+    VideoThumbnailDataDto getLatestThreeVideoThumbnails(String userId);
 }
