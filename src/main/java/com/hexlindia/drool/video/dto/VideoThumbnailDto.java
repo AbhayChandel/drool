@@ -1,5 +1,7 @@
 package com.hexlindia.drool.video.dto;
 
+import com.hexlindia.drool.common.data.doc.UserRef;
+
 public class VideoThumbnailDto {
 
     private String id;
@@ -7,6 +9,7 @@ public class VideoThumbnailDto {
     private String title;
     private String views;
     private String likes;
+    private UserRef userRef;
 
     public VideoThumbnailDto() {
     }
@@ -49,5 +52,13 @@ public class VideoThumbnailDto {
 
     public void setLikes(String likes) {
         this.likes = likes;
+    }
+
+    public UserRef getUserRef() {
+        return userRef;
+    }
+
+    public void setUserRef(UserRef userRef) {
+        this.userRef = userRef;
     }
 }
