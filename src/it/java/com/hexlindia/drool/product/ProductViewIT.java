@@ -1,11 +1,13 @@
 package com.hexlindia.drool.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.product.data.doc.AspectDoc;
 import com.hexlindia.drool.product.data.doc.AspectOption;
+import com.hexlindia.drool.product.data.doc.AspectResultDoc;
+import com.hexlindia.drool.product.data.doc.AspectsDoc;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
 import com.hexlindia.drool.product.dto.ProductPageDto;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +44,7 @@ public class ProductViewIT {
     @Autowired
     MongoOperations mongoOperations;
 
-    private Map<String, String> insertedProducts = new HashMap<>();
+    private Map<String, ObjectId> insertedProducts = new HashMap<>();
 
     private String getfindProductPageViewByIdUri() {
         return "/" + restUriVersion + "/view/product/page/id";
@@ -50,15 +52,22 @@ public class ProductViewIT {
 
     @BeforeEach
     void setup() {
-        AspectDoc aspectStyle = new AspectDoc("1", "pc", "Top Styles", 45,
+        AspectResultDoc aspectStyle = new AspectResultDoc("1", "pc", "Top Styles", 45,
                 Arrays.asList(new AspectOption("Bohemian", 5)));
-        AspectDoc aspectOccasion = new AspectDoc("2", "pc", "Occasion", 35,
+        AspectResultDoc aspectOccasion = new AspectResultDoc("2", "pc", "Occasion", 35,
                 Arrays.asList(new AspectOption("Wedding", 15)));
-        ProductDoc productDocActive = new ProductDoc("Lakme 9 to 5", Arrays.asList(aspectStyle, aspectOccasion));
+        ProductDoc productDocActive = new ProductDoc();
+        AspectsDoc aspectsDoc = new AspectsDoc();
+        aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
+        aspectsDoc.setExternalAspectIds(Arrays.asList(new ObjectId(), new ObjectId(), new ObjectId()));
+        productDocActive.setAspectsDoc(aspectsDoc);
+        productDocActive.setName("Lakme 9 to 5");
         productDocActive.setActive(true);
         this.mongoOperations.save(productDocActive);
         insertedProducts.put("active", productDocActive.getId());
-        ProductDoc productDocInactive = new ProductDoc("Lakme 9 to 5", Arrays.asList(aspectStyle, aspectOccasion));
+        ProductDoc productDocInactive = new ProductDoc();
+        productDocInactive.setAspectsDoc(aspectsDoc);
+        productDocInactive.setName("L' Oreal Collosal Kajal");
         productDocInactive.setActive(false);
         this.mongoOperations.save(productDocInactive);
         insertedProducts.put("inactive", productDocInactive.getId());
@@ -75,14 +84,14 @@ public class ProductViewIT {
         assertNotNull(productPageDto.getProductDto().getId());
         assertTrue(productPageDto.getProductDto().getActive());
         assertEquals("Lakme 9 to 5", productPageDto.getProductDto().getName());
-        assertEquals("1", productPageDto.getProductDto().getAspects().get(0).getId());
-        assertEquals("pc", productPageDto.getProductDto().getAspects().get(0).getDisplayComponent());
-        assertEquals("Top Styles", productPageDto.getProductDto().getAspects().get(0).getTitle());
-        assertEquals(45, productPageDto.getProductDto().getAspects().get(0).getVotes());
-        assertEquals("Bohemian", productPageDto.getProductDto().getAspects().get(0).getOptions().get(0).getName());
-        assertEquals(5, productPageDto.getProductDto().getAspects().get(0).getOptions().get(0).getVotes());
-        assertEquals("Wedding", productPageDto.getProductDto().getAspects().get(1).getOptions().get(0).getName());
-        assertEquals(15, productPageDto.getProductDto().getAspects().get(1).getOptions().get(0).getVotes());
+        assertEquals("1", productPageDto.getProductDto().getAspectResults().get(0).getId());
+        assertEquals("pc", productPageDto.getProductDto().getAspectResults().get(0).getDisplayComponent());
+        assertEquals("Top Styles", productPageDto.getProductDto().getAspectResults().get(0).getTitle());
+        assertEquals(45, productPageDto.getProductDto().getAspectResults().get(0).getVotes());
+        assertEquals("Bohemian", productPageDto.getProductDto().getAspectResults().get(0).getOptions().get(0).getName());
+        assertEquals(5, productPageDto.getProductDto().getAspectResults().get(0).getOptions().get(0).getVotes());
+        assertEquals("Wedding", productPageDto.getProductDto().getAspectResults().get(1).getOptions().get(0).getName());
+        assertEquals(15, productPageDto.getProductDto().getAspectResults().get(1).getOptions().get(0).getVotes());
     }
 
 

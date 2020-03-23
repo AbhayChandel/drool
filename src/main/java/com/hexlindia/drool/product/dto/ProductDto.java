@@ -3,6 +3,7 @@ package com.hexlindia.drool.product.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -15,13 +16,13 @@ import java.util.List;
 public class ProductDto {
 
     @Id
-    private String id;
+    private ObjectId id;
     private Boolean active;
     private String name;
-    private List<AspectDto> aspects;
+    private List<AspectResultDto> aspectResults;
 
-    public ProductDto(String name, List<AspectDto> aspects) {
+    public ProductDto(String name, List<AspectResultDto> aspectResults) {
         this.name = name;
-        this.aspects = aspects;
+        this.aspectResults = aspectResults;
     }
 }

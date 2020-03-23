@@ -3,6 +3,7 @@ package com.hexlindia.drool.product.business.impl.usecase;
 import com.hexlindia.drool.product.data.repository.api.ProductRepository;
 import com.hexlindia.drool.product.dto.mapper.ProductDocDtoMapper;
 import com.hexlindia.drool.product.exception.ProductNotFoundException;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class ProductsImplTest {
 
     @Test
     void findById_testFindUnavailableProduct() {
-        when(this.productRepositoryMock.findById("abc")).thenReturn(null);
-        Assertions.assertThrows(ProductNotFoundException.class, () -> productsImplSpy.getProductPageById("abc"));
+        when(this.productRepositoryMock.findById(new ObjectId())).thenReturn(null);
+        Assertions.assertThrows(ProductNotFoundException.class, () -> productsImplSpy.getProductPageById(new ObjectId()));
     }
 }

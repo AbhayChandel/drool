@@ -7,6 +7,7 @@ import com.hexlindia.drool.product.dto.ProductPageDto;
 import com.hexlindia.drool.product.dto.mapper.ProductDocDtoMapper;
 import com.hexlindia.drool.product.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -17,11 +18,13 @@ public class ProductViewImpl implements ProductView {
     private final ProductDocDtoMapper productDocDtoMapper;
 
     @Override
-    public ProductPageDto getProductPageById(String id) {
+    public ProductPageDto getProductPageById(ObjectId id) {
         ProductDoc productDoc = productRepository.findById(id);
         if (productDoc != null) {
             return new ProductPageDto(productDocDtoMapper.toDto(productDoc));
         }
         throw new ProductNotFoundException("Product with id " + id + " not found");
     }
+
+
 }
