@@ -1,7 +1,7 @@
 package com.hexlindia.drool.product.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.product.business.api.usecase.ProductView;
+import com.hexlindia.drool.product.business.api.usecase.Product;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -23,10 +23,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = ProductViewRestServiceImpl.class,
+@WebMvcTest(value = ProductRestServiceImpl.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebSecurityConfigurer.class, JwtValidationFilter.class}),
         excludeAutoConfiguration = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
-public class ProductViewRestServiceImplTest {
+public class ProductRestServiceImplTest {
 
     @Value("${rest.uri.version}")
     String restUriVersion;
@@ -38,31 +38,31 @@ public class ProductViewRestServiceImplTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    ProductView productViewMocked;
+    Product productMocked;
 
-    private String getfindProductPageViewByIdUri() {
-        return "/" + restUriVersion + "/view/product/page/id";
+    private String getAspectTemplatesUri() {
+        return "/" + restUriVersion + "/product//aspecttemplates/id";
     }
 
     @Test
-    public void findProductPageViewById_HttpMethodNotAllowedError() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getfindProductPageViewByIdUri() + "/1"))
+    public void getAspectTemplates_HttpMethodNotAllowedError() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getAspectTemplatesUri() + "/1"))
                 .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
-    public void findProductPageViewById_ParametersMissing() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(getfindProductPageViewByIdUri() + "/"))
+    public void getAspectTemplates_ParametersMissing() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(getAspectTemplatesUri() + "/"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void findProductPageViewById_ParametersPassedToBusinessLayer() throws Exception {
+    public void getAspectTemplates_ParametersPassedToBusinessLayer() throws Exception {
         ObjectId objectId = ObjectId.get();
-        this.mockMvc.perform(MockMvcRequestBuilders.get(getfindProductPageViewByIdUri() + "/" + objectId));
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getAspectTemplatesUri() + "/" + objectId));
 
         ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
-        verify(this.productViewMocked, times(1)).getProductPageById(idArgumentCaptor.capture());
+        verify(this.productMocked, times(1)).getAspectTemplates(idArgumentCaptor.capture());
         assertEquals(objectId, idArgumentCaptor.getValue());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AspectDto {
+public class AspectResultDto {
     private String id;
 
     @JsonProperty("displayComp")

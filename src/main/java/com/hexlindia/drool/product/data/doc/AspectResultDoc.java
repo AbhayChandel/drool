@@ -10,14 +10,14 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AspectDoc {
+public class AspectResultDoc {
     private String id;
     private String displayComponent;
     private String title;
     private Integer votes;
     private List<AspectOption> options;
 
-    public AspectDoc(String id, String displayComponent, String title, Integer votes, List<AspectOption> options) {
+    public AspectResultDoc(String id, String displayComponent, String title, Integer votes, List<AspectOption> options) {
         this.id = id;
         this.displayComponent = displayComponent;
         this.title = title;
