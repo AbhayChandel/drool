@@ -23,6 +23,7 @@ import org.springframework.http.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
@@ -75,6 +76,7 @@ public class ProductIT {
         assertEquals(4, aspectTemplates.get(0).getOptions().size());
         assertEquals("Style", aspectTemplates.get(1).getTitle());
         assertEquals(4, aspectTemplates.get(1).getOptions().size());
+        assertNotNull(aspectTemplates.get(2).getId());
         assertEquals("Shades", aspectTemplates.get(2).getTitle());
         assertEquals(3, aspectTemplates.get(2).getOptions().size());
 
@@ -91,6 +93,7 @@ public class ProductIT {
         aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
         aspectsDoc.setExternalAspectIds(insertedAspectTemplates);
         AspectTemplate shadeVariant = new AspectTemplate();
+        shadeVariant.setId(ObjectId.get());
         shadeVariant.setTitle("Shades");
         shadeVariant.setOptions(Arrays.asList("Red Coat", "Crimson Pink", "Plush Orange"));
         aspectsDoc.setInternalAspects(Arrays.asList(shadeVariant));

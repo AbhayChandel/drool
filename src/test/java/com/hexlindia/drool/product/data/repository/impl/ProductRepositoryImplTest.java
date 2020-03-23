@@ -49,6 +49,7 @@ class ProductRepositoryImplTest {
         ProductAspectTemplates productAspectTemplates = productRepository.getAspectTemplates(insertedProducts.get("active"));
         assertEquals(insertedProducts.get("active"), productAspectTemplates.getId());
         assertEquals(3, productAspectTemplates.getAspectTemplates().size());
+        assertNotNull(productAspectTemplates.getAspectTemplates().get(2).getId());
     }
 
     private void insertProducts() {
@@ -62,6 +63,7 @@ class ProductRepositoryImplTest {
         aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
         aspectsDoc.setExternalAspectIds(insertedAspectTemplates);
         AspectTemplate shadeVariant = new AspectTemplate();
+        shadeVariant.setId(ObjectId.get());
         shadeVariant.setTitle("Shades");
         shadeVariant.setOptions(Arrays.asList("Red Coat", "Crimson Pink", "Plush Orange"));
         aspectsDoc.setInternalAspects(Arrays.asList(shadeVariant));
@@ -81,6 +83,7 @@ class ProductRepositoryImplTest {
         AspectTemplate aspectTemplateOccasion = new AspectTemplate();
         aspectTemplateOccasion.setTitle("Occasions");
         aspectTemplateOccasion.setOptions(Arrays.asList("Wedding", "Day out", "Brunch", "Partying"));
+
         this.mongoOperations.save(aspectTemplateOccasion);
         insertedAspectTemplates.add(aspectTemplateOccasion.getId());
 

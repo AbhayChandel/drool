@@ -3,6 +3,7 @@ package com.hexlindia.drool.common.datamigration.test.changelog;
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
 import com.hexlindia.drool.product.data.doc.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Arrays;
@@ -33,6 +34,7 @@ public class ProductCollectionChangeLog {
         aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
         aspectsDoc.setExternalAspectIds(Arrays.asList(aspectTemplateOccasion.getId(), aspectTemplateStyle.getId()));
         AspectTemplate shadeVariant = new AspectTemplate();
+        shadeVariant.setId(ObjectId.get());
         shadeVariant.setTitle("Shades");
         shadeVariant.setOptions(Arrays.asList("Red Coat", "Crimson Pink", "Plush Orange"));
         aspectsDoc.setInternalAspects(Arrays.asList(shadeVariant));
