@@ -24,15 +24,25 @@ public class ProductReviewImpl implements ProductReview {
     @Override
     public ReviewDto save(ReviewDto reviewDto) {
         ReviewDoc reviewDoc = reviewMapper.toReviewDoc(reviewDto);
-        VideoDto videoDto = reviewDto.getVideoDto();
         if (ReviewType.video.equals(reviewDto.getReviewType())) {
-            videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
-            videoDto.setUserRefDto(reviewDto.getUserRefDto());
-            videoDto = video.save(videoDto);
+            VideoDto videoDto = saveVideo(reviewDto);
+            reviewDto.setVideoDto(videoDto);
             reviewDoc.setVideoId(new ObjectId(videoDto.getId()));
         }
         reviewDoc = productReviewRepository.save(reviewDoc, new ObjectId(reviewDto.getProductRefDto().getId()));
+        updateReviewIdInVideoDoc(reviewDoc.getVideoId(), reviewDoc.getId());
         reviewDto.setId(reviewDoc.getId().toHexString());
         return reviewDto;
+    }
+
+    private VideoDto saveVideo(ReviewDto reviewDto) {
+        VideoDto videoDto = reviewDto.getVideoDto();
+        videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
+        videoDto.setUserRefDto(reviewDto.getUserRefDto());
+        return video.save(videoDto);
+    }
+
+    private void updateReviewIdInVideoDoc(ObjectId videoId, ObjectId reviewId) {
+        video.updateReviewId(videoId, reviewId);
     }
 }

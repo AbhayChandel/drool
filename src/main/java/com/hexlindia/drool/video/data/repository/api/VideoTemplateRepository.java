@@ -6,6 +6,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
+import org.bson.types.ObjectId;
 
 public interface VideoTemplateRepository {
     VideoDoc save(VideoDoc videoDoc);
@@ -25,4 +26,6 @@ public interface VideoTemplateRepository {
     String deleteCommentLike(VideoCommentDto videoCommentDto);
 
     VideoThumbnailDataAggregation getLatestThreeVideosByUser(String userId);
+
+    boolean updateReviewId(ObjectId videoId, ObjectId reviewId);
 }
