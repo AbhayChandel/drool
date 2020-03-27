@@ -6,7 +6,7 @@ import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.ReviewDto;
-import com.hexlindia.drool.product.dto.mapper.TextReviewMapper;
+import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
 import org.bson.types.ObjectId;
@@ -32,14 +32,14 @@ class ProductReviewImplTest {
     private ProductReviewRepository productReviewRepositoryMock;
 
     @Mock
-    private TextReviewMapper textReviewMapperMock;
+    private ReviewMapper reviewMapperMock;
 
     @Mock
     private Video videoMock;
 
     @BeforeEach
     void setUp() {
-        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, textReviewMapperMock, videoMock));
+        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock));
     }
 
     @Test
@@ -52,7 +52,7 @@ class ProductReviewImplTest {
         reviewDocMocked.setDetailedReview("THis is a details text review");
         reviewDocMocked.setReviewSummary("This is text review summary");
 
-        when(this.textReviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
+        when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedObjectId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedObjectId.toHexString(), "MockedProduct", "MOckedCategory"));
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedObjectId)).thenReturn(reviewDocMocked);
@@ -89,7 +89,7 @@ class ProductReviewImplTest {
         videoDto.setUserRefDto(userRefDto);
         reviewDto.setVideoDto(videoDto);
 
-        when(this.textReviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
+        when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedProductId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedProductId.toHexString(), "MockedProduct", "MOckedCategory"));
         reviewDto.setUserRefDto(userRefDto);
@@ -127,7 +127,7 @@ class ProductReviewImplTest {
         reviewDtoMocked.setProductRefDto(new ProductRefDto(mockedProductId.toHexString(), "Colossal Kajal", "Kajal"));
         reviewDtoMocked.setUserRefDto(new UserRefDto("1", "shabana"));
 
-        when(this.textReviewMapperMock.toReviewDoc(any())).thenReturn(reviewDocMocked);
+        when(this.reviewMapperMock.toReviewDoc(any())).thenReturn(reviewDocMocked);
 
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId)).thenReturn(reviewDocMocked);
         this.productReviewSpy.save(reviewDtoMocked);

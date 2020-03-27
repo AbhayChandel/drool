@@ -1,5 +1,6 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
+import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
@@ -42,6 +43,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setRecommendation("1");
         reviewDoc.setDetailedReview("This is a detailed review");
         reviewDoc.setReviewSummary("This is a review summary");
+        reviewDoc.setUserRef(new UserRef("u123", "username123"));
         assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
     }
 
@@ -51,6 +53,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setReviewType(ReviewType.video);
         reviewDoc.setRecommendation("1");
         reviewDoc.setVideoId(ObjectId.get());
+        reviewDoc.setUserRef(new UserRef("u123", "username123"));
         assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
     }
 

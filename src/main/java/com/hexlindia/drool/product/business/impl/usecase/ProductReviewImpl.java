@@ -4,7 +4,7 @@ import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.ReviewDto;
-import com.hexlindia.drool.product.dto.mapper.TextReviewMapper;
+import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,12 @@ import java.util.Arrays;
 public class ProductReviewImpl implements ProductReview {
 
     private final ProductReviewRepository productReviewRepository;
-    private final TextReviewMapper textReviewMapper;
+    private final ReviewMapper reviewMapper;
     private final Video video;
 
     @Override
     public ReviewDto save(ReviewDto reviewDto) {
-        ReviewDoc reviewDoc = textReviewMapper.toReviewDoc(reviewDto);
+        ReviewDoc reviewDoc = reviewMapper.toReviewDoc(reviewDto);
         VideoDto videoDto = reviewDto.getVideoDto();
         if (ReviewType.video.equals(reviewDto.getReviewType())) {
             videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
