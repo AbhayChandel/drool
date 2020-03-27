@@ -44,6 +44,7 @@ public class ProductRestServiceImplTest {
         return "/" + restUriVersion + "/product//aspecttemplates/id";
     }
 
+
     @Test
     public void getAspectTemplates_HttpMethodNotAllowedError() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.put(getAspectTemplatesUri() + "/1"))
