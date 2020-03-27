@@ -1,7 +1,8 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
+import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
-import com.hexlindia.drool.product.data.doc.TextReviewDoc;
+import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,22 +37,22 @@ class ProductReviewRepositoryTest {
 
     @Test
     void saveTextReview() {
-        TextReviewDoc textReviewDoc = new TextReviewDoc();
-        textReviewDoc.setReviewType("text");
-        textReviewDoc.setRecommendation("1");
-        textReviewDoc.setDetailedReview("This is a detailed review");
-        textReviewDoc.setReviewSummary("This is a review summary");
-        assertNotNull(productReviewRepository.save(textReviewDoc, insertedProducts.get("active")));
+        ReviewDoc reviewDoc = new ReviewDoc();
+        reviewDoc.setReviewType(ReviewType.text);
+        reviewDoc.setRecommendation("1");
+        reviewDoc.setDetailedReview("This is a detailed review");
+        reviewDoc.setReviewSummary("This is a review summary");
+        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
     }
 
-    /*@Test
+    @Test
     void saveVideoReview() {
-        TextReviewDoc textReviewDoc = new TextReviewDoc();
-        textReviewDoc.setReviewType("text");
-        textReviewDoc.setRecommendation("1");
-        textReviewDoc.setVideoId(ObjectId.get());
-        assertNotNull(productReviewRepository.save(textReviewDoc, insertedProducts.get("active")));
-    }*/
+        ReviewDoc reviewDoc = new ReviewDoc();
+        reviewDoc.setReviewType(ReviewType.video);
+        reviewDoc.setRecommendation("1");
+        reviewDoc.setVideoId(ObjectId.get());
+        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
+    }
 
     private void insertProducts() {
         ProductDoc productDocActive = new ProductDoc();

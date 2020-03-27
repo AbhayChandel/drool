@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
+import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.dto.AspectPreferenceDto;
 import com.hexlindia.drool.product.dto.BrandRatingDto;
 import com.hexlindia.drool.product.dto.ReviewDto;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,7 +73,7 @@ class ProductReviewRestServiceImplTest {
     void save_ParametersArePassedToBusinessLayer() throws Exception {
         when(this.productReviewMocked.save(any())).thenReturn(null);
         ReviewDto reviewDto = new ReviewDto();
-        reviewDto.setReviewType("text");
+        reviewDto.setReviewType(ReviewType.text);
 
         AspectPreferenceDto aspectPreferenceDtoStyle = new AspectPreferenceDto();
         aspectPreferenceDtoStyle.setAspectId("abc");
@@ -96,7 +98,12 @@ class ProductReviewRestServiceImplTest {
         reviewDto.setTextReviewDto(textReviewDto);
 
         VideoDto videoDto = new VideoDto();
-        videoDto.setId("v1");
+        videoDto.setId("abc");
+        videoDto.setType("review");
+        videoDto.setActive(true);
+        videoDto.setTitle("The is a mocked video review");
+        videoDto.setDescription("this is a mocked video review description");
+        videoDto.setSourceId("werlkj");
         reviewDto.setVideoDto(videoDto);
 
         reviewDto.setUserRefDto(new UserRefDto("1", "shabana"));
@@ -109,7 +116,7 @@ class ProductReviewRestServiceImplTest {
         ArgumentCaptor<ReviewDto> reviewDtoArgumentCaptor = ArgumentCaptor.forClass(ReviewDto.class);
         verify(this.productReviewMocked, times(1)).save(reviewDtoArgumentCaptor.capture());
         ReviewDto reviewDtoPaased = reviewDtoArgumentCaptor.getValue();
-        assertEquals("text", reviewDtoPaased.getReviewType());
+        assertEquals(ReviewType.text, reviewDtoPaased.getReviewType());
 
         assertEquals("abc", reviewDtoPaased.getAspectPreferenceDtoList().get(1).getAspectId());
         assertEquals("Retro", reviewDtoPaased.getAspectPreferenceDtoList().get(1).getSelectedOptions().get(0));
@@ -131,7 +138,12 @@ class ProductReviewRestServiceImplTest {
         assertEquals("THis is a details text review", reviewDtoPaased.getTextReviewDto().getDetailedReview());
         assertEquals("This is text review summary", reviewDtoPaased.getTextReviewDto().getReviewSummary());
 
-        assertEquals("v1", reviewDtoPaased.getVideoDto().getId());
+        assertEquals("abc", reviewDtoPaased.getVideoDto().getId());
+        assertEquals("review", reviewDtoPaased.getVideoDto().getType());
+        assertTrue(reviewDtoPaased.getVideoDto().isActive());
+        assertEquals("The is a mocked video review", reviewDtoPaased.getVideoDto().getTitle());
+        assertEquals("this is a mocked video review description", reviewDtoPaased.getVideoDto().getDescription());
+        assertEquals("werlkj", reviewDtoPaased.getVideoDto().getSourceId());
 
         assertEquals("1", reviewDtoPaased.getUserRefDto().getId());
         assertEquals("shabana", reviewDtoPaased.getUserRefDto().getUsername());

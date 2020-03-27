@@ -134,6 +134,77 @@ public class ProductReviewIT {
 
     }
 
+    @Test
+    void testVideoReviewSave() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+
+        JSONObject reviewDto = new JSONObject();
+        reviewDto.put("reviewType", "video");
+
+        JSONObject aspectPreferenceDtoStyle = new JSONObject();
+        aspectPreferenceDtoStyle.put("id", "abc");
+        JSONArray aspectPreferenceDtoStyleSelected = new JSONArray();
+        aspectPreferenceDtoStyleSelected.put("Retro");
+        aspectPreferenceDtoStyleSelected.put("Bohemian");
+        aspectPreferenceDtoStyle.put("selected", aspectPreferenceDtoStyleSelected);
+
+        JSONObject aspectPreferenceDtoOcassion = new JSONObject();
+        aspectPreferenceDtoOcassion.put("id", "abc");
+        JSONArray aspectPreferenceDtoOcassionSelected = new JSONArray();
+        aspectPreferenceDtoOcassionSelected.put("Wedding");
+        aspectPreferenceDtoOcassionSelected.put("Cocktail");
+        aspectPreferenceDtoOcassion.put("selected", aspectPreferenceDtoOcassionSelected);
+
+        JSONArray aspectPreferenceDtoArray = new JSONArray();
+        aspectPreferenceDtoArray.put(aspectPreferenceDtoStyle);
+        aspectPreferenceDtoArray.put(aspectPreferenceDtoOcassion);
+
+        reviewDto.put("aspects", aspectPreferenceDtoArray);
+
+        JSONObject brandRatingDtoTrendy = new JSONObject();
+        brandRatingDtoTrendy.put("name", "Trendy");
+        brandRatingDtoTrendy.put("rating", 4);
+        JSONArray brandRatingDtoArray = new JSONArray();
+        brandRatingDtoArray.put(brandRatingDtoTrendy);
+
+        reviewDto.put("brandRating", brandRatingDtoArray);
+        reviewDto.put("recommendation", "1");
+
+        JSONObject productRefDto1 = new JSONObject();
+        productRefDto1.put("id", insertedProducts.get("active").toHexString());
+        productRefDto1.put("name", "Tom Ford Vetiver");
+        productRefDto1.put("type", "Fragrance");
+
+        reviewDto.put("product", productRefDto1);
+
+        JSONObject videoReview = new JSONObject();
+        videoReview.put("type", "review");
+        videoReview.put("active", "true");
+        videoReview.put("title", "Review for Tom Ford Vetiver");
+        videoReview.put("description", "This is an honest review of Tom Ford Vetiver");
+        videoReview.put("sourceId", "s123");
+
+        reviewDto.put("textReview", new JSONObject());
+        reviewDto.put("videoReview", videoReview);
+
+        JSONObject UserRefDto = new JSONObject();
+        UserRefDto.put("id", "u123");
+        UserRefDto.put("username", "user123");
+
+        reviewDto.put("user", UserRefDto);
+
+        HttpEntity<String> request = new HttpEntity<>(reviewDto.toString(), headers);
+        ResponseEntity<ReviewDto> responseEntity = this.restTemplate.postForEntity(getSaveUri(), request, ReviewDto.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        ReviewDto reviewDtoReturned = responseEntity.getBody();
+        assertNotNull(reviewDtoReturned.getId());
+
+
+    }
+
 
     private void getAuthToken() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();

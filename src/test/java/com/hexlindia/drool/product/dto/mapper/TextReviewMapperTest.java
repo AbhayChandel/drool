@@ -1,6 +1,7 @@
 package com.hexlindia.drool.product.dto.mapper;
 
-import com.hexlindia.drool.product.data.doc.TextReviewDoc;
+import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
+import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import com.hexlindia.drool.product.dto.TextReviewDto;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class TextReviewMapperTest {
     @Test
     void toTextReviewDoc() {
         ReviewDto reviewDto = new ReviewDto();
-        reviewDto.setReviewType("text");
+        reviewDto.setReviewType(ReviewType.text);
         reviewDto.setRecommendation("1");
 
         TextReviewDto textReviewDto = new TextReviewDto();
@@ -26,11 +27,11 @@ class TextReviewMapperTest {
         textReviewDto.setReviewSummary("This is text review summary");
         reviewDto.setTextReviewDto(textReviewDto);
 
-        TextReviewDoc textReviewDoc = textReviewMapper.toReviewDoc(reviewDto);
+        ReviewDoc reviewDoc = textReviewMapper.toReviewDoc(reviewDto);
 
-        assertEquals("text", textReviewDoc.getReviewType());
-        assertEquals("1", textReviewDoc.getRecommendation());
-        assertEquals("THis is a details text review", textReviewDoc.getDetailedReview());
-        assertEquals("This is text review summary", textReviewDoc.getReviewSummary());
+        assertEquals(ReviewType.text, reviewDoc.getReviewType());
+        assertEquals("1", reviewDoc.getRecommendation());
+        assertEquals("THis is a details text review", reviewDoc.getDetailedReview());
+        assertEquals("This is text review summary", reviewDoc.getReviewSummary());
     }
 }

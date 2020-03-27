@@ -3,6 +3,7 @@ package com.hexlindia.drool.product.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ReviewDto {
 
     private String id;
-    private String reviewType;
+    private ReviewType reviewType;
 
     @JsonProperty("aspects")
     private List<AspectPreferenceDto> aspectPreferenceDtoList;
