@@ -1,10 +1,10 @@
 package com.hexlindia.drool.product.dto.mapper;
 
-import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.data.doc.AspectVotingDetailsDoc;
 import com.hexlindia.drool.product.dto.AspectVotingDetailsDto;
 import com.hexlindia.drool.product.dto.AspectVotingDto;
+import com.hexlindia.drool.product.dto.ProductRefDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

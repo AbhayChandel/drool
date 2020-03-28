@@ -1,6 +1,5 @@
 package com.hexlindia.drool.product.dto.mapper;
 
-import com.hexlindia.drool.common.dto.mapper.ProductRefMapper;
 import com.hexlindia.drool.common.dto.mapper.UserRefMapper;
 import com.hexlindia.drool.product.data.doc.AspectVotingDetailsDoc;
 import com.hexlindia.drool.product.dto.AspectVotingDetailsDto;

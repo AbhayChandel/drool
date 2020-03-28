@@ -98,10 +98,21 @@ public class ProductReviewIT {
         JSONObject brandRatingDtoTrendy = new JSONObject();
         brandRatingDtoTrendy.put("name", "Trendy");
         brandRatingDtoTrendy.put("rating", 4);
+        JSONObject brandRatingDtoTrustable = new JSONObject();
+        brandRatingDtoTrustable.put("name", "Trustable");
+        brandRatingDtoTrustable.put("rating", 2);
         JSONArray brandRatingDtoArray = new JSONArray();
         brandRatingDtoArray.put(brandRatingDtoTrendy);
 
-        reviewDto.put("brandRating", brandRatingDtoArray);
+        JSONObject brandRef = new JSONObject();
+        brandRef.put("id", ObjectId.get().toHexString());
+        brandRef.put("name", "Lakme");
+
+        JSONObject brandCriteriaRatingsDetails = new JSONObject();
+        brandCriteriaRatingsDetails.put("brandCriteriaRatings", brandRatingDtoArray);
+        brandCriteriaRatingsDetails.put("brandRef", brandRef);
+        reviewDto.put("brandCriteriaRatingsDetails", brandCriteriaRatingsDetails);
+
         reviewDto.put("recommendation", "1");
 
         JSONObject productRefDto1 = new JSONObject();
@@ -166,10 +177,21 @@ public class ProductReviewIT {
         JSONObject brandRatingDtoTrendy = new JSONObject();
         brandRatingDtoTrendy.put("name", "Trendy");
         brandRatingDtoTrendy.put("rating", 4);
+        JSONObject brandRatingDtoTrustable = new JSONObject();
+        brandRatingDtoTrustable.put("name", "Trustable");
+        brandRatingDtoTrustable.put("rating", 2);
         JSONArray brandRatingDtoArray = new JSONArray();
         brandRatingDtoArray.put(brandRatingDtoTrendy);
 
-        reviewDto.put("brandRating", brandRatingDtoArray);
+        JSONObject brandRef = new JSONObject();
+        brandRef.put("id", ObjectId.get().toHexString());
+        brandRef.put("name", "Lakme");
+
+        JSONObject brandCriteriaRatingsDetails = new JSONObject();
+        brandCriteriaRatingsDetails.put("brandCriteriaRatings", brandRatingDtoArray);
+        brandCriteriaRatingsDetails.put("brandRef", brandRef);
+        reviewDto.put("brandCriteriaRatingsDetails", brandCriteriaRatingsDetails);
+
         reviewDto.put("recommendation", "1");
 
         JSONObject productRefDto1 = new JSONObject();

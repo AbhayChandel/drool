@@ -2,9 +2,9 @@ package com.hexlindia.drool.video.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.dto.PostRefDto;
-import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.common.error.ErrorResult;
+import com.hexlindia.drool.product.dto.ProductRefDto;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoCommentDto;

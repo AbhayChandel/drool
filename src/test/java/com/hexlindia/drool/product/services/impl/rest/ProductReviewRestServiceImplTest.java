@@ -1,16 +1,13 @@
 package com.hexlindia.drool.product.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
-import com.hexlindia.drool.product.dto.AspectVotingDto;
-import com.hexlindia.drool.product.dto.BrandRatingDto;
-import com.hexlindia.drool.product.dto.ReviewDto;
-import com.hexlindia.drool.product.dto.TextReviewDto;
+import com.hexlindia.drool.product.dto.*;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import com.hexlindia.drool.video.dto.VideoDto;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +80,12 @@ class ProductReviewRestServiceImplTest {
         aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
         reviewDto.setAspectVotingDtoList(Arrays.asList(aspectVotingDtoOcassion, aspectVotingDtoStyle));
 
-        BrandRatingDto brandRatingDtoTrendy = new BrandRatingDto();
-        brandRatingDtoTrendy.setName("Trendy");
-        brandRatingDtoTrendy.setRating(4);
-        reviewDto.setBrandRatingDtoList(Arrays.asList(brandRatingDtoTrendy));
+        BrandCriterionRatingDto brandCriterionRatingDtoTrendy = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrendy.setName("Trendy");
+        brandCriterionRatingDtoTrendy.setRating(4);
+
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy), new BrandRefDto(ObjectId.get().toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         reviewDto.setRecommendation("1");
 
@@ -126,8 +125,8 @@ class ProductReviewRestServiceImplTest {
         assertEquals("Wedding", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(0));
         assertEquals("Cocktail", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(1));
 
-        assertEquals("Trendy", reviewDtoPaased.getBrandRatingDtoList().get(0).getName());
-        assertEquals(4, reviewDtoPaased.getBrandRatingDtoList().get(0).getRating());
+        assertEquals("Trendy", reviewDtoPaased.getBrandCriteriaRatingsDetailsDto().getBrandCriterionRatingDtoList().get(0).getName());
+        assertEquals(4, reviewDtoPaased.getBrandCriteriaRatingsDetailsDto().getBrandCriterionRatingDtoList().get(0).getRating());
 
         assertEquals("1", reviewDtoPaased.getRecommendation());
 

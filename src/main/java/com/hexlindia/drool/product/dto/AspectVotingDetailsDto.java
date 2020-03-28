@@ -1,6 +1,5 @@
 package com.hexlindia.drool.product.dto;
 
-import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

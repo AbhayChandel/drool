@@ -1,13 +1,12 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
-import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
+import com.hexlindia.drool.product.business.api.usecase.BrandEvaluation;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
-import com.hexlindia.drool.product.dto.AspectVotingDto;
-import com.hexlindia.drool.product.dto.ReviewDto;
+import com.hexlindia.drool.product.dto.*;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
@@ -44,9 +43,12 @@ class ProductReviewImplTest {
     @Mock
     private Video videoMock;
 
+    @Mock
+    private BrandEvaluation brandEvaluation;
+
     @BeforeEach
     void setUp() {
-        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock));
+        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock, brandEvaluation));
     }
 
     @Test
@@ -69,11 +71,25 @@ class ProductReviewImplTest {
         aspectVotingDtoList.add(aspectVotingDtoOcassion);
         aspectVotingDtoList.add(aspectVotingDtoStyle);
         reviewDto.setAspectVotingDtoList(aspectVotingDtoList);
+        reviewDto.setUserRefDto(new UserRefDto("u123", "username123"));
+
+        BrandCriterionRatingDto brandCriterionRatingDtoTrendy = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrendy.setName("Trendy");
+        brandCriterionRatingDtoTrendy.setRating(4);
+        BrandCriterionRatingDto brandCriterionRatingDtoTrustable = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrustable.setName("Trustable");
+        brandCriterionRatingDtoTrustable.setRating(2);
+        ObjectId brandId = new ObjectId();
+
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedObjectId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedObjectId.toHexString(), "MockedProduct", "MOckedCategory"));
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedObjectId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
+        ObjectId mockedBrandRatingId = new ObjectId();
+        when(this.brandEvaluation.saveCriteriaRatings(brandCriteriaRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
@@ -125,10 +141,23 @@ class ProductReviewImplTest {
         aspectVotingDtoList.add(aspectVotingDtoStyle);
         reviewDto.setAspectVotingDtoList(aspectVotingDtoList);
 
+        BrandCriterionRatingDto brandCriterionRatingDtoTrendy = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrendy.setName("Trendy");
+        brandCriterionRatingDtoTrendy.setRating(4);
+        BrandCriterionRatingDto brandCriterionRatingDtoTrustable = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrustable.setName("Trustable");
+        brandCriterionRatingDtoTrustable.setRating(2);
+        ObjectId brandId = new ObjectId();
+
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
+
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedProductId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedProductId.toHexString(), "MockedProduct", "MOckedCategory"));
         reviewDto.setUserRefDto(userRefDto);
+        ObjectId mockedBrandRatingId = new ObjectId();
+        when(this.brandEvaluation.saveCriteriaRatings(brandCriteriaRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
         when(this.productReviewRepositoryMock.save(any(), any(), anyList())).thenReturn(reviewDocMocked);
         when(this.videoMock.save(videoDto)).thenReturn(videoDto);
         this.productReviewSpy.save(reviewDto);
@@ -177,7 +206,20 @@ class ProductReviewImplTest {
 
         reviewDtoMocked.setAspectVotingDtoList(aspectVotingDtoList);
 
+        BrandCriterionRatingDto brandCriterionRatingDtoTrendy = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrendy.setName("Trendy");
+        brandCriterionRatingDtoTrendy.setRating(4);
+        BrandCriterionRatingDto brandCriterionRatingDtoTrustable = new BrandCriterionRatingDto();
+        brandCriterionRatingDtoTrustable.setName("Trustable");
+        brandCriterionRatingDtoTrustable.setRating(2);
+        ObjectId brandId = new ObjectId();
+
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        reviewDtoMocked.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
+
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
+        ObjectId mockedBrandRatingId = new ObjectId();
+        when(this.brandEvaluation.saveCriteriaRatings(brandCriteriaRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
         this.productReviewSpy.save(reviewDtoMocked);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
