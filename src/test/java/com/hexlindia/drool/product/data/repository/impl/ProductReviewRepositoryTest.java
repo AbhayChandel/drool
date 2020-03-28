@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setDetailedReview("This is a detailed review");
         reviewDoc.setReviewSummary("This is a review summary");
         reviewDoc.setUserRef(new UserRef("u123", "username123"));
-        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
+        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active"), new ArrayList<>()));
     }
 
     @Test
@@ -54,7 +55,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setRecommendation("1");
         reviewDoc.setVideoId(ObjectId.get());
         reviewDoc.setUserRef(new UserRef("u123", "username123"));
-        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active")));
+        assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active"), new ArrayList<>()));
     }
 
     private void insertProducts() {

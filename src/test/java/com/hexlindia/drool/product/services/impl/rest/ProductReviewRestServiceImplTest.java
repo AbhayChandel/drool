@@ -5,7 +5,7 @@ import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
-import com.hexlindia.drool.product.dto.AspectPreferenceDto;
+import com.hexlindia.drool.product.dto.AspectVotingDto;
 import com.hexlindia.drool.product.dto.BrandRatingDto;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import com.hexlindia.drool.product.dto.TextReviewDto;
@@ -75,13 +75,13 @@ class ProductReviewRestServiceImplTest {
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setReviewType(ReviewType.text);
 
-        AspectPreferenceDto aspectPreferenceDtoStyle = new AspectPreferenceDto();
-        aspectPreferenceDtoStyle.setAspectId("abc");
-        aspectPreferenceDtoStyle.setSelectedOptions(Arrays.asList("Retro", "Bohemian"));
-        AspectPreferenceDto aspectPreferenceDtoOcassion = new AspectPreferenceDto();
-        aspectPreferenceDtoOcassion.setAspectId("def");
-        aspectPreferenceDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
-        reviewDto.setAspectPreferenceDtoList(Arrays.asList(aspectPreferenceDtoOcassion, aspectPreferenceDtoStyle));
+        AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
+        aspectVotingDtoStyle.setAspectId("abc");
+        aspectVotingDtoStyle.setSelectedOptions(Arrays.asList("Retro", "Bohemian"));
+        AspectVotingDto aspectVotingDtoOcassion = new AspectVotingDto();
+        aspectVotingDtoOcassion.setAspectId("def");
+        aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
+        reviewDto.setAspectVotingDtoList(Arrays.asList(aspectVotingDtoOcassion, aspectVotingDtoStyle));
 
         BrandRatingDto brandRatingDtoTrendy = new BrandRatingDto();
         brandRatingDtoTrendy.setName("Trendy");
@@ -118,13 +118,13 @@ class ProductReviewRestServiceImplTest {
         ReviewDto reviewDtoPaased = reviewDtoArgumentCaptor.getValue();
         assertEquals(ReviewType.text, reviewDtoPaased.getReviewType());
 
-        assertEquals("abc", reviewDtoPaased.getAspectPreferenceDtoList().get(1).getAspectId());
-        assertEquals("Retro", reviewDtoPaased.getAspectPreferenceDtoList().get(1).getSelectedOptions().get(0));
-        assertEquals("Bohemian", reviewDtoPaased.getAspectPreferenceDtoList().get(1).getSelectedOptions().get(1));
+        assertEquals("abc", reviewDtoPaased.getAspectVotingDtoList().get(1).getAspectId());
+        assertEquals("Retro", reviewDtoPaased.getAspectVotingDtoList().get(1).getSelectedOptions().get(0));
+        assertEquals("Bohemian", reviewDtoPaased.getAspectVotingDtoList().get(1).getSelectedOptions().get(1));
 
-        assertEquals("def", reviewDtoPaased.getAspectPreferenceDtoList().get(0).getAspectId());
-        assertEquals("Wedding", reviewDtoPaased.getAspectPreferenceDtoList().get(0).getSelectedOptions().get(0));
-        assertEquals("Cocktail", reviewDtoPaased.getAspectPreferenceDtoList().get(0).getSelectedOptions().get(1));
+        assertEquals("def", reviewDtoPaased.getAspectVotingDtoList().get(0).getAspectId());
+        assertEquals("Wedding", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(0));
+        assertEquals("Cocktail", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(1));
 
         assertEquals("Trendy", reviewDtoPaased.getBrandRatingDtoList().get(0).getName());
         assertEquals(4, reviewDtoPaased.getBrandRatingDtoList().get(0).getRating());

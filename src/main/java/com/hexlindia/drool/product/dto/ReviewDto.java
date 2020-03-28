@@ -18,7 +18,7 @@ public class ReviewDto {
     private ReviewType reviewType;
 
     @JsonProperty("aspects")
-    private List<AspectPreferenceDto> aspectPreferenceDtoList;
+    private List<AspectVotingDto> aspectVotingDtoList;
 
     @JsonProperty("brandRating")
     private List<BrandRatingDto> brandRatingDtoList;

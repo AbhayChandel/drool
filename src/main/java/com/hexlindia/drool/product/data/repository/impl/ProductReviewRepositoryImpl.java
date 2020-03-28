@@ -4,6 +4,7 @@ import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
+import com.hexlindia.drool.product.dto.AspectVotingDto;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -32,6 +34,8 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
 
     private static final String TOTAL_REVIEWS_COUNT = "totalReviewsCount";
 
+    private static final String ASPECT_RESULTS = "aspects.aspect_results";
+
 
     private final MongoOperations mongoOperations;
 
@@ -40,9 +44,16 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
     }
 
     @Override
-    public ReviewDoc save(ReviewDoc reviewDoc, ObjectId productId) {
+    public ReviewDoc save(ReviewDoc reviewDoc, ObjectId productId, List<AspectVotingDto> aspectVotingDtoList) {
         reviewDoc.setDatePosted(LocalDateTime.now());
         Update update = new Update().addToSet(getReviewsArray(reviewDoc.getReviewType()), reviewDoc).inc(REVIEWS_PATH + TOTAL_REVIEWS_COUNT, 1).inc(getReviewsCount(reviewDoc.getReviewType()), 1);
+        /*for(AspectPreferenceDto aspectPreferenceDto: aspectPreferenceDtoList){
+            update.filterArray(new Criteria(ASPECT_RESULTS + "._id").is(aspectPreferenceDto.getAspectId())).inc("votes", 1)
+            for(String option: aspectPreferenceDto.getSelectedOptions()){
+                update.filterArray(new Criteria(ASPECT_RESULTS + "._id").is(aspectPreferenceDto.getAspectId())).inc("votes", 1).
+            }
+
+        }*/
         UpdateResult reviewSaveResult = mongoOperations.updateFirst(new Query(where("id").is(productId)), update, ProductDoc.class);
         if (reviewSaveResult.getModifiedCount() > 0) {
             return reviewDoc;

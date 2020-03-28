@@ -2,9 +2,11 @@ package com.hexlindia.drool.product.business.impl.usecase;
 
 import com.hexlindia.drool.common.dto.ProductRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
+import com.hexlindia.drool.product.dto.AspectVotingDto;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.video.business.api.usecase.Video;
@@ -17,7 +19,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,11 +39,14 @@ class ProductReviewImplTest {
     private ReviewMapper reviewMapperMock;
 
     @Mock
+    private AspectVotingDetails aspectVotingDetailsMock;
+
+    @Mock
     private Video videoMock;
 
     @BeforeEach
     void setUp() {
-        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock));
+        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock));
     }
 
     @Test
@@ -52,20 +59,38 @@ class ProductReviewImplTest {
         reviewDocMocked.setDetailedReview("THis is a details text review");
         reviewDocMocked.setReviewSummary("This is text review summary");
 
+        AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
+        aspectVotingDtoStyle.setAspectId("abc");
+        aspectVotingDtoStyle.setSelectedOptions(Arrays.asList("Retro", "Bohemian"));
+        AspectVotingDto aspectVotingDtoOcassion = new AspectVotingDto();
+        aspectVotingDtoOcassion.setAspectId("def");
+        aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
+        List<AspectVotingDto> aspectVotingDtoList = new ArrayList<>();
+        aspectVotingDtoList.add(aspectVotingDtoOcassion);
+        aspectVotingDtoList.add(aspectVotingDtoStyle);
+        reviewDto.setAspectVotingDtoList(aspectVotingDtoList);
+
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedObjectId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedObjectId.toHexString(), "MockedProduct", "MOckedCategory"));
-        when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedObjectId)).thenReturn(reviewDocMocked);
+        when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedObjectId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<List<AspectVotingDto>> aspectPrefArgumentCaptor = ArgumentCaptor.forClass(List.class);
 
-        verify(this.productReviewRepositoryMock, times(1)).save(reviewDocArgumentCaptor.capture(), productIdArgumentCaptor.capture());
+        verify(this.productReviewRepositoryMock, times(1)).save(reviewDocArgumentCaptor.capture(), productIdArgumentCaptor.capture(), aspectPrefArgumentCaptor.capture());
         assertEquals(ReviewType.text, reviewDocArgumentCaptor.getValue().getReviewType());
         assertEquals("1", reviewDocArgumentCaptor.getValue().getRecommendation());
         assertEquals("THis is a details text review", reviewDocArgumentCaptor.getValue().getDetailedReview());
         assertEquals("This is text review summary", reviewDocArgumentCaptor.getValue().getReviewSummary());
         assertEquals(mockedObjectId, productIdArgumentCaptor.getValue());
+        assertEquals("abc", aspectPrefArgumentCaptor.getValue().get(1).getAspectId());
+        assertEquals("Retro", aspectPrefArgumentCaptor.getValue().get(1).getSelectedOptions().get(0));
+        assertEquals("Bohemian", aspectPrefArgumentCaptor.getValue().get(1).getSelectedOptions().get(1));
+        assertEquals("def", aspectPrefArgumentCaptor.getValue().get(0).getAspectId());
+        assertEquals("Wedding", aspectPrefArgumentCaptor.getValue().get(0).getSelectedOptions().get(0));
+        assertEquals("Cocktail", aspectPrefArgumentCaptor.getValue().get(0).getSelectedOptions().get(1));
     }
 
     @Test
@@ -89,11 +114,22 @@ class ProductReviewImplTest {
         videoDto.setUserRefDto(userRefDto);
         reviewDto.setVideoDto(videoDto);
 
+        AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
+        aspectVotingDtoStyle.setAspectId("abc");
+        aspectVotingDtoStyle.setSelectedOptions(Arrays.asList("Retro", "Bohemian"));
+        AspectVotingDto aspectVotingDtoOcassion = new AspectVotingDto();
+        aspectVotingDtoOcassion.setAspectId("def");
+        aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
+        List<AspectVotingDto> aspectVotingDtoList = new ArrayList<>();
+        aspectVotingDtoList.add(aspectVotingDtoOcassion);
+        aspectVotingDtoList.add(aspectVotingDtoStyle);
+        reviewDto.setAspectVotingDtoList(aspectVotingDtoList);
+
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
         ObjectId mockedProductId = new ObjectId();
         reviewDto.setProductRefDto(new ProductRefDto(mockedProductId.toHexString(), "MockedProduct", "MOckedCategory"));
         reviewDto.setUserRefDto(userRefDto);
-        when(this.productReviewRepositoryMock.save(any(), any())).thenReturn(reviewDocMocked);
+        when(this.productReviewRepositoryMock.save(any(), any(), anyList())).thenReturn(reviewDocMocked);
         when(this.videoMock.save(videoDto)).thenReturn(videoDto);
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<VideoDto> videoDtoArgumentCaptor = ArgumentCaptor.forClass(VideoDto.class);
@@ -129,12 +165,25 @@ class ProductReviewImplTest {
 
         when(this.reviewMapperMock.toReviewDoc(any())).thenReturn(reviewDocMocked);
 
-        when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId)).thenReturn(reviewDocMocked);
+        AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
+        aspectVotingDtoStyle.setAspectId("abc");
+        aspectVotingDtoStyle.setSelectedOptions(Arrays.asList("Retro", "Bohemian"));
+        AspectVotingDto aspectVotingDtoOcassion = new AspectVotingDto();
+        aspectVotingDtoOcassion.setAspectId("def");
+        aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
+        List<AspectVotingDto> aspectVotingDtoList = new ArrayList<>();
+        aspectVotingDtoList.add(aspectVotingDtoOcassion);
+        aspectVotingDtoList.add(aspectVotingDtoStyle);
+
+        reviewDtoMocked.setAspectVotingDtoList(aspectVotingDtoList);
+
+        when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
         this.productReviewSpy.save(reviewDtoMocked);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<List<AspectVotingDto>> aspectPrefArgumentCaptor = ArgumentCaptor.forClass(List.class);
 
-        verify(this.productReviewRepositoryMock, times(1)).save(reviewDocArgumentCaptor.capture(), productIdArgumentCaptor.capture());
+        verify(this.productReviewRepositoryMock, times(1)).save(reviewDocArgumentCaptor.capture(), productIdArgumentCaptor.capture(), aspectPrefArgumentCaptor.capture());
         assertEquals(ReviewType.video, reviewDocArgumentCaptor.getValue().getReviewType());
         assertEquals("2", reviewDocArgumentCaptor.getValue().getRecommendation());
         assertEquals(mockedVideoId, reviewDocArgumentCaptor.getValue().getVideoId());

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AspectPreferenceDto {
+public class AspectVotingDto {
 
     @JsonProperty("id")
     private String aspectId;
