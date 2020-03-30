@@ -12,7 +12,7 @@ public class ObjectIdMapper {
     }
 
     @ObjectIdToStringMapping
-    public String ObjectIdToString(ObjectId id) {
+    public String objectIdToString(ObjectId id) {
         return id != null ? id.toHexString() : null;
     }
 

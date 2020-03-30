@@ -75,10 +75,7 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     @Override
     public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
         UpdateResult updateResult = mongoOperations.updateFirst(new Query(where("id").is(videoId)), new Update().set("reviewId", reviewId), VideoDoc.class);
-        if (updateResult.getModifiedCount() > 0) {
-            return true;
-        }
-        return false;
+        return updateResult.getModifiedCount() > 0;
     }
 
     @Override

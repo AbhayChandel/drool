@@ -61,7 +61,7 @@ public class ProductReviewImpl implements ProductReview {
     }
 
     private void saveAspectVotingDetails(ReviewDto reviewDto) {
-        if (reviewDto.getAspectVotingDtoList().size() > 0) {
+        if (!reviewDto.getAspectVotingDtoList().isEmpty()) {
             this.aspectVotingDetails.save(new AspectVotingDetailsDto(reviewDto.getAspectVotingDtoList(), reviewDto.getProductRefDto(), reviewDto.getUserRefDto()));
         }
     }

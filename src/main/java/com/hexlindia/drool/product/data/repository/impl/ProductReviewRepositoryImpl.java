@@ -22,8 +22,6 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Repository
 public class ProductReviewRepositoryImpl implements ProductReviewRepository {
 
-    private static final String PRODUCTS_COLLECTION_NAME = "products";
-
     private static final String REVIEWS_PATH = "reviews.";
 
     private static final String TEXT_REVIEWS_ARRAY = "textReviews";
@@ -35,8 +33,6 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
     private static final String VIDEO_REVIEWS_COUNT = "videoReviewsCount";
 
     private static final String TOTAL_REVIEWS_COUNT = "totalReviewsCount";
-
-    private static final String ASPECT_RESULTS = "aspects.aspect_results";
 
 
     private final MongoOperations mongoOperations;
@@ -65,7 +61,7 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
 
     private Update setAspectResultUpdate(Update update, List<AspectVotingDto> aspectVotingDtoList) {
 
-        if (aspectVotingDtoList.size() > 0) {
+        if (!aspectVotingDtoList.isEmpty()) {
             List<String> aspectIdList = new ArrayList<>();
             List<String> aspectSelectedOptionsList = new ArrayList<>();
             for (AspectVotingDto aspectVotingDto : aspectVotingDtoList) {
