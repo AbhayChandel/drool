@@ -11,6 +11,7 @@ import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,11 @@ public class VideoTemplateRepositoryTest {
     public void test_getLatestThreeByUser() {
         VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoTemplateRepository.getLatestThreeVideosByUser("123");
         assertEquals(3, videoThumbnailDataAggregation.getVideoThumbnailList().size());
+    }
+
+    @Test
+    void test_updateReviewId() {
+        assertTrue(videoTemplateRepository.updateReviewId(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), new ObjectId()));
     }
 
     @Test

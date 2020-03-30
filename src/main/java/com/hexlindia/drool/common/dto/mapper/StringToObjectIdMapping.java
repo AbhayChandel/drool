@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Qualifier
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
-public @interface ObjectIdToStringMappingAnnotation {
+public @interface StringToObjectIdMapping {
 }

@@ -14,6 +14,7 @@ import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoThumbnailDataMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -66,6 +67,11 @@ public class VideoImpl implements Video {
         VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoTemplateRepository.getLatestThreeVideosByUser(userId);
         return videoThumbnailDataMapper.toDto(videoThumbnailDataAggregation);
 
+    }
+
+    @Override
+    public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
+        return videoTemplateRepository.updateReviewId(videoId, reviewId);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.hexlindia.drool.common.dto;
+package com.hexlindia.drool.product.dto;
 
 public class ProductRefDto {
 

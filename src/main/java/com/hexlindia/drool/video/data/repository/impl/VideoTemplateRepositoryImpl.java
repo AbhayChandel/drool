@@ -11,6 +11,7 @@ import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -69,6 +70,12 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
         ), VIDEO_COLLECTION_NAME, VideoThumbnailDataAggregation.class);
 
         return results.getUniqueMappedResult();
+    }
+
+    @Override
+    public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
+        UpdateResult updateResult = mongoOperations.updateFirst(new Query(where("id").is(videoId)), new Update().set("reviewId", reviewId), VideoDoc.class);
+        return updateResult.getModifiedCount() > 0;
     }
 
     @Override

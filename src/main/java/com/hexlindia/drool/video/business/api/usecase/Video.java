@@ -4,6 +4,7 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
+import org.bson.types.ObjectId;
 
 public interface Video {
 
@@ -24,4 +25,6 @@ public interface Video {
     String deleteCommentLike(VideoCommentDto videoCommentDto);
 
     VideoThumbnailDataDto getLatestThreeVideoThumbnails(String userId);
+
+    boolean updateReviewId(ObjectId videoId, ObjectId reviewId);
 }
