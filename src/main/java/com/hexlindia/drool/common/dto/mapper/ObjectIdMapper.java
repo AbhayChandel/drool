@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 public class ObjectIdMapper {
 
     @StringToObjectIdMapping
-    public static ObjectId stringToObjectId(String id) {
-        return new ObjectId(id);
+    public ObjectId stringToObjectId(String id) {
+        return id != null ? new ObjectId(id) : null;
     }
 
     @ObjectIdToStringMapping
-    public static String ObjectIdToString(ObjectId id) {
-        return id.toHexString();
+    public String ObjectIdToString(ObjectId id) {
+        return id != null ? id.toHexString() : null;
     }
 
 
