@@ -1,5 +1,6 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
+import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Import(MongoDBConfig.class)
 class ProductReviewRepositoryTest {
 
     private final ProductReviewRepository productReviewRepository;
