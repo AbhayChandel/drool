@@ -16,6 +16,6 @@ public class AspectVotingDetailsRepositoryImpl implements AspectVotingDetailsRep
     @Override
     public ObjectId save(AspectVotingDetailsDoc aspectVotingDetailsDoc) {
         aspectVotingDetailsDoc = this.mongoOperations.save(aspectVotingDetailsDoc);
-        return aspectVotingDetailsDoc != null ? aspectVotingDetailsDoc.getId() : null;
+        return aspectVotingDetailsDoc.getId();
     }
 }

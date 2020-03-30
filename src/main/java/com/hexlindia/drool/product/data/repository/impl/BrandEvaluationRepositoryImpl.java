@@ -16,6 +16,6 @@ public class BrandEvaluationRepositoryImpl implements BrandEvaluationRepository 
     @Override
     public ObjectId saveCriteriaRatings(BrandCriteriaRatingsDetailsDoc brandCriteriaRatingsDetailsDoc) {
         brandCriteriaRatingsDetailsDoc = this.mongoOperations.save(brandCriteriaRatingsDetailsDoc);
-        return brandCriteriaRatingsDetailsDoc != null ? brandCriteriaRatingsDetailsDoc.getId() : null;
+        return brandCriteriaRatingsDetailsDoc.getId();
     }
 }
