@@ -3,6 +3,10 @@ package com.hexlindia.drool.product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.product.data.doc.AspectOption;
+import com.hexlindia.drool.product.data.doc.AspectResultDoc;
+import com.hexlindia.drool.product.data.doc.AspectsDoc;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +21,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(MongoDBConfig.class)
 @Slf4j
 public class ProductReviewIT {
 
@@ -67,7 +74,7 @@ public class ProductReviewIT {
     }
 
     @Test
-    void testTextReviewSave() throws JSONException {
+    void testSaveTextReview() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
@@ -75,43 +82,9 @@ public class ProductReviewIT {
         JSONObject reviewDto = new JSONObject();
         reviewDto.put("reviewType", "text");
 
-        JSONObject aspectPreferenceDtoStyle = new JSONObject();
-        aspectPreferenceDtoStyle.put("id", "abc");
-        JSONArray aspectPreferenceDtoStyleSelected = new JSONArray();
-        aspectPreferenceDtoStyleSelected.put("Retro");
-        aspectPreferenceDtoStyleSelected.put("Bohemian");
-        aspectPreferenceDtoStyle.put("selected", aspectPreferenceDtoStyleSelected);
+        setAspectVotingResults(reviewDto);
+        setBrandRatingResults(reviewDto);
 
-        JSONObject aspectPreferenceDtoOcassion = new JSONObject();
-        aspectPreferenceDtoOcassion.put("id", "abc");
-        JSONArray aspectPreferenceDtoOcassionSelected = new JSONArray();
-        aspectPreferenceDtoOcassionSelected.put("Wedding");
-        aspectPreferenceDtoOcassionSelected.put("Cocktail");
-        aspectPreferenceDtoOcassion.put("selected", aspectPreferenceDtoOcassionSelected);
-
-        JSONArray aspectPreferenceDtoArray = new JSONArray();
-        aspectPreferenceDtoArray.put(aspectPreferenceDtoStyle);
-        aspectPreferenceDtoArray.put(aspectPreferenceDtoOcassion);
-
-        reviewDto.put("aspects", aspectPreferenceDtoArray);
-
-        JSONObject brandRatingDtoTrendy = new JSONObject();
-        brandRatingDtoTrendy.put("name", "Trendy");
-        brandRatingDtoTrendy.put("rating", 4);
-        JSONObject brandRatingDtoTrustable = new JSONObject();
-        brandRatingDtoTrustable.put("name", "Trustable");
-        brandRatingDtoTrustable.put("rating", 2);
-        JSONArray brandRatingDtoArray = new JSONArray();
-        brandRatingDtoArray.put(brandRatingDtoTrendy);
-
-        JSONObject brandRef = new JSONObject();
-        brandRef.put("id", ObjectId.get().toHexString());
-        brandRef.put("name", "Lakme");
-
-        JSONObject brandCriteriaRatingsDetails = new JSONObject();
-        brandCriteriaRatingsDetails.put("brandCriteriaRatings", brandRatingDtoArray);
-        brandCriteriaRatingsDetails.put("brandRef", brandRef);
-        reviewDto.put("brandCriteriaRatingsDetails", brandCriteriaRatingsDetails);
 
         reviewDto.put("recommendation", "1");
 
@@ -227,6 +200,48 @@ public class ProductReviewIT {
 
     }
 
+    private void setAspectVotingResults(JSONObject reviewDto) throws JSONException {
+        JSONObject aspectPreferenceDtoStyle = new JSONObject();
+        aspectPreferenceDtoStyle.put("id", "1");
+        JSONArray aspectPreferenceDtoStyleSelected = new JSONArray();
+        aspectPreferenceDtoStyleSelected.put("Chic");
+        aspectPreferenceDtoStyleSelected.put("Casual");
+        aspectPreferenceDtoStyle.put("selected", aspectPreferenceDtoStyleSelected);
+
+        JSONObject aspectPreferenceDtoOcassion = new JSONObject();
+        aspectPreferenceDtoOcassion.put("id", "2");
+        JSONArray aspectPreferenceDtoOcassionSelected = new JSONArray();
+        aspectPreferenceDtoOcassionSelected.put("Cocktail");
+        aspectPreferenceDtoOcassion.put("selected", aspectPreferenceDtoOcassionSelected);
+
+        JSONArray aspectPreferenceDtoArray = new JSONArray();
+        aspectPreferenceDtoArray.put(aspectPreferenceDtoStyle);
+        aspectPreferenceDtoArray.put(aspectPreferenceDtoOcassion);
+
+        reviewDto.put("aspects", aspectPreferenceDtoArray);
+    }
+
+    private void setBrandRatingResults(JSONObject reviewDto) throws JSONException {
+        JSONObject brandRatingDtoTrendy = new JSONObject();
+        brandRatingDtoTrendy.put("name", "Trendy");
+        brandRatingDtoTrendy.put("rating", 4);
+        JSONObject brandRatingDtoTrustable = new JSONObject();
+        brandRatingDtoTrustable.put("name", "Trustable");
+        brandRatingDtoTrustable.put("rating", 2);
+        JSONArray brandRatingDtoArray = new JSONArray();
+        brandRatingDtoArray.put(brandRatingDtoTrendy);
+        brandRatingDtoArray.put(brandRatingDtoTrustable);
+
+        JSONObject brandRef = new JSONObject();
+        brandRef.put("id", ObjectId.get().toHexString());
+        brandRef.put("name", "Lakme");
+
+        JSONObject brandCriteriaRatingsDetails = new JSONObject();
+        brandCriteriaRatingsDetails.put("brandCriteriaRatings", brandRatingDtoArray);
+        brandCriteriaRatingsDetails.put("brandRef", brandRef);
+        reviewDto.put("brandCriteriaRatingsDetails", brandCriteriaRatingsDetails);
+    }
+
 
     private void getAuthToken() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
@@ -246,6 +261,7 @@ public class ProductReviewIT {
         ProductDoc productDocActive = new ProductDoc();
         productDocActive.setName("Lakme 9 to 5");
         productDocActive.setActive(true);
+        setAspectDoc(productDocActive);
         this.mongoOperations.save(productDocActive);
         insertedProducts.put("active", productDocActive.getId());
         ProductDoc productDocInactive = new ProductDoc();
@@ -253,5 +269,18 @@ public class ProductReviewIT {
         productDocInactive.setActive(false);
         this.mongoOperations.save(productDocInactive);
         insertedProducts.put("inactive", productDocInactive.getId());
+    }
+
+    private void setAspectDoc(ProductDoc productDoc) {
+        AspectResultDoc aspectStyle = new AspectResultDoc("1", "pc", "Top Styles", 75,
+                Arrays.asList(new AspectOption("Retro", 25), new AspectOption("Chic", 55),
+                        new AspectOption("Bohemian", 5), new AspectOption("Casual", 45)));
+        AspectResultDoc aspectOccasion = new AspectResultDoc("2", "pc", "Occasion", 65,
+                Arrays.asList(new AspectOption("Wedding", 5), new AspectOption("Clubbing", 35), new AspectOption("Cocktail", 25)));
+
+        AspectsDoc aspectsDoc = new AspectsDoc();
+        aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
+
+        productDoc.setAspectsDoc(aspectsDoc);
     }
 }

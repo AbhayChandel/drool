@@ -55,7 +55,9 @@ public class ProductReviewImpl implements ProductReview {
     }
 
     private void updateReviewIdInVideoDoc(ObjectId videoId, ObjectId reviewId) {
-        video.updateReviewId(videoId, reviewId);
+        if (videoId != null) {
+            video.updateReviewId(videoId, reviewId);
+        }
     }
 
     private void saveAspectVotingDetails(ReviewDto reviewDto) {
