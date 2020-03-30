@@ -27,9 +27,6 @@ public class ReviewDto {
     @JsonProperty("product")
     private ProductRefDto productRefDto;
 
-    @JsonProperty("brand")
-    private BrandRefDto brandRefDto;
-
     @JsonProperty("textReview")
     private TextReviewDto textReviewDto;
 
