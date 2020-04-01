@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -52,5 +53,10 @@ public class UserActivityImpl implements UserActivity {
     @Override
     public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
         return this.userActivityRepository.deleteCommentLike(videoCommentDto);
+    }
+
+    @Override
+    public UpdateResult addTextReview(ReviewDoc reviewDoc) {
+        return this.userActivityRepository.addTextReview(reviewDoc);
     }
 }

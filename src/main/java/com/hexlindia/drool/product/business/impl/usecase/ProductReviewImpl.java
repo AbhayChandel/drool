@@ -10,6 +10,7 @@ import com.hexlindia.drool.product.dto.BrandCriteriaRatingsDetailsDto;
 import com.hexlindia.drool.product.dto.BrandCriterionRatingDto;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ProductReviewImpl implements ProductReview {
     private final Video video;
     private final AspectVotingDetails aspectVotingDetails;
     private final BrandEvaluation brandEvaluation;
+    private final UserActivity userActivity;
 
     @Override
     public ReviewDto save(ReviewDto reviewDto) {
@@ -36,6 +38,10 @@ public class ProductReviewImpl implements ProductReview {
 
         reviewDoc = productReviewRepository.save(reviewDoc, productId, reviewDto.getAspectVotingDtoList());
         reviewDto.setId(reviewDoc.getId().toHexString());
+
+        if (ReviewType.text.equals(reviewDto.getReviewType())) {
+            userActivity.addTextReview(reviewDoc);
+        }
 
         ObjectId videoId = saveVideoReview(reviewDto, reviewDoc);
         saveAspectVotingDetails(reviewDto);

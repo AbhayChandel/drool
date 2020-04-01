@@ -8,6 +8,7 @@ import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.*;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
 import org.bson.types.ObjectId;
@@ -46,9 +47,12 @@ class ProductReviewImplTest {
     @Mock
     private BrandEvaluation brandEvaluation;
 
+    @Mock
+    private UserActivity userActivityMock;
+
     @BeforeEach
     void setUp() {
-        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock, brandEvaluation));
+        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock, brandEvaluation, userActivityMock));
     }
 
     @Test
