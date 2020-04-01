@@ -5,6 +5,7 @@ import com.hexlindia.drool.product.data.doc.AspectVotingDetailsDoc;
 import com.hexlindia.drool.product.dto.AspectVotingDetailsDto;
 import com.hexlindia.drool.product.dto.AspectVotingDto;
 import com.hexlindia.drool.product.dto.ProductRefDto;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,8 @@ class AspectVotingDetailsMapperTest {
         AspectVotingDto aspectVotingDotOccasion = new AspectVotingDto();
         aspectVotingDotOccasion.setAspectId("2");
         aspectVotingDotOccasion.setSelectedOptions(Arrays.asList("Wedding", "Party"));
-        AspectVotingDetailsDto aspectVotingDetailsDto = new AspectVotingDetailsDto(Arrays.asList(aspectVotingDtoStyle, aspectVotingDotOccasion), new ProductRefDto("123", "Collosal Kajal", "Kajal"), new UserRefDto("u123", "username123"));
+        String reviewId = ObjectId.get().toHexString();
+        AspectVotingDetailsDto aspectVotingDetailsDto = new AspectVotingDetailsDto(Arrays.asList(aspectVotingDtoStyle, aspectVotingDotOccasion), reviewId, new ProductRefDto("123", "Collosal Kajal", "Kajal"), new UserRefDto("u123", "username123"));
         AspectVotingDetailsDoc aspectVotingDetailsDoc = aspectVotingDetailsMapper.toDoc(aspectVotingDetailsDto);
         assertEquals("1", aspectVotingDetailsDoc.getAspectVotingDocList().get(0).getAspectId());
         assertEquals("Retro", aspectVotingDetailsDoc.getAspectVotingDocList().get(0).getSelectedOptions().get(0));
@@ -40,5 +42,6 @@ class AspectVotingDetailsMapperTest {
         assertEquals("Kajal", aspectVotingDetailsDoc.getProductRef().getType());
         assertEquals("u123", aspectVotingDetailsDoc.getUserRef().getId());
         assertEquals("username123", aspectVotingDetailsDoc.getUserRef().getUsername());
+        assertEquals(new ObjectId(reviewId), aspectVotingDetailsDoc.getReviewId());
     }
 }

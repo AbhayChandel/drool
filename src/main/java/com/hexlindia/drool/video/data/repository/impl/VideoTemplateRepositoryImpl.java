@@ -47,6 +47,8 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
 
     @Override
     public VideoDoc save(VideoDoc videoDoc) {
+        videoDoc.setDatePosted(LocalDateTime.now());
+        videoDoc.setActive(true);
         return this.mongoOperations.save(videoDoc);
     }
 

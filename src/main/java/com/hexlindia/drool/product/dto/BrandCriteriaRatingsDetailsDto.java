@@ -15,6 +15,8 @@ public class BrandCriteriaRatingsDetailsDto {
 
     private String id;
 
+    private String reviewId;
+
     @JsonProperty("brandCriteriaRatings")
     private List<BrandCriterionRatingDto> brandCriterionRatingDtoList;
 

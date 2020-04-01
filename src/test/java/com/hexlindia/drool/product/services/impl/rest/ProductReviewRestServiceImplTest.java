@@ -84,7 +84,7 @@ class ProductReviewRestServiceImplTest {
         brandCriterionRatingDtoTrendy.setName("Trendy");
         brandCriterionRatingDtoTrendy.setRating(4);
 
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy), new BrandRefDto(ObjectId.get().toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, null, Arrays.asList(brandCriterionRatingDtoTrendy), new BrandRefDto(ObjectId.get().toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         reviewDto.setRecommendation("1");

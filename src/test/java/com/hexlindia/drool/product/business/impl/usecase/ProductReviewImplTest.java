@@ -81,7 +81,7 @@ class ProductReviewImplTest {
         brandCriterionRatingDtoTrustable.setRating(2);
         ObjectId brandId = new ObjectId();
 
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
@@ -149,7 +149,7 @@ class ProductReviewImplTest {
         brandCriterionRatingDtoTrustable.setRating(2);
         ObjectId brandId = new ObjectId();
 
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         when(this.reviewMapperMock.toReviewDoc(reviewDto)).thenReturn(reviewDocMocked);
@@ -214,7 +214,7 @@ class ProductReviewImplTest {
         brandCriterionRatingDtoTrustable.setRating(2);
         ObjectId brandId = new ObjectId();
 
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         reviewDtoMocked.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
 
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId, aspectVotingDtoList)).thenReturn(reviewDocMocked);

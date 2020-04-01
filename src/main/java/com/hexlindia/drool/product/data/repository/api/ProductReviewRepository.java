@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ProductReviewRepository {
 
+    boolean setVideoId(ObjectId productId, ObjectId reviewId, ObjectId videoId);
+
     ReviewDoc save(ReviewDoc reviewDoc, ObjectId productId, List<AspectVotingDto> aspectVotingDtoList);
 }

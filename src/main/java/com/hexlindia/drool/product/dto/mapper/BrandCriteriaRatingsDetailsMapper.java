@@ -15,5 +15,6 @@ public interface BrandCriteriaRatingsDetailsMapper {
     @Mapping(source = "brandCriterionRatingDtoList", target = "brandCriterionRatingDocList")
     @Mapping(source = "brandRefDto", target = "brandRef")
     @Mapping(source = "userRefDto", target = "userRef")
+    @Mapping(source = "reviewId", target = "reviewId", qualifiedBy = StringToObjectIdMapping.class)
     BrandCriteriaRatingsDetailsDoc toDoc(BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto);
 }

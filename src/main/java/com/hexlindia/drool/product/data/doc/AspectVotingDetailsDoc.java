@@ -19,6 +19,7 @@ import java.util.List;
 public class AspectVotingDetailsDoc {
 
     private ObjectId id;
+    private ObjectId reviewId;
     private List<AspectVotingDoc> aspectVotingDocList;
     private ProductRef productRef;
     private UserRef userRef;

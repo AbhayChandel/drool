@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 @Slf4j
 public class VideoImpl implements Video {
@@ -47,7 +45,6 @@ public class VideoImpl implements Video {
     @Override
     public VideoDto save(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
-        videoDoc.setDatePosted(LocalDateTime.now());
         videoDoc = videoTemplateRepository.save(videoDoc);
         if (videoDoc.getId() != null) {
             userActivity.addVideo(videoDoc);

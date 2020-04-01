@@ -42,6 +42,13 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
     }
 
     @Override
+    public boolean setVideoId(ObjectId productId, ObjectId reviewId, ObjectId videoId) {
+        Update update = new Update().set("reviews.videoReviews.$[review].videoId", videoId).filterArray(Criteria.where("review._id").is(reviewId));
+        UpdateResult results = mongoOperations.updateFirst(new Query(where("id").is(productId)), update, ProductDoc.class);
+        return results.getModifiedCount() > 0;
+    }
+
+    @Override
     public ReviewDoc save(ReviewDoc reviewDoc, ObjectId productId, List<AspectVotingDto> aspectVotingDtoList) {
         reviewDoc.setDatePosted(LocalDateTime.now());
 

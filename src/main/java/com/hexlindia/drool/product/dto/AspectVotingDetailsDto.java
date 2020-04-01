@@ -11,6 +11,7 @@ import java.util.List;
 public class AspectVotingDetailsDto {
 
     private List<AspectVotingDto> aspectVotingDtoList;
+    private String reviewId;
     private ProductRefDto productRefDto;
     private UserRefDto userRefDto;
 }

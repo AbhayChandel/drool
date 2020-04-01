@@ -14,6 +14,7 @@ import java.util.List;
 public class BrandCriteriaRatingsDetailsDoc {
 
     private ObjectId id;
+    private ObjectId reviewId;
     private List<BrandCriterionRatingDoc> brandCriterionRatingDocList;
     private BrandRef brandRef;
     private UserRef userRef;

@@ -29,8 +29,8 @@ class BrandCriteriaRatingsDetailsMapperTest {
         brandCriterionRatingDtoTrustable.setName("Trustable");
         brandCriterionRatingDtoTrustable.setRating(2);
         ObjectId brandId = new ObjectId();
-
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        String reviewId = ObjectId.get().toHexString();
+        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, reviewId, Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         BrandCriteriaRatingsDetailsDoc brandCriteriaRatingsDetailsDoc = brandCriteriaRatingsDetailsMapper.toDoc(brandCriteriaRatingsDetailsDto);
         assertEquals("Trendy", brandCriteriaRatingsDetailsDoc.getBrandCriterionRatingDocList().get(0).getName());
         assertEquals(4, brandCriteriaRatingsDetailsDoc.getBrandCriterionRatingDocList().get(0).getRating());
@@ -40,5 +40,6 @@ class BrandCriteriaRatingsDetailsMapperTest {
         assertEquals(brandId, brandCriteriaRatingsDetailsDoc.getBrandRef().getId());
         assertEquals("u123", brandCriteriaRatingsDetailsDoc.getUserRef().getId());
         assertEquals("username123", brandCriteriaRatingsDetailsDoc.getUserRef().getUsername());
+        assertEquals(new ObjectId(reviewId), brandCriteriaRatingsDetailsDoc.getReviewId());
     }
 }

@@ -5,6 +5,7 @@ import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.product.data.doc.AspectVotingDetailsDoc;
 import com.hexlindia.drool.product.data.doc.AspectVotingDoc;
 import com.hexlindia.drool.product.data.repository.api.AspectVotingDetailsRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,7 @@ class AspectVotingDetailsRepositoryTest {
         AspectVotingDoc aspectVotingDocOccasion = new AspectVotingDoc();
         aspectVotingDocOccasion.setAspectId("2");
         aspectVotingDocOccasion.setSelectedOptions(Arrays.asList("Wedding", "Party"));
-        AspectVotingDetailsDoc aspectVotingDetailsDoc = new AspectVotingDetailsDoc(null, Arrays.asList(aspectVotingDocStyle, aspectVotingDocOccasion), new ProductRef("123", "Collosal Kajal", "Kajal"), new UserRef("u123", "username123"));
+        AspectVotingDetailsDoc aspectVotingDetailsDoc = new AspectVotingDetailsDoc(null, new ObjectId(), Arrays.asList(aspectVotingDocStyle, aspectVotingDocOccasion), new ProductRef("123", "Collosal Kajal", "Kajal"), new UserRef("u123", "username123"));
         assertNotNull(aspectVotingDetailsRepository.save(aspectVotingDetailsDoc));
     }
 }

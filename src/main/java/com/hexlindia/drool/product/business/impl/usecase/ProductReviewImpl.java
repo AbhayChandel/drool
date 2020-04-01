@@ -32,26 +32,33 @@ public class ProductReviewImpl implements ProductReview {
     public ReviewDto save(ReviewDto reviewDto) {
 
         ReviewDoc reviewDoc = reviewMapper.toReviewDoc(reviewDto);
-        saveVideoReview(reviewDto, reviewDoc);
-        reviewDoc = productReviewRepository.save(reviewDoc, new ObjectId(reviewDto.getProductRefDto().getId()), reviewDto.getAspectVotingDtoList());
-        updateReviewIdInVideoDoc(reviewDoc.getVideoId(), reviewDoc.getId());
+        ObjectId productId = new ObjectId(reviewDto.getProductRefDto().getId());
+
+        reviewDoc = productReviewRepository.save(reviewDoc, productId, reviewDto.getAspectVotingDtoList());
         reviewDto.setId(reviewDoc.getId().toHexString());
 
+        ObjectId videoId = saveVideoReview(reviewDto, reviewDoc);
         saveAspectVotingDetails(reviewDto);
         saveBrandEvaluationCriteriaRatings(reviewDto);
+
+        if (ReviewType.video.equals(reviewDto.getReviewType()) && videoId != null) {
+            productReviewRepository.setVideoId(productId, reviewDoc.getId(), videoId);
+        }
 
         return reviewDto;
     }
 
-    private void saveVideoReview(ReviewDto reviewDto, ReviewDoc reviewDoc) {
+    private ObjectId saveVideoReview(ReviewDto reviewDto, ReviewDoc reviewDoc) {
         if (ReviewType.video.equals(reviewDto.getReviewType())) {
             VideoDto videoDto = reviewDto.getVideoDto();
+            videoDto.setReviewId(reviewDoc.getId().toHexString());
             videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
             videoDto.setUserRefDto(reviewDto.getUserRefDto());
             videoDto = video.save(videoDto);
             reviewDto.setVideoDto(videoDto);
-            reviewDoc.setVideoId(new ObjectId(videoDto.getId()));
+            return new ObjectId(videoDto.getId());
         }
+        return null;
     }
 
     private void updateReviewIdInVideoDoc(ObjectId videoId, ObjectId reviewId) {
@@ -62,12 +69,13 @@ public class ProductReviewImpl implements ProductReview {
 
     private void saveAspectVotingDetails(ReviewDto reviewDto) {
         if (!reviewDto.getAspectVotingDtoList().isEmpty()) {
-            this.aspectVotingDetails.save(new AspectVotingDetailsDto(reviewDto.getAspectVotingDtoList(), reviewDto.getProductRefDto(), reviewDto.getUserRefDto()));
+            this.aspectVotingDetails.save(new AspectVotingDetailsDto(reviewDto.getAspectVotingDtoList(), reviewDto.getId(), reviewDto.getProductRefDto(), reviewDto.getUserRefDto()));
         }
     }
 
     private void saveBrandEvaluationCriteriaRatings(ReviewDto reviewDto) {
         BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = reviewDto.getBrandCriteriaRatingsDetailsDto();
+        brandCriteriaRatingsDetailsDto.setReviewId(reviewDto.getId());
         brandCriteriaRatingsDetailsDto.setUserRefDto(reviewDto.getUserRefDto());
         boolean userRated = false;
         for (BrandCriterionRatingDto brandCriterionRatingDto : brandCriteriaRatingsDetailsDto.getBrandCriterionRatingDtoList()) {
