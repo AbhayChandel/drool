@@ -20,7 +20,7 @@ public class ReviewDto {
     private List<AspectVotingDto> aspectVotingDtoList;
 
     @JsonProperty("brandCriteriaRatingsDetails")
-    private BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto;
+    private BrandRatingsDetailsDto brandRatingsDetailsDto;
 
     private String recommendation;
 

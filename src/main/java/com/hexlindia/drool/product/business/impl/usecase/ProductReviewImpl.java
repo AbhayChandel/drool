@@ -1,8 +1,7 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
-import com.hexlindia.drool.product.business.api.usecase.Brand;
-import com.hexlindia.drool.product.business.api.usecase.BrandEvaluation;
+import com.hexlindia.drool.product.business.api.usecase.BrandRating;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ProductAspectTemplates;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
@@ -23,13 +22,12 @@ import java.util.Arrays;
 @Component
 public class ProductReviewImpl implements ProductReview {
 
-    private final Brand brand;
+    private final BrandRating brandRating;
     private final ProductReviewRepository productReviewRepository;
     private final AspectTemplateMapper aspectTemplateMapper;
     private final ReviewMapper reviewMapper;
     private final Video video;
     private final AspectVotingDetails aspectVotingDetails;
-    private final BrandEvaluation brandEvaluation;
     private final UserActivity userActivity;
 
 
@@ -41,7 +39,7 @@ public class ProductReviewImpl implements ProductReview {
         ProductAspectTemplates productAspectTemplates = this.productReviewRepository.getAspectTemplates(productId);
         reviewDialogFormsDto.setAspectTemplateDtoList(aspectTemplateMapper.toDtoList(productAspectTemplates.getAspectTemplates()));
         reviewDialogFormsDto.setBrandId(brandId.toHexString());
-        reviewDialogFormsDto.setBrandRatingMetrics(brand.getRatingMetrics(brandId.toHexString()));
+        reviewDialogFormsDto.setBrandRatingMetrics(brandRating.getRatingMetrics(brandId.toHexString()));
         return reviewDialogFormsDto;
     }
 
@@ -60,7 +58,7 @@ public class ProductReviewImpl implements ProductReview {
 
         ObjectId videoId = saveVideoReview(reviewDto, reviewDoc);
         saveAspectVotingDetails(reviewDto);
-        saveBrandEvaluationCriteriaRatings(reviewDto);
+        saveBrandRatings(reviewDto);
 
         if (ReviewType.video.equals(reviewDto.getReviewType()) && videoId != null) {
             productReviewRepository.setVideoId(productId, reviewDoc.getId(), videoId);
@@ -94,20 +92,22 @@ public class ProductReviewImpl implements ProductReview {
         }
     }
 
-    private void saveBrandEvaluationCriteriaRatings(ReviewDto reviewDto) {
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = reviewDto.getBrandCriteriaRatingsDetailsDto();
-        brandCriteriaRatingsDetailsDto.setReviewId(reviewDto.getId());
-        brandCriteriaRatingsDetailsDto.setUserRefDto(reviewDto.getUserRefDto());
+    private void saveBrandRatings(ReviewDto reviewDto) {
+        BrandRatingsDetailsDto brandRatingsDetailsDto = reviewDto.getBrandRatingsDetailsDto();
+        brandRatingsDetailsDto.setReviewId(reviewDto.getId());
+        brandRatingsDetailsDto.setUserRefDto(reviewDto.getUserRefDto());
         boolean userRated = false;
-        for (BrandCriterionRatingDto brandCriterionRatingDto : brandCriteriaRatingsDetailsDto.getBrandCriterionRatingDtoList()) {
-            if (brandCriterionRatingDto.getRating() > 0) {
-                userRated = true;
-                break;
+        if (brandRatingsDetailsDto.getBrandRatingMetricDtoList() != null) {
+            for (BrandRatingMetricDto brandRatingMetricDto : brandRatingsDetailsDto.getBrandRatingMetricDtoList()) {
+                if (brandRatingMetricDto.getRating() > 0) {
+                    userRated = true;
+                    break;
+                }
             }
         }
         if (userRated) {
-            ObjectId id = brandEvaluation.saveCriteriaRatings(brandCriteriaRatingsDetailsDto);
-            reviewDto.getBrandCriteriaRatingsDetailsDto().setId(id.toHexString());
+            ObjectId id = brandRating.saveBrandRatings(brandRatingsDetailsDto);
+            reviewDto.getBrandRatingsDetailsDto().setId(id.toHexString());
         }
     }
 

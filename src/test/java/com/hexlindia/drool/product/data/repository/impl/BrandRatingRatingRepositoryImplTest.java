@@ -1,7 +1,7 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
 import com.hexlindia.drool.product.data.doc.BrandDoc;
-import com.hexlindia.drool.product.data.repository.api.BrandRepository;
+import com.hexlindia.drool.product.data.repository.api.BrandRatingRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,22 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class BrandRepositoryImplTest {
+class BrandRatingRatingRepositoryImplTest {
 
-    private final BrandRepository brandRepository;
+    private final BrandRatingRepository brandRatingRepository;
     private final MongoOperations mongoOperations;
 
     private List<ObjectId> insertedBrands = new ArrayList<>();
 
     @Autowired
-    public BrandRepositoryImplTest(BrandRepository brandRepository, MongoOperations mongoOperations) {
-        this.brandRepository = brandRepository;
+    public BrandRatingRatingRepositoryImplTest(BrandRatingRepository brandRatingRepository, MongoOperations mongoOperations) {
+        this.brandRatingRepository = brandRatingRepository;
         this.mongoOperations = mongoOperations;
     }
 
     @Test
     void test_getRatingMetrics() {
-        List<String> ratingMetrics = brandRepository.getRatingMetrics(insertedBrands.get(0));
+        List<String> ratingMetrics = brandRatingRepository.getRatingMetrics(insertedBrands.get(0));
         assertNotNull(ratingMetrics);
         assertEquals(5, ratingMetrics.size());
     }

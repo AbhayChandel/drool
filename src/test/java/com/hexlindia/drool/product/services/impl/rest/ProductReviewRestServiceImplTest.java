@@ -109,12 +109,12 @@ class ProductReviewRestServiceImplTest {
         aspectVotingDtoOcassion.setSelectedOptions(Arrays.asList("Wedding", "Cocktail"));
         reviewDto.setAspectVotingDtoList(Arrays.asList(aspectVotingDtoOcassion, aspectVotingDtoStyle));
 
-        BrandCriterionRatingDto brandCriterionRatingDtoTrendy = new BrandCriterionRatingDto();
-        brandCriterionRatingDtoTrendy.setName("Trendy");
-        brandCriterionRatingDtoTrendy.setRating(4);
+        BrandRatingMetricDto brandRatingMetricDtoTrendy = new BrandRatingMetricDto();
+        brandRatingMetricDtoTrendy.setName("Trendy");
+        brandRatingMetricDtoTrendy.setRating(4);
 
-        BrandCriteriaRatingsDetailsDto brandCriteriaRatingsDetailsDto = new BrandCriteriaRatingsDetailsDto(null, null, Arrays.asList(brandCriterionRatingDtoTrendy), new BrandRefDto(ObjectId.get().toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
-        reviewDto.setBrandCriteriaRatingsDetailsDto(brandCriteriaRatingsDetailsDto);
+        BrandRatingsDetailsDto brandRatingsDetailsDto = new BrandRatingsDetailsDto(null, null, Arrays.asList(brandRatingMetricDtoTrendy), new BrandRefDto(ObjectId.get().toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
+        reviewDto.setBrandRatingsDetailsDto(brandRatingsDetailsDto);
 
         reviewDto.setRecommendation("1");
 
@@ -154,8 +154,8 @@ class ProductReviewRestServiceImplTest {
         assertEquals("Wedding", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(0));
         assertEquals("Cocktail", reviewDtoPaased.getAspectVotingDtoList().get(0).getSelectedOptions().get(1));
 
-        assertEquals("Trendy", reviewDtoPaased.getBrandCriteriaRatingsDetailsDto().getBrandCriterionRatingDtoList().get(0).getName());
-        assertEquals(4, reviewDtoPaased.getBrandCriteriaRatingsDetailsDto().getBrandCriterionRatingDtoList().get(0).getRating());
+        assertEquals("Trendy", reviewDtoPaased.getBrandRatingsDetailsDto().getBrandRatingMetricDtoList().get(0).getName());
+        assertEquals(4, reviewDtoPaased.getBrandRatingsDetailsDto().getBrandRatingMetricDtoList().get(0).getRating());
 
         assertEquals("1", reviewDtoPaased.getRecommendation());
 

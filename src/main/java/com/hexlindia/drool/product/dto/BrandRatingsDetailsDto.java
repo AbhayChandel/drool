@@ -11,14 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BrandCriteriaRatingsDetailsDto {
+public class BrandRatingsDetailsDto {
 
     private String id;
 
     private String reviewId;
 
     @JsonProperty("brandCriteriaRatings")
-    private List<BrandCriterionRatingDto> brandCriterionRatingDtoList;
+    private List<BrandRatingMetricDto> brandRatingMetricDtoList;
 
     @JsonProperty("brandRef")
     private BrandRefDto brandRefDto;
