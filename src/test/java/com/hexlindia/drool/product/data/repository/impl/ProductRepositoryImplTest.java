@@ -11,7 +11,8 @@ import org.springframework.data.mongodb.core.MongoOperations;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 class ProductRepositoryImplTest {
@@ -42,14 +43,6 @@ class ProductRepositoryImplTest {
     @Test
     public void test_findByIdAndIsNotActive() {
         assertNull(productRepository.findById(insertedProducts.get("inactive")));
-    }
-
-    @Test
-    public void test_getAspectTemplates() {
-        ProductAspectTemplates productAspectTemplates = productRepository.getAspectTemplates(insertedProducts.get("active"));
-        assertEquals(insertedProducts.get("active"), productAspectTemplates.getId());
-        assertEquals(3, productAspectTemplates.getAspectTemplates().size());
-        assertNotNull(productAspectTemplates.getAspectTemplates().get(2).getId());
     }
 
     private void insertProducts() {

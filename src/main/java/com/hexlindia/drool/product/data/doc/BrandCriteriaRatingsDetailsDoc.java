@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class BrandCriteriaRatingsDetailsDoc {
 
     private ObjectId id;
     private ObjectId reviewId;
+
+    @Field(value = "brand_criterion_ratings")
     private List<BrandCriterionRatingDoc> brandCriterionRatingDocList;
     private BrandRef brandRef;
     private UserRef userRef;

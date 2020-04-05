@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.config.MongoDBConfig;
-import com.hexlindia.drool.product.data.doc.AspectOption;
-import com.hexlindia.drool.product.data.doc.AspectResultDoc;
-import com.hexlindia.drool.product.data.doc.AspectsDoc;
-import com.hexlindia.drool.product.data.doc.ProductDoc;
+import com.hexlindia.drool.product.data.doc.*;
+import com.hexlindia.drool.product.dto.AspectTemplateDto;
+import com.hexlindia.drool.product.dto.ReviewDialogFormsDto;
 import com.hexlindia.drool.product.dto.ReviewDto;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -23,14 +22,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,14 +57,44 @@ public class ProductReviewIT {
         return "/" + restUriVersion + "/product/review/save";
     }
 
+    private String getAspectTemplatesUri() {
+        return "/" + restUriVersion + "/product/review/forms";
+    }
+
     private Map<String, ObjectId> insertedProducts = new HashMap<>();
+    private List<ObjectId> insertedAspectTemplates = new ArrayList<>();
+    private List<ObjectId> insertedBrands = new ArrayList<>();
 
     private String authToken;
 
     @BeforeEach
     void setup() throws JSONException, JsonProcessingException {
         getAuthToken();
+        insertAspectTemplates();
         insertProducts();
+        insertBrands();
+    }
+
+    @Test
+    void testGetReviewForms() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<ReviewDialogFormsDto> responseEntity = restTemplate.exchange(getAspectTemplatesUri() + "/" + insertedProducts.get("active") + "/" + insertedBrands.get(0), HttpMethod.GET, httpEntity, ReviewDialogFormsDto.class);
+        List<AspectTemplateDto> aspectTemplates = responseEntity.getBody().getAspectTemplateDtoList();
+        assertEquals(3, aspectTemplates.size());
+        assertEquals("Occasions", aspectTemplates.get(0).getTitle());
+        assertEquals(4, aspectTemplates.get(0).getOptions().size());
+        assertEquals("Style", aspectTemplates.get(1).getTitle());
+        assertEquals(4, aspectTemplates.get(1).getOptions().size());
+        assertNotNull(aspectTemplates.get(2).getId());
+        assertEquals("Shades", aspectTemplates.get(2).getTitle());
+        assertEquals(3, aspectTemplates.get(2).getOptions().size());
+        List<String> ratingMetrics = responseEntity.getBody().getBrandRatingMetrics();
+        assertNotNull(ratingMetrics);
+        assertEquals(5, ratingMetrics.size());
+
     }
 
     @Test
@@ -280,7 +304,47 @@ public class ProductReviewIT {
 
         AspectsDoc aspectsDoc = new AspectsDoc();
         aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
+        aspectsDoc.setExternalAspectIds(insertedAspectTemplates);
+        aspectsDoc.setInternalAspects(getInternalAspects());
 
         productDoc.setAspectsDoc(aspectsDoc);
+    }
+
+    private void insertAspectTemplates() {
+        AspectTemplate aspectTemplateOccasion = new AspectTemplate();
+        aspectTemplateOccasion.setTitle("Occasions");
+        aspectTemplateOccasion.setOptions(Arrays.asList("Wedding", "Day out", "Brunch", "Partying"));
+
+        this.mongoOperations.save(aspectTemplateOccasion);
+        insertedAspectTemplates.add(aspectTemplateOccasion.getId());
+
+        AspectTemplate aspectTemplateStyle = new AspectTemplate();
+        aspectTemplateStyle.setTitle("Style");
+        aspectTemplateStyle.setOptions(Arrays.asList("Retro", "Chic", "Bohemian", "Casual"));
+        this.mongoOperations.save(aspectTemplateStyle);
+        insertedAspectTemplates.add(aspectTemplateStyle.getId());
+    }
+
+    private List<AspectTemplate> getInternalAspects() {
+        AspectTemplate shadeVariant = new AspectTemplate();
+        shadeVariant.setId(ObjectId.get());
+        shadeVariant.setTitle("Shades");
+        shadeVariant.setOptions(Arrays.asList("Red Coat", "Crimson Pink", "Plush Orange"));
+        return Arrays.asList(shadeVariant);
+    }
+
+    private void insertBrands() {
+        List<String> brandRatingMetrics = new ArrayList<>();
+        brandRatingMetrics.add("Trustable");
+        brandRatingMetrics.add("Affordable");
+        brandRatingMetrics.add("Trendy");
+        brandRatingMetrics.add("Quality");
+        brandRatingMetrics.add("Overall");
+        BrandDoc brandDoc = new BrandDoc();
+        brandDoc.setRatingMetrics(brandRatingMetrics);
+        brandDoc.setName("Maybelline");
+        brandDoc.setActive(true);
+        mongoOperations.save(brandDoc);
+        insertedBrands.add(brandDoc.getId());
     }
 }

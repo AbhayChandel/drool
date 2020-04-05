@@ -1,14 +1,14 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
+import com.hexlindia.drool.product.business.api.usecase.Brand;
 import com.hexlindia.drool.product.business.api.usecase.BrandEvaluation;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
+import com.hexlindia.drool.product.data.doc.ProductAspectTemplates;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
-import com.hexlindia.drool.product.dto.AspectVotingDetailsDto;
-import com.hexlindia.drool.product.dto.BrandCriteriaRatingsDetailsDto;
-import com.hexlindia.drool.product.dto.BrandCriterionRatingDto;
-import com.hexlindia.drool.product.dto.ReviewDto;
+import com.hexlindia.drool.product.dto.*;
+import com.hexlindia.drool.product.dto.mapper.AspectTemplateMapper;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
@@ -23,12 +23,27 @@ import java.util.Arrays;
 @Component
 public class ProductReviewImpl implements ProductReview {
 
+    private final Brand brand;
     private final ProductReviewRepository productReviewRepository;
+    private final AspectTemplateMapper aspectTemplateMapper;
     private final ReviewMapper reviewMapper;
     private final Video video;
     private final AspectVotingDetails aspectVotingDetails;
     private final BrandEvaluation brandEvaluation;
     private final UserActivity userActivity;
+
+
+    @Override
+    public ReviewDialogFormsDto getReviewDialogForms(ObjectId productId, ObjectId brandId) {
+
+        ReviewDialogFormsDto reviewDialogFormsDto = new ReviewDialogFormsDto();
+        reviewDialogFormsDto.setProductId(productId.toHexString());
+        ProductAspectTemplates productAspectTemplates = this.productReviewRepository.getAspectTemplates(productId);
+        reviewDialogFormsDto.setAspectTemplateDtoList(aspectTemplateMapper.toDtoList(productAspectTemplates.getAspectTemplates()));
+        reviewDialogFormsDto.setBrandId(brandId.toHexString());
+        reviewDialogFormsDto.setBrandRatingMetrics(brand.getRatingMetrics(brandId.toHexString()));
+        return reviewDialogFormsDto;
+    }
 
     @Override
     public ReviewDto save(ReviewDto reviewDto) {

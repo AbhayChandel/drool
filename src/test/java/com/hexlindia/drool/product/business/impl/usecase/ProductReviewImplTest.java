@@ -2,11 +2,13 @@ package com.hexlindia.drool.product.business.impl.usecase;
 
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
+import com.hexlindia.drool.product.business.api.usecase.Brand;
 import com.hexlindia.drool.product.business.api.usecase.BrandEvaluation;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.*;
+import com.hexlindia.drool.product.dto.mapper.AspectTemplateMapper;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
@@ -33,7 +35,13 @@ class ProductReviewImplTest {
     private ProductReview productReviewSpy;
 
     @Mock
+    private Brand brandMock;
+
+    @Mock
     private ProductReviewRepository productReviewRepositoryMock;
+
+    @Mock
+    private AspectTemplateMapper aspectTemplateMapperMock;
 
     @Mock
     private ReviewMapper reviewMapperMock;
@@ -52,7 +60,7 @@ class ProductReviewImplTest {
 
     @BeforeEach
     void setUp() {
-        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(productReviewRepositoryMock, reviewMapperMock, videoMock, aspectVotingDetailsMock, brandEvaluation, userActivityMock));
+        this.productReviewSpy = Mockito.spy(new ProductReviewImpl(brandMock, productReviewRepositoryMock, aspectTemplateMapperMock, reviewMapperMock, videoMock, aspectVotingDetailsMock, brandEvaluation, userActivityMock));
     }
 
     @Test

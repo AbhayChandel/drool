@@ -52,6 +52,35 @@ class ProductReviewRestServiceImplTest {
         return "/" + restUriVersion + "/product/review/save";
     }
 
+    private String getAspectTemplatesUri() {
+        return "/" + restUriVersion + "/product/review/forms";
+    }
+
+    @Test
+    public void getAspectTemplates_HttpMethodNotAllowedError() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getAspectTemplatesUri() + "/1/2"))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    public void getAspectTemplates_ParametersMissing() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(getAspectTemplatesUri() + "/"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getAspectTemplates_ParametersPassedToBusinessLayer() throws Exception {
+        ObjectId productId = ObjectId.get();
+        ObjectId brandId = ObjectId.get();
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getAspectTemplatesUri() + "/" + productId + "/" + brandId));
+
+        ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ObjectId> brandIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        verify(this.productReviewMocked, times(1)).getReviewDialogForms(productIdArgumentCaptor.capture(), brandIdArgumentCaptor.capture());
+        assertEquals(productId, productIdArgumentCaptor.getValue());
+        assertEquals(brandId, brandIdArgumentCaptor.getValue());
+    }
+
     @Test
     public void saveReview_HttpMethodNotAllowedError() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.put(getSaveUri()))

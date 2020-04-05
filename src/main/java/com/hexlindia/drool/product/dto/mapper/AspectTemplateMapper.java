@@ -18,5 +18,5 @@ public abstract class AspectTemplateMapper {
     @Mapping(source = "id", target = "id", qualifiedBy = ObjectIdToStringMapping.class)
     abstract AspectTemplateDto templateDto(AspectTemplate aspectTemplate);
 
-    abstract List<AspectTemplateDto> toDtoList(List<AspectTemplate> aspectTemplateList);
+    public abstract List<AspectTemplateDto> toDtoList(List<AspectTemplate> aspectTemplateList);
 }

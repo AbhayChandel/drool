@@ -14,11 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
@@ -29,6 +27,7 @@ class ProductReviewRepositoryTest {
     private final MongoOperations mongoOperations;
 
     private Map<String, ObjectId> insertedProducts = new HashMap<>();
+    private List<ObjectId> insertedAspectTemplates = new ArrayList<>();
 
     @Autowired
     public ProductReviewRepositoryTest(ProductReviewRepository productReviewRepository, MongoOperations mongoOperations) {
@@ -38,7 +37,16 @@ class ProductReviewRepositoryTest {
 
     @BeforeEach
     void setup() {
+        insertAspectTemplates();
         insertProducts();
+
+    }
+
+    @Test
+    public void test_getAspectTemplates() {
+        ProductAspectTemplates productAspectTemplates = productReviewRepository.getAspectTemplates(insertedProducts.get("active"));
+        assertEquals(3, productAspectTemplates.getAspectTemplates().size());
+        assertNotNull(productAspectTemplates.getAspectTemplates().get(2).getId());
     }
 
     @Test
@@ -75,6 +83,7 @@ class ProductReviewRepositoryTest {
         productDocActive.setName("Lakme 9 to 5");
         productDocActive.setActive(true);
         productDocActive.setAspectsDoc(getAspectDoc());
+
         this.mongoOperations.save(productDocActive);
         insertedProducts.put("active", productDocActive.getId());
         ProductDoc productDocInactive = new ProductDoc();
@@ -93,7 +102,32 @@ class ProductReviewRepositoryTest {
 
         AspectsDoc aspectsDoc = new AspectsDoc();
         aspectsDoc.setAspectResultDocList(Arrays.asList(aspectStyle, aspectOccasion));
+        aspectsDoc.setExternalAspectIds(insertedAspectTemplates);
+        aspectsDoc.setInternalAspects(getInternalAspects());
 
         return aspectsDoc;
+    }
+
+    private void insertAspectTemplates() {
+        AspectTemplate aspectTemplateOccasion = new AspectTemplate();
+        aspectTemplateOccasion.setTitle("Occasions");
+        aspectTemplateOccasion.setOptions(Arrays.asList("Wedding", "Day out", "Brunch", "Partying"));
+
+        this.mongoOperations.save(aspectTemplateOccasion);
+        insertedAspectTemplates.add(aspectTemplateOccasion.getId());
+
+        AspectTemplate aspectTemplateStyle = new AspectTemplate();
+        aspectTemplateStyle.setTitle("Style");
+        aspectTemplateStyle.setOptions(Arrays.asList("Retro", "Chic", "Bohemian", "Casual"));
+        this.mongoOperations.save(aspectTemplateStyle);
+        insertedAspectTemplates.add(aspectTemplateStyle.getId());
+    }
+
+    private List<AspectTemplate> getInternalAspects() {
+        AspectTemplate shadeVariant = new AspectTemplate();
+        shadeVariant.setId(ObjectId.get());
+        shadeVariant.setTitle("Shades");
+        shadeVariant.setOptions(Arrays.asList("Red Coat", "Crimson Pink", "Plush Orange"));
+        return Arrays.asList(shadeVariant);
     }
 }
