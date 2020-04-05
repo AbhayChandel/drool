@@ -1,7 +1,7 @@
 package com.hexlindia.drool.product.dto.mapper;
 
-import com.hexlindia.drool.product.data.doc.BrandCriterionRatingDoc;
-import com.hexlindia.drool.product.dto.BrandCriterionRatingDto;
+import com.hexlindia.drool.product.data.doc.BrandRatingMetricDoc;
+import com.hexlindia.drool.product.dto.BrandRatingMetricDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BrandCriterionRatingMapper {
 
-    BrandCriterionRatingDoc toDoc(BrandCriterionRatingDto brandCriterionRatingDto);
+    BrandRatingMetricDoc toDoc(BrandRatingMetricDto brandRatingMetricDto);
 
-    List<BrandCriterionRatingDoc> toList(List<BrandCriterionRatingDto> brandCriterionRatingDtoList);
+    List<BrandRatingMetricDoc> toList(List<BrandRatingMetricDto> brandRatingMetricDtoList);
 
 }

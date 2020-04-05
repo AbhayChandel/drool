@@ -6,7 +6,9 @@ import com.hexlindia.drool.product.data.doc.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @ChangeLog
 public class ProductCollectionChangeLog {
@@ -24,10 +26,10 @@ public class ProductCollectionChangeLog {
         aspectTemplateStyle.setOptions(Arrays.asList("Retro", "Chic", "Bohemian", "Casual"));
         mongoTemplate.save(aspectTemplateStyle);
 
-        AspectResultDoc aspectStyle = new AspectResultDoc("1", "pc", "Top Styles", 45,
+        AspectResultDoc aspectStyle = new AspectResultDoc(aspectTemplateStyle.getId().toHexString(), "pc", "Top Styles", 45,
                 Arrays.asList(new AspectOption("Retro", 25), new AspectOption("Chic", 45),
                         new AspectOption("Bohemian", 5)));
-        AspectResultDoc aspectOccasion = new AspectResultDoc("2", "pc", "Occasion", 35,
+        AspectResultDoc aspectOccasion = new AspectResultDoc(aspectTemplateOccasion.getId().toHexString(), "pc", "Occasion", 35,
                 Arrays.asList(new AspectOption("Wedding", 5), new AspectOption("Clubbing", 35)));
         ProductDoc productDocActive = new ProductDoc();
         AspectsDoc aspectsDoc = new AspectsDoc();
@@ -46,7 +48,20 @@ public class ProductCollectionChangeLog {
         productDocInactive.setName("L' Oreal Collosal Kajal");
         productDocInactive.setActive(false);
         mongoTemplate.save(productDocInactive);
+    }
 
-
+    @ChangeSet(order = "003", id = "brands", author = "")
+    public void insertInitialBrands(MongoTemplate mongoTemplate) {
+        List<String> brandRatingMetrics = new ArrayList<>();
+        brandRatingMetrics.add("Trustable");
+        brandRatingMetrics.add("Affordable");
+        brandRatingMetrics.add("Trendy");
+        brandRatingMetrics.add("Quality");
+        brandRatingMetrics.add("Overall");
+        BrandDoc brandDoc = new BrandDoc();
+        brandDoc.setRatingMetrics(brandRatingMetrics);
+        brandDoc.setName("Maybelline");
+        brandDoc.setActive(true);
+        mongoTemplate.save(brandDoc);
     }
 }

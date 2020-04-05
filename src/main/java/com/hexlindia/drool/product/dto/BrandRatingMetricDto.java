@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BrandCriterionRatingDto {
+public class BrandRatingMetricDto {
 
     private String name;
     private Integer rating;

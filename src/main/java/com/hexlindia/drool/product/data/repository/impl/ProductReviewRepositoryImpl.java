@@ -1,6 +1,7 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
+import com.hexlindia.drool.product.data.doc.ProductAspectTemplates;
 import com.hexlindia.drool.product.data.doc.ProductDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
@@ -8,6 +9,7 @@ import com.hexlindia.drool.product.dto.AspectVotingDto;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
@@ -34,6 +37,8 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
 
     private static final String TOTAL_REVIEWS_COUNT = "totalReviewsCount";
 
+    private static final String PRODUCT_COLLECTION_NAME = "products";
+
 
     private final MongoOperations mongoOperations;
 
@@ -47,6 +52,32 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
         UpdateResult results = mongoOperations.updateFirst(new Query(where("id").is(productId)), update, ProductDoc.class);
         return results.getModifiedCount() > 0;
     }
+
+    @Override
+    public ProductAspectTemplates getAspectTemplates(ObjectId id) {
+
+        MatchOperation matchProduct = match(new Criteria("_id").is(id));
+        LookupOperation lookupExternalAspectTemplates = LookupOperation.newLookup().
+                from("aspect_templates")
+                .localField("aspects.external_aspects")
+                .foreignField("_id")
+                .as("easpects");
+
+        ProjectionOperation project = Aggregation.project()
+                .and("easpects").concatArrays("aspects.internal_aspects").as("allaspects");
+        //ReplaceRootOperation replaceRootOperation = Aggregation.replaceRoot("allaspects");
+        UnwindOperation unwind = Aggregation.unwind("allaspects");
+        ReplaceRootOperation replaceRoot = Aggregation.replaceRoot("allaspects");
+
+
+        AggregationResults<ProductAspectTemplates> aspectTemplates = this.mongoOperations.aggregate(Aggregation.newAggregation(
+                matchProduct,
+                lookupExternalAspectTemplates, project
+        ), PRODUCT_COLLECTION_NAME, ProductAspectTemplates.class);
+
+        return aspectTemplates.getUniqueMappedResult();
+    }
+
 
     @Override
     public ReviewDoc save(ReviewDoc reviewDoc, ObjectId productId, List<AspectVotingDto> aspectVotingDtoList) {
@@ -69,10 +100,10 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
     private Update setAspectResultUpdate(Update update, List<AspectVotingDto> aspectVotingDtoList) {
 
         if (!aspectVotingDtoList.isEmpty()) {
-            List<String> aspectIdList = new ArrayList<>();
+            List<ObjectId> aspectIdList = new ArrayList<>();
             List<String> aspectSelectedOptionsList = new ArrayList<>();
             for (AspectVotingDto aspectVotingDto : aspectVotingDtoList) {
-                aspectIdList.add(aspectVotingDto.getAspectId());
+                aspectIdList.add(new ObjectId(aspectVotingDto.getAspectId()));
                 aspectSelectedOptionsList.addAll(aspectVotingDto.getSelectedOptions());
             }
 
