@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 public interface BrandRatingsDetailsMapper {
 
     @Mapping(source = "id", target = "id", qualifiedBy = StringToObjectIdMapping.class)
-    @Mapping(source = "getBrandRatingMetricDtoList", target = "brandCriterionRatingDocList")
+    @Mapping(source = "brandRatingMetricDtoList", target = "brandRatingMetricDocList")
     @Mapping(source = "brandRefDto", target = "brandRef")
     @Mapping(source = "userRefDto", target = "userRef")
     @Mapping(source = "reviewId", target = "reviewId", qualifiedBy = StringToObjectIdMapping.class)

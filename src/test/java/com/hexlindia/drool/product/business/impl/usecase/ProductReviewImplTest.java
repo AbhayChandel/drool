@@ -4,7 +4,6 @@ import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
 import com.hexlindia.drool.product.business.api.usecase.BrandRating;
 import com.hexlindia.drool.product.business.api.usecase.BrandRatingsDetails;
-import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.*;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class ProductReviewImplTest {
 
-    private ProductReview productReviewSpy;
+    private ProductReviewImpl productReviewSpy;
 
     @Mock
     private BrandRating brandRatingMock;
@@ -102,6 +101,8 @@ class ProductReviewImplTest {
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedObjectId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
         ObjectId mockedBrandRatingId = new ObjectId();
         when(this.brandRatingsDetails.saveRatings(brandRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
+        Mockito.doNothing().when(this.productReviewSpy).saveBrandRatings(any());
+
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         ArgumentCaptor<ObjectId> productIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
@@ -172,6 +173,7 @@ class ProductReviewImplTest {
         when(this.brandRatingsDetails.saveRatings(brandRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
         when(this.productReviewRepositoryMock.save(any(), any(), anyList())).thenReturn(reviewDocMocked);
         when(this.videoMock.save(videoDto)).thenReturn(videoDto);
+        Mockito.doNothing().when(this.productReviewSpy).saveBrandRatings(any());
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<VideoDto> videoDtoArgumentCaptor = ArgumentCaptor.forClass(VideoDto.class);
 
@@ -229,6 +231,7 @@ class ProductReviewImplTest {
         BrandRatingsDetailsDto brandRatingsDetailsDto = new BrandRatingsDetailsDto(null, null, Arrays.asList(brandRatingMetricDtoTrendy, brandRatingMetricDtoTrustable), new BrandRefDto(brandId.toHexString(), "Lakme"), new UserRefDto("u123", "username123"));
         reviewDtoMocked.setBrandRatingsDetailsDto(brandRatingsDetailsDto);
 
+        Mockito.doNothing().when(this.productReviewSpy).saveBrandRatings(any());
         when(this.productReviewRepositoryMock.save(reviewDocMocked, mockedProductId, aspectVotingDtoList)).thenReturn(reviewDocMocked);
         ObjectId mockedBrandRatingId = new ObjectId();
         when(this.brandRatingsDetails.saveRatings(brandRatingsDetailsDto)).thenReturn(mockedBrandRatingId);

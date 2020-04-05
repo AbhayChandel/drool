@@ -59,10 +59,10 @@ class ProductReviewRepositoryTest {
         reviewDoc.setUserRef(new UserRef("u123", "username123"));
 
         AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
-        aspectVotingDtoStyle.setAspectId("1");
+        aspectVotingDtoStyle.setAspectId(ObjectId.get().toHexString());
         aspectVotingDtoStyle.setSelectedOptions(Arrays.asList("Chic", "Casual"));
         AspectVotingDto aspectVotingDtoOccasion = new AspectVotingDto();
-        aspectVotingDtoOccasion.setAspectId("2");
+        aspectVotingDtoOccasion.setAspectId(ObjectId.get().toHexString());
         aspectVotingDtoOccasion.setSelectedOptions(Arrays.asList("Clubbing", "Cocktail"));
 
         assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active"), Arrays.asList(aspectVotingDtoStyle, aspectVotingDtoOccasion)));

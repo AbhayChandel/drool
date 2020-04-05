@@ -92,7 +92,7 @@ public class ProductReviewImpl implements ProductReview {
         }
     }
 
-    private void saveBrandRatings(ReviewDto reviewDto) {
+    void saveBrandRatings(ReviewDto reviewDto) {
         BrandRatingsDetailsDto brandRatingsDetailsDto = reviewDto.getBrandRatingsDetailsDto();
         brandRatingsDetailsDto.setReviewId(reviewDto.getId());
         brandRatingsDetailsDto.setUserRefDto(reviewDto.getUserRefDto());

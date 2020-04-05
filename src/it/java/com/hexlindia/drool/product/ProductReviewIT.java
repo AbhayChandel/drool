@@ -152,14 +152,14 @@ public class ProductReviewIT {
         reviewDto.put("reviewType", "video");
 
         JSONObject aspectPreferenceDtoStyle = new JSONObject();
-        aspectPreferenceDtoStyle.put("id", "abc");
+        aspectPreferenceDtoStyle.put("id", ObjectId.get().toHexString());
         JSONArray aspectPreferenceDtoStyleSelected = new JSONArray();
         aspectPreferenceDtoStyleSelected.put("Retro");
         aspectPreferenceDtoStyleSelected.put("Bohemian");
         aspectPreferenceDtoStyle.put("selected", aspectPreferenceDtoStyleSelected);
 
         JSONObject aspectPreferenceDtoOcassion = new JSONObject();
-        aspectPreferenceDtoOcassion.put("id", "abc");
+        aspectPreferenceDtoOcassion.put("id", ObjectId.get().toHexString());
         JSONArray aspectPreferenceDtoOcassionSelected = new JSONArray();
         aspectPreferenceDtoOcassionSelected.put("Wedding");
         aspectPreferenceDtoOcassionSelected.put("Cocktail");
@@ -226,14 +226,14 @@ public class ProductReviewIT {
 
     private void setAspectVotingResults(JSONObject reviewDto) throws JSONException {
         JSONObject aspectPreferenceDtoStyle = new JSONObject();
-        aspectPreferenceDtoStyle.put("id", "1");
+        aspectPreferenceDtoStyle.put("id", ObjectId.get().toHexString());
         JSONArray aspectPreferenceDtoStyleSelected = new JSONArray();
         aspectPreferenceDtoStyleSelected.put("Chic");
         aspectPreferenceDtoStyleSelected.put("Casual");
         aspectPreferenceDtoStyle.put("selected", aspectPreferenceDtoStyleSelected);
 
         JSONObject aspectPreferenceDtoOcassion = new JSONObject();
-        aspectPreferenceDtoOcassion.put("id", "2");
+        aspectPreferenceDtoOcassion.put("id", ObjectId.get().toHexString());
         JSONArray aspectPreferenceDtoOcassionSelected = new JSONArray();
         aspectPreferenceDtoOcassionSelected.put("Cocktail");
         aspectPreferenceDtoOcassion.put("selected", aspectPreferenceDtoOcassionSelected);
