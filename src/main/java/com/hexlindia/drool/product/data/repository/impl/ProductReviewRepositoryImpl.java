@@ -65,10 +65,6 @@ public class ProductReviewRepositoryImpl implements ProductReviewRepository {
 
         ProjectionOperation project = Aggregation.project()
                 .and("easpects").concatArrays("aspects.internal_aspects").as("allaspects");
-        //ReplaceRootOperation replaceRootOperation = Aggregation.replaceRoot("allaspects");
-        UnwindOperation unwind = Aggregation.unwind("allaspects");
-        ReplaceRootOperation replaceRoot = Aggregation.replaceRoot("allaspects");
-
 
         AggregationResults<ProductAspectTemplates> aspectTemplates = this.mongoOperations.aggregate(Aggregation.newAggregation(
                 matchProduct,

@@ -63,6 +63,7 @@ class ProductRepositoryImplTest {
         productDocActive.setAspectsDoc(aspectsDoc);
         productDocActive.setName("Lakme 9 to 5");
         productDocActive.setActive(true);
+        productDocActive.setSearchTags(Arrays.asList("lakme", "9to5", "lipstick"));
         this.mongoOperations.save(productDocActive);
         insertedProducts.put("active", productDocActive.getId());
         ProductDoc productDocInactive = new ProductDoc();

@@ -1,7 +1,7 @@
 package com.hexlindia.drool.product.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.product.business.api.usecase.Product;
+import com.hexlindia.drool.product.business.api.usecase.ProductSearch;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class ProductRestServiceImplTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    Product productMocked;
+    ProductSearch productSearchMocked;
 
     private String getAspectTemplatesUri() {
         return "/" + restUriVersion + "/product//aspecttemplates/id";

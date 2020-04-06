@@ -5,6 +5,4 @@ import org.bson.types.ObjectId;
 
 public interface ProductRepository {
     ProductDoc findById(ObjectId id);
-
-
 }
