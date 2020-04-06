@@ -23,7 +23,7 @@ import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
-public class ProductIT {
+public class ProducIT {
 
     @Value("${rest.uri.version}")
     String restUriVersion;

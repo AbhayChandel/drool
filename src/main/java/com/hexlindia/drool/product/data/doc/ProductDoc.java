@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Id;
+import java.util.List;
 
 @Document(collection = "products")
 @NoArgsConstructor
@@ -22,6 +23,12 @@ public class ProductDoc {
     private Boolean active;
     private String name;
 
+    @Field(value = "brand")
+    private BrandRef brandRef;
+
     @Field(value = "aspects")
     private AspectsDoc aspectsDoc;
+
+    @Field(value = "search_tags")
+    private List<String> searchTags;
 }

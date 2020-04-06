@@ -17,6 +17,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final MongoOperations mongoOperations;
 
+    private static final String PRODUCTS_COLLECTION_NAME = "products";
+
 
     @Autowired
     public ProductRepositoryImpl(MongoOperations mongoOperations) {
@@ -27,6 +29,5 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductDoc findById(ObjectId id) {
         return mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), ProductDoc.class);
     }
-
 
 }
