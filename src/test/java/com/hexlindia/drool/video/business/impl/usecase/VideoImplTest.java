@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.business.impl.usecase;
 
+import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.data.doc.ProductRef;
@@ -57,9 +58,12 @@ class VideoImplTest {
     @Mock
     private VideoThumbnailDataMapper videoThumbnailDataMapperMock;
 
+    @Mock
+    private ActivityFeed activityFeedMock;
+
     @BeforeEach
     void setUp() {
-        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoTemplateRepositoryMock, videoCommentMapperMock, postRefMapperMock, userActivityMock, videoThumbnailDataMapperMock));
+        this.videoImplSpy = Mockito.spy(new VideoImpl(videoDocDtoMapperMock, videoTemplateRepositoryMock, videoCommentMapperMock, postRefMapperMock, userActivityMock, videoThumbnailDataMapperMock, activityFeedMock));
     }
 
     @Test

@@ -27,13 +27,13 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @SpringBootTest
-class UserActivityRepositoryImplTest {
+class UserActivityFeedRepositoryImplTest {
 
     private final UserActivityRepository userActivityRepository;
     private final MongoOperations mongoOperations;
 
     @Autowired
-    public UserActivityRepositoryImplTest(UserActivityRepository userActivityRepository, MongoTemplate mongoOperations) {
+    public UserActivityFeedRepositoryImplTest(UserActivityRepository userActivityRepository, MongoTemplate mongoOperations) {
         this.userActivityRepository = userActivityRepository;
         this.mongoOperations = mongoOperations;
     }

@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class UserActivityImplTest {
+class UserActivityFeedImplTest {
 
     private UserActivity userActivitySpy;
 
