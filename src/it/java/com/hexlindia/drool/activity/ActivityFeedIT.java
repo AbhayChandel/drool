@@ -1,109 +1,93 @@
-package com.hexlindia.drool.activity.data.repository.impl;
+package com.hexlindia.drool.activity;
 
-import com.hexlindia.drool.activity.FeedDocFields;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
-import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
+import com.hexlindia.drool.activity.dto.FeedDto;
+import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.ProductRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.http.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class ActivityFeedFeedRepositoryImplTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(MongoDBConfig.class)
+@Slf4j
+public class ActivityFeedIT {
+
+    @Value("${rest.uri.version}")
+    String restUriVersion;
 
     @Autowired
-    ActivityFeedRepository activityFeedRepository;
+    ObjectMapper objectMapper;
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Autowired
     MongoOperations mongoOperations;
 
-    ObjectId insertedPostId = ObjectId.get();
+    private String getActivityFeedUri() {
+        return "/" + restUriVersion + "/view/activity/feed";
+    }
 
-    List<FeedDoc> getFeedExpectedList = new ArrayList<>();
-
-    @Test
-    void testSave() {
-        FeedDoc feedDoc = new FeedDoc();
-        feedDoc.setPostId(ObjectId.get());
-        feedDoc.setPostType("guide");
-        feedDoc.setPostMedium("video");
-        feedDoc.setTitle(("Test guide for repository testing"));
-        feedDoc.setSourceId("ax4n6k5xk");
-        feedDoc.setDatePosted(LocalDateTime.now());
-        feedDoc.setLikes("0");
-        feedDoc.setViews("0");
-        feedDoc.setComments(0);
-        feedDoc.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")));
-        feedDoc.setUserRef(new UserRef("123", "shabanastyle"));
-
-        assertNotNull(activityFeedRepository.save(feedDoc));
+    @BeforeEach
+    void setup() throws JSONException, JsonProcessingException {
+        insertFeeds();
     }
 
     @Test
-    void testGetFeed() {
-        List<FeedDoc> feedDocList = activityFeedRepository.getFeed(0);
-        assertEquals(10, feedDocList.size());
-        boolean isFirstDoc = true;
-        FeedDoc previousFeedDoc = null;
-        for (FeedDoc feedDoc : feedDocList) {
-            if (isFirstDoc) {
-                previousFeedDoc = feedDoc;
-                isFirstDoc = false;
+    void testGetFeed() throws JSONException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<FeedDto[]> responseEntity = restTemplate.exchange(getActivityFeedUri() + "/0", HttpMethod.GET, httpEntity, FeedDto[].class);
+        assertNotNull(responseEntity.getBody());
+        List<FeedDto> feedDtoList = Arrays.asList(responseEntity.getBody());
+        assertEquals(10, feedDtoList.size());
+
+        boolean isFirstDto = true;
+        FeedDto previousFeedDto = null;
+        for (FeedDto feedDto : feedDtoList) {
+            if (isFirstDto) {
+                previousFeedDto = feedDto;
+                isFirstDto = false;
                 continue;
             }
-            assertTrue(feedDoc.getDatePosted().isBefore(previousFeedDoc.getDatePosted()));
-            previousFeedDoc = feedDoc;
+            assertTrue(getLocaldateTime(feedDto.getDatePosted()).isBefore(getLocaldateTime(previousFeedDto.getDatePosted())));
+            previousFeedDto = feedDto;
         }
     }
 
-    @Test
-    void testSetLikes() {
-        assertEquals("201", activityFeedRepository.setField(insertedPostId, FeedDocFields.likes, "201").getLikes());
+    private LocalDateTime getLocaldateTime(String localDateTimeStr) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM, yyyy");
+        return LocalDate.parse(localDateTimeStr, formatter).atStartOfDay();
     }
 
-    @Test
-    void testSetViews() {
-        assertEquals("301", activityFeedRepository.setField(insertedPostId, FeedDocFields.views, "301").getViews());
-    }
-
-    @Test
-    void testIncrementComments() {
-        assertEquals(401, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocFields.comments, 1).getComments());
-    }
-
-    @Test
-    void testDecrementComments() {
-        assertEquals(399, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocFields.comments, -1).getComments());
-    }
-
-
-    @BeforeEach
-    void setup() {
-        FeedDoc feedDoc = new FeedDoc();
-        feedDoc.setPostId(insertedPostId);
-        feedDoc.setPostType("guide");
-        feedDoc.setPostMedium("video");
-        feedDoc.setTitle(("Test guide for repository testing setup"));
-        feedDoc.setSourceId("ax4n6k5xk");
-        feedDoc.setDatePosted(LocalDateTime.now());
-        feedDoc.setLikes("200");
-        feedDoc.setViews("300");
-        feedDoc.setComments(400);
-        feedDoc.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")));
-        feedDoc.setUserRef(new UserRef("123", "shabanastyle"));
-        this.mongoOperations.save(feedDoc);
-
+    private void insertFeeds() {
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
         feedDocLakmeFoundation.setPostId(ObjectId.get());
         feedDocLakmeFoundation.setPostType("guide");

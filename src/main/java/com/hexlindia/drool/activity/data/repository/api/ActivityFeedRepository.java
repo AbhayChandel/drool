@@ -4,6 +4,8 @@ import com.hexlindia.drool.activity.FeedDocFields;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import org.bson.types.ObjectId;
 
+import java.util.List;
+
 public interface ActivityFeedRepository {
 
     FeedDoc save(FeedDoc feedDoc);
@@ -11,4 +13,6 @@ public interface ActivityFeedRepository {
     FeedDoc setField(ObjectId postId, FeedDocFields feedDocFields, String value);
 
     FeedDoc incrementDecrementField(ObjectId postId, FeedDocFields feedDocFields, int value);
+
+    List<FeedDoc> getFeed(int page);
 }

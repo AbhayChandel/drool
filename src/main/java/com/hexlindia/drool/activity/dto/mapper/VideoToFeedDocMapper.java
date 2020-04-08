@@ -1,5 +1,6 @@
-package com.hexlindia.drool.activity.data.doc;
+package com.hexlindia.drool.activity.dto.mapper;
 
+import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.common.dto.mapper.ObjectIdMapper;
 import com.hexlindia.drool.common.dto.mapper.StringToObjectIdMapping;
 import com.hexlindia.drool.video.data.doc.VideoDoc;

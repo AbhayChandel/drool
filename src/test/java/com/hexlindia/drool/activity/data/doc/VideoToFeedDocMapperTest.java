@@ -1,5 +1,6 @@
 package com.hexlindia.drool.activity.data.doc;
 
+import com.hexlindia.drool.activity.dto.mapper.VideoToFeedDocMapper;
 import com.hexlindia.drool.common.data.doc.ProductRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -36,8 +37,8 @@ class VideoToFeedDocMapperTest {
         assertEquals("This video is going to activity feed", feedDoc.getTitle());
         assertEquals("aanx323faid", feedDoc.getSourceId());
         assertEquals(datePosted, feedDoc.getDatePosted());
-        assertEquals(0, feedDoc.getLikes());
-        assertEquals(0, feedDoc.getViews());
+        assertEquals("0", feedDoc.getLikes());
+        assertEquals("0", feedDoc.getViews());
         assertEquals(0, feedDoc.getComments());
         assertEquals(2, feedDoc.getProductRefList().size());
         assertEquals("1", feedDoc.getProductRefList().get(0).getId());

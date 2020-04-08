@@ -22,7 +22,6 @@ public class ProductReviewRestServiceImpl implements ProductReviewRestService {
 
     @Override
     public ResponseEntity<ReviewDialogFormsDto> getReviewDialogForms(ObjectId productId, ObjectId brandId) {
-        ReviewDialogFormsDto reviewDialogFormsDto = productReview.getReviewDialogForms(productId, brandId);
-        return ResponseEntity.ok(reviewDialogFormsDto);
+        return ResponseEntity.ok(productReview.getReviewDialogForms(productId, brandId));
     }
 }

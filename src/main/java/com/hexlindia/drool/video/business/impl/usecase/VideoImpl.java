@@ -93,7 +93,7 @@ public class VideoImpl implements Video {
         videoCommentDto = videoCommentMapper.toDto(videoTemplateRepository.insertComment(postRef, videoComment));
         if (videoCommentDto != null) {
             userActivity.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
-            activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getId()), FeedDocFields.comments, 1);
+            activityFeed.incrementDecrementField(new ObjectId(postRef.getId()), FeedDocFields.comments, 1);
             return videoCommentDto;
         }
         log.error("Video comment not inserted");
@@ -105,7 +105,7 @@ public class VideoImpl implements Video {
         boolean result = videoTemplateRepository.deleteComment(videoCommentDto);
         if (result) {
             userActivity.deleteVideoComment(videoCommentDto);
-            activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getId()), FeedDocFields.comments, -1);
+            activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getPostRefDto().getId()), FeedDocFields.comments, -1);
         } else {
             log.error("Video comment not deleted");
         }
