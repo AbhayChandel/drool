@@ -77,7 +77,7 @@ public class VideoIT {
         UserRefDto.put("username", "user123");
         JSONObject videoDoc = new JSONObject();
         videoDoc.put("type", "review");
-        videoDoc.put("title", "Review for Tom Ford Vetiver");
+        videoDoc.put("title", "Added as part of test setup");
         videoDoc.put("description", "This is an honest review of Tom Ford Vetiver");
         videoDoc.put("sourceId", "s123");
         videoDoc.put("productRefDtoList", productRefDtoList);
