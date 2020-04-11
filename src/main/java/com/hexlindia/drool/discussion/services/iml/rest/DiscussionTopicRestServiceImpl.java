@@ -1,15 +1,13 @@
 package com.hexlindia.drool.discussion.services.iml.rest;
 
-import com.hexlindia.drool.common.to.ActivityTo;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
+import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.services.api.rest.DiscussionTopicRestService;
-import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
-import com.hexlindia.drool.discussion.to.validation.DiscussionTopicCreateValidation;
-import com.hexlindia.drool.discussion.to.validation.DiscussionTopicUpdateValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestService {
@@ -22,33 +20,27 @@ public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestServic
     }
 
     @Override
-    public ResponseEntity<DiscussionTopicTo> post(@Validated(DiscussionTopicCreateValidation.class) DiscussionTopicTo discussionTopicTo) {
-        return ResponseEntity.ok(this.discussionTopic.post(discussionTopicTo));
+    public ResponseEntity<DiscussionTopicDto> post(DiscussionTopicDto discussionTopicDto) {
+        return ResponseEntity.ok(this.discussionTopic.post(discussionTopicDto));
     }
 
     @Override
-    public ResponseEntity<DiscussionTopicTo> updateTitle(@Validated(DiscussionTopicUpdateValidation.class) DiscussionTopicTo discussionTopicTo) {
-        return ResponseEntity.ok(this.discussionTopic.updateTopicTitle(discussionTopicTo));
+    public ResponseEntity<Boolean> updateTitle(Map<String, String> parameters) {
+        return ResponseEntity.ok(this.discussionTopic.updateTopicTitle(parameters.get("title"), parameters.get("id")));
     }
 
     @Override
-    public ResponseEntity incrementViewsCount(Long id) {
-        discussionTopic.incrementViewsByOne(id);
-        return ResponseEntity.ok("");
+    public ResponseEntity<String> incrementViews(String id) {
+        return ResponseEntity.ok(discussionTopic.incrementViews(id));
     }
 
     @Override
-    public ResponseEntity<String> incrementLikesCount(ActivityTo activityTo) {
-        return ResponseEntity.ok(discussionTopic.incrementLikesByOne(activityTo));
+    public ResponseEntity<String> incrementLikes(Map<String, String> parameters) {
+        return ResponseEntity.ok(discussionTopic.incrementLikes(parameters.get("id"), parameters.get("userId")));
     }
 
     @Override
-    public ResponseEntity<String> decrementLikesCount(ActivityTo activityTo) {
-        return ResponseEntity.ok(discussionTopic.decrementLikesByOne(activityTo));
-    }
-
-    @Override
-    public ResponseEntity<DiscussionTopicTo> findById(Long id) {
-        return ResponseEntity.ok(this.discussionTopic.findById(id));
+    public ResponseEntity<String> decrementLikes(Map<String, String> parameters) {
+        return ResponseEntity.ok(discussionTopic.decrementLikes(parameters.get("id"), parameters.get("userId")));
     }
 }

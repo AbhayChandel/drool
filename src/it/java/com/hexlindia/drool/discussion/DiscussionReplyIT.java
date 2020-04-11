@@ -3,13 +3,15 @@ package com.hexlindia.drool.discussion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.discussion.to.DiscussionReplyTo;
-import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
-import org.flywaydb.test.annotation.FlywayTest;
-import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
+import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
+import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
+import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +19,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.*;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@FlywayTestExtension
-@FlywayTest
+@Import(MongoDBConfig.class)
 public class DiscussionReplyIT {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -41,7 +44,15 @@ public class DiscussionReplyIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    MongoOperations mongoOperations;
+
     private String authToken;
+    private ObjectId insertDiscussionTopic;
+    private ObjectId insertedReplyId;
 
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
@@ -56,83 +67,70 @@ public class DiscussionReplyIT {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(response);
         authToken = rootNode.path("authToken").asText();
+
+        insertDiscussionTopicDocs();
+    }
+
+    private void insertDiscussionTopicDocs() {
+        DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
+        discussionTopicDoc.setTitle("This a dummy discussion topic");
+        ObjectId userId = ObjectId.get();
+        discussionTopicDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionTopicDoc.setActive(true);
+        DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
+        discussionReplyDoc.setReply("As I told it is a great reply");
+        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setActive(true);
+        discussionReplyDoc.setLikes(190);
+        discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
+
+        mongoOperations.save(discussionTopicDoc);
+        insertDiscussionTopic = discussionTopicDoc.getId();
+        insertedReplyId = discussionReplyDoc.getId();
     }
 
     /*
     Discussion successfully created
      */
     @Test
-    void testReplyPostedSuccessfully() throws JSONException {
+    void testReplyPostedSuccessfully() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<DiscussionTopicTo> discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        int repliesBeforeNewReply = discussionTopicresponseEntity.getBody().getReplies();
-        LocalDateTime discussionDateLastActiveBeforeNewReply = discussionTopicresponseEntity.getBody().getDateLastActive();
+        DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
+        discussionReplyDto.setDiscussionId(insertDiscussionTopic.toHexString());
+        discussionReplyDto.setReply("This is a new reply");
+        discussionReplyDto.setLikes("0");
+        ObjectId userId = new ObjectId();
+        discussionReplyDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
-        JSONObject discussion = new JSONObject();
-        discussion.put("discussionTopicId", "1");
-        discussion.put("reply", "A new reply is posted");
-        discussion.put("userId", "55");
-
-        HttpEntity<String> request = new HttpEntity<>(discussion.toString(), headers);
-        ResponseEntity<DiscussionReplyTo> responseEntity = this.restTemplate.postForEntity(getPostUri(), request, DiscussionReplyTo.class);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionReplyDto), headers);
+        ResponseEntity<DiscussionReplyDto> responseEntity = this.restTemplate.postForEntity(getPostUri(), request, DiscussionReplyDto.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
-        DiscussionReplyTo discussionReplyToRetrieved = responseEntity.getBody();
-        assertEquals("A new reply is posted", discussionReplyToRetrieved.getReply());
-        assertEquals(55L, discussionReplyToRetrieved.getUserId());
-        assertEquals(0, discussionReplyToRetrieved.getLikes());
-        assertNotNull(discussionReplyToRetrieved.getDatePosted());
-
-        discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertEquals(repliesBeforeNewReply + 1, discussionTopicresponseEntity.getBody().getReplies());
-        assertTrue(discussionTopicresponseEntity.getBody().getDateLastActive().isAfter(discussionDateLastActiveBeforeNewReply));
-
-        responseEntity = restTemplate.exchange(getFindByIdUri() + "/" + discussionReplyToRetrieved.getId(), HttpMethod.GET, httpEntity, DiscussionReplyTo.class);
-        discussionReplyToRetrieved = responseEntity.getBody();
-        assertEquals(1L, discussionReplyToRetrieved.getDiscussionTopicId());
+        DiscussionReplyDto discussionReplyDtoRetrieved = responseEntity.getBody();
+        assertNotNull(discussionReplyDtoRetrieved.getId());
+        assertEquals("This is a new reply", discussionReplyDtoRetrieved.getReply());
+        assertEquals(userId.toHexString(), discussionReplyDtoRetrieved.getUserRefDto().getId());
+        assertEquals("shabana", discussionReplyDtoRetrieved.getUserRefDto().getUsername());
+        assertEquals("0", discussionReplyDtoRetrieved.getLikes());
     }
 
     @Test
-    void testReplyUdatedSuccessfully() throws JSONException {
+    void testReplyUpdatedSuccessfully() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
-        JSONObject discussion = new JSONObject();
-        discussion.put("id", "1");
-        discussion.put("reply", "No, Loreal is not better than Lakme");
+        JSONObject parameters = new JSONObject();
+        parameters.put("replyId", insertedReplyId.toHexString());
+        parameters.put("discussionId", insertDiscussionTopic.toHexString());
+        parameters.put("reply", "No, Loreal is not better than Lakme");
 
-        HttpEntity<String> request = new HttpEntity<>(discussion.toString(), headers);
-        ResponseEntity<DiscussionReplyTo> responseEntity = restTemplate.exchange(getUpdateUri(), HttpMethod.PUT, request, DiscussionReplyTo.class);
+        HttpEntity<String> request = new HttpEntity<>(parameters.toString(), headers);
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getUpdateUri(), HttpMethod.PUT, request, Boolean.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
-        DiscussionReplyTo discussionReplyToReturned = responseEntity.getBody();
-        assertEquals("No, Loreal is not better than Lakme", discussionReplyToReturned.getReply());
-    }
+        assertTrue(responseEntity.getBody());
 
-    @Test
-    void testFindById() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<DiscussionReplyTo> responseEntity = restTemplate.exchange(getFindByIdUri() + "/1", HttpMethod.GET, httpEntity, DiscussionReplyTo.class);
-        DiscussionReplyTo discussionReplyTo = responseEntity.getBody();
-        assertEquals(1L, discussionReplyTo.getId());
-        assertEquals(3L, discussionReplyTo.getUserId());
-        assertEquals(2457, discussionReplyTo.getLikes());
-    }
-
-    @Test
-    void testFindByIdUnavailableReplyTopic() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(getFindByIdUri() + "/101", HttpMethod.GET, httpEntity, String.class);
-        Assertions.assertEquals(404, responseEntity.getStatusCodeValue());
-        Assertions.assertEquals("Reply search failed. Discussion reply with id 101 not found", responseEntity.getBody());
     }
 
     @Test
@@ -141,21 +139,16 @@ public class DiscussionReplyIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+        JSONObject parameters = new JSONObject();
+        parameters.put("likes", 499);
+        parameters.put("replyId", insertedReplyId.toHexString());
+        parameters.put("discussionId", insertDiscussionTopic.toHexString());
+        parameters.put("userId", ObjectId.get().toHexString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(parameters.toString(), headers);
 
-        ResponseEntity<DiscussionTopicTo> discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        LocalDateTime discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDateLastActive();
+        ResponseEntity<String> response = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, httpEntity, String.class);
+        assertEquals(191, Integer.parseInt(response.getBody()));
 
-        JSONObject activityTo = new JSONObject();
-        activityTo.put("postId", "4");
-        activityTo.put("currentUserId", "5");
-        HttpEntity<String> request = new HttpEntity<>(activityTo.toString(), headers);
-        ResponseEntity<String> responseEntityPut = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, request, String.class);
-        assertEquals(200, responseEntityPut.getStatusCodeValue());
-        assertEquals("100", responseEntityPut.getBody());
-
-        discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertTrue(discussionResponseEntity.getBody().getDateLastActive().isAfter(discussionDateLastActiveBeforeLikeIncrement));
     }
 
     @Test
@@ -163,38 +156,34 @@ public class DiscussionReplyIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<DiscussionTopicTo> discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        LocalDateTime discussionDateLastActiveBeforeLikeIncrement = discussionResponseEntity.getBody().getDateLastActive();
+        JSONObject parameters = new JSONObject();
+        parameters.put("likes", 800);
+        parameters.put("replyId", insertedReplyId.toHexString());
+        parameters.put("discussionId", insertDiscussionTopic.toHexString());
+        parameters.put("userId", ObjectId.get().toHexString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(parameters.toString(), headers);
 
-        JSONObject activityTo = new JSONObject();
-        activityTo.put("postId", "5");
-        activityTo.put("currentUserId", "5");
-        HttpEntity<String> request = new HttpEntity<>(activityTo.toString(), headers);
-        ResponseEntity<String> responseEntityPut = restTemplate.exchange(getLikesDecrementUri(), HttpMethod.PUT, request, String.class);
-        assertEquals(200, responseEntityPut.getStatusCodeValue());
-        assertEquals("1.9k", responseEntityPut.getBody());
+        ResponseEntity<String> response = restTemplate.exchange(getLikesDecrementUri(), HttpMethod.PUT, httpEntity, String.class);
+        assertEquals(189, Integer.parseInt(response.getBody()));
 
-        discussionResponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/2", HttpMethod.GET, httpEntity, DiscussionTopicTo.class);
-        assertTrue(discussionResponseEntity.getBody().getDateLastActive().isAfter(discussionDateLastActiveBeforeLikeIncrement));
     }
 
     @Test
-    void testDeleteReply() {
+    void testSetStatus() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
-        HttpEntity<String> request = new HttpEntity<>(null, headers);
 
-        ResponseEntity<DiscussionTopicTo> discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, request, DiscussionTopicTo.class);
-        int repliesBeforeReplyDeletion = discussionTopicresponseEntity.getBody().getReplies();
+        JSONObject parameters = new JSONObject();
+        parameters.put("status", false);
+        parameters.put("replyId", insertedReplyId.toHexString());
+        parameters.put("discussionId", insertDiscussionTopic.toHexString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(parameters.toString(), headers);
 
-        ResponseEntity<DiscussionReplyTo> responseEntityDelete = restTemplate.exchange(getDeleteByIdUri() + "/1", HttpMethod.DELETE, request, DiscussionReplyTo.class);
-        assertEquals(200, responseEntityDelete.getStatusCodeValue());
+        ResponseEntity<String> response = restTemplate.exchange(getSetStatusUri(), HttpMethod.PUT, httpEntity, String.class);
+        assertTrue(Boolean.valueOf(response.getBody()));
 
-        discussionTopicresponseEntity = restTemplate.exchange(getDiscussionTopicFindByIdUri() + "/1", HttpMethod.GET, request, DiscussionTopicTo.class);
-        assertEquals(repliesBeforeReplyDeletion - 1, discussionTopicresponseEntity.getBody().getReplies());
     }
 
 
@@ -214,8 +203,8 @@ public class DiscussionReplyIT {
         return "/" + restUriVersion + "/discussion/reply/update";
     }
 
-    private String getDeleteByIdUri() {
-        return "/" + restUriVersion + "/discussion/reply/delete/id";
+    private String getSetStatusUri() {
+        return "/" + restUriVersion + "/discussion/reply/set";
     }
 
     private String getFindByIdUri() {
