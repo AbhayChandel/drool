@@ -1,28 +1,18 @@
 package com.hexlindia.drool.discussion.business.api.usecase;
 
-import com.hexlindia.drool.common.to.ActivityTo;
-import com.hexlindia.drool.discussion.data.entity.DiscussionReplyEntity;
-import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
+import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 
 public interface DiscussionTopic {
 
-    DiscussionTopicTo post(DiscussionTopicTo discussionTopicTo);
+    DiscussionTopicDto post(DiscussionTopicDto discussionTopicDto);
 
-    DiscussionTopicTo findById(Long id);
+    DiscussionTopicDto findById(String id);
 
-    DiscussionTopicTo updateTopicTitle(DiscussionTopicTo discussionTopicTo);
+    boolean updateTopicTitle(String title, String id);
 
-    void incrementViewsByOne(Long id);
+    String incrementViews(String id);
 
-    String incrementLikesByOne(ActivityTo activityTo);
+    String incrementLikes(String id, String userId);
 
-    String decrementLikesByOne(ActivityTo activityTo);
-
-    void incrementRepliesByOne(Long id);
-
-    void decrementRepliesByOne(Long id);
-
-    void setLastDateActiveToNow(Long id);
-
-    void saveReply(DiscussionReplyEntity discussionReplyEntity, Long discussionTopicId);
+    String decrementLikes(String id, String userId);
 }

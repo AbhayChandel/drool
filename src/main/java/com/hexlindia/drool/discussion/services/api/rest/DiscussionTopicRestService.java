@@ -1,28 +1,30 @@
 package com.hexlindia.drool.discussion.services.api.rest;
 
-import com.hexlindia.drool.common.to.ActivityTo;
-import com.hexlindia.drool.discussion.to.DiscussionTopicTo;
+import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Map;
 
 @RequestMapping("/${rest.uri.version}/discussion")
 public interface DiscussionTopicRestService {
-    @PostMapping(value = "/post")
-    ResponseEntity<DiscussionTopicTo> post(@RequestBody DiscussionTopicTo discussionTopicTo);
 
-    @GetMapping(value = "/find/id/{id}")
-    ResponseEntity<DiscussionTopicTo> findById(@PathVariable("id") Long id);
+    @PostMapping(value = "/post")
+    ResponseEntity<DiscussionTopicDto> post(@RequestBody DiscussionTopicDto discussionTopicDto);
 
     @PutMapping(value = "/update")
-    ResponseEntity<DiscussionTopicTo> updateTitle(@RequestBody DiscussionTopicTo discussionTopicTo);
+    ResponseEntity<Boolean> updateTitle(@RequestBody Map<String, String> parameters);
 
     @PutMapping(value = "/views/increment")
-    ResponseEntity<String> incrementViewsCount(@RequestBody Long id);
+    ResponseEntity<String> incrementViews(@RequestBody String id);
 
     @PutMapping(value = "/likes/increment")
-    ResponseEntity<String> incrementLikesCount(@RequestBody ActivityTo activityTo);
+    ResponseEntity<String> incrementLikes(@RequestBody Map<String, String> parameters);
 
     @PutMapping(value = "/likes/decrement")
-    ResponseEntity<String> decrementLikesCount(@RequestBody ActivityTo activityTo);
+    ResponseEntity<String> decrementLikes(@RequestBody Map<String, String> parameters);
 
 }

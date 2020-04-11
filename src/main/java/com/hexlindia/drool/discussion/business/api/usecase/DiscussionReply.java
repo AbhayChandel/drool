@@ -1,19 +1,16 @@
 package com.hexlindia.drool.discussion.business.api.usecase;
 
-import com.hexlindia.drool.common.to.ActivityTo;
-import com.hexlindia.drool.discussion.to.DiscussionReplyTo;
+import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 
 public interface DiscussionReply {
 
-    DiscussionReplyTo post(DiscussionReplyTo discussionTopicTo);
+    DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto);
 
-    DiscussionReplyTo findById(Long id);
+    boolean updateReply(String reply, String replyId, String discussionId);
 
-    DiscussionReplyTo updateReply(DiscussionReplyTo discussionReplyTo);
+    String incrementLikes(String replyId, String discussionId, String userId);
 
-    String incrementLikesByOne(ActivityTo activityTo);
+    String decrementLikes(String replyId, String discussionId, String userId);
 
-    String decrementLikesByOne(ActivityTo activityTo);
-
-    DiscussionReplyTo deactivateReply(Long id);
+    boolean setStatus(Boolean status, String replyId, String discussionId);
 }
