@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.mongodb.api.DiscussionTopicMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicMongoRepository;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;

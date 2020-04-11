@@ -3,10 +3,8 @@ package com.hexlindia.drool.discussion.services.iml.rest;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReply;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.services.api.rest.DiscussionReplyRestService;
-import com.hexlindia.drool.discussion.to.validation.DiscussionReplyPostValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -18,7 +16,7 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
     private final DiscussionReply discussionReply;
 
     @Override
-    public ResponseEntity<DiscussionReplyDto> saveReply(@Validated(DiscussionReplyPostValidation.class) DiscussionReplyDto discussionReplyDto) {
+    public ResponseEntity<DiscussionReplyDto> saveReply(DiscussionReplyDto discussionReplyDto) {
         return ResponseEntity.ok(this.discussionReply.saveReply(discussionReplyDto));
     }
 

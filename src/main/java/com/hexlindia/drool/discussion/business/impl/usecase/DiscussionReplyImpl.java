@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReply;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
-import com.hexlindia.drool.discussion.data.mongodb.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionReplyDtoDocMapper;
 import lombok.RequiredArgsConstructor;

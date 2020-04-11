@@ -2,7 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
-import com.hexlindia.drool.discussion.data.mongodb.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionReplyDtoDocMapper;
 import org.bson.types.ObjectId;

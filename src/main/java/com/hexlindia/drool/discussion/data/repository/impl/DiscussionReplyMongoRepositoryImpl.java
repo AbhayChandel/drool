@@ -1,8 +1,8 @@
-package com.hexlindia.drool.discussion.data.mongodb.impl;
+package com.hexlindia.drool.discussion.data.repository.impl;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.mongodb.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;

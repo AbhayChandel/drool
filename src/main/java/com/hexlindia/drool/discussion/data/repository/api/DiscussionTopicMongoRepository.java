@@ -1,4 +1,4 @@
-package com.hexlindia.drool.discussion.data.mongodb.api;
+package com.hexlindia.drool.discussion.data.repository.api;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import org.bson.types.ObjectId;

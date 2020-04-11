@@ -4,7 +4,7 @@ import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.mongodb.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
