@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.data.repository.impl;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -17,7 +17,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 @RequiredArgsConstructor
-public class DiscussionTopicMongoRepositoryImpl implements DiscussionTopicMongoRepository {
+public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository {
 
     private final MongoOperations mongoOperations;
 

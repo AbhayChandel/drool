@@ -2,7 +2,7 @@ package com.hexlindia.drool.discussion.data.repository.impl;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -19,7 +19,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 @RequiredArgsConstructor
-public class DiscussionReplyMongoRepositoryImpl implements DiscussionReplyMongoRepository {
+public class DiscussionReplyRepositoryImpl implements DiscussionReplyRepository {
 
     private final MongoOperations mongoOperations;
 
