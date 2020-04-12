@@ -1,7 +1,7 @@
 package com.hexlindia.drool.user.services.api.rest;
 
-import com.hexlindia.drool.user.business.api.to.UserAccountTo;
-import com.hexlindia.drool.user.business.api.to.UserRegistrationDetailsTo;
+import com.hexlindia.drool.user.dto.UserAccountDto;
+import com.hexlindia.drool.user.dto.UserRegistrationDto;
 import com.hexlindia.drool.user.services.JwtResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public interface UserAccountRestService {
 
     @PostMapping(value = "/register")
-    ResponseEntity<JwtResponse> register(@RequestBody UserRegistrationDetailsTo userRegistrationDetailsTo);
+    ResponseEntity<JwtResponse> register(@RequestBody UserRegistrationDto userRegistrationDto);
 
     @GetMapping(value = "/find/email/{email}")
-    ResponseEntity<UserAccountTo> findByEmail(@PathVariable("email") String email);
+    ResponseEntity<UserAccountDto> findByEmail(@PathVariable("email") String email);
 
 
 }

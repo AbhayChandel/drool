@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.product.data.doc.*;
 import com.hexlindia.drool.product.dto.AspectTemplateDto;
 import com.hexlindia.drool.product.dto.ReviewDialogFormsDto;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(MongoDBConfig.class)
+@Import({MongoDBConfig.class, MongoDataInsertion.class})
 @Slf4j
 public class ProductReviewIT {
 
@@ -48,6 +49,9 @@ public class ProductReviewIT {
 
     @Autowired
     MongoOperations mongoOperations;
+
+    @Autowired
+    MongoDataInsertion mongoDataInsertion;
 
     private String getAuthenticationUri() {
         return "/" + restUriVersion + "/accessall/user/account/authenticate";
@@ -69,6 +73,7 @@ public class ProductReviewIT {
 
     @BeforeEach
     void setup() throws JSONException, JsonProcessingException {
+        mongoDataInsertion.insertUserData();
         getAuthToken();
         insertAspectTemplates();
         insertProducts();
@@ -271,7 +276,7 @@ public class ProductReviewIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();

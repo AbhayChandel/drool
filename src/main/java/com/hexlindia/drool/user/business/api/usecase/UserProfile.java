@@ -1,17 +1,17 @@
 package com.hexlindia.drool.user.business.api.usecase;
 
-import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
-import com.hexlindia.drool.user.business.api.to.UserProfileTo;
+import com.hexlindia.drool.user.dto.ContributionSummaryDto;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 
 public interface UserProfile {
 
-    UserProfileTo create(UserProfileTo userProfileTo);
+    UserProfileDto create(UserProfileDto userProfileDto);
 
-    UserProfileTo findById(Long userAccountId);
+    UserProfileDto findById(String id);
 
-    UserProfileTo findByUsername(String username);
+    UserProfileDto findByUsername(String username);
 
-    UserProfileTo update(UserProfileTo userProfileTo);
+    UserProfileDto update(UserProfileDto userProfileDto);
 
     ContributionSummaryDto getContributionSummary(String userId);
 }

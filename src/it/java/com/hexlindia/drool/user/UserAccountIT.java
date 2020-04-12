@@ -1,17 +1,21 @@
 package com.hexlindia.drool.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.user.business.api.to.UserAccountTo;
-import com.hexlindia.drool.user.business.api.to.UserProfileTo;
+import com.hexlindia.drool.user.data.doc.UserAccountDoc;
+import com.hexlindia.drool.user.data.doc.UserProfileDoc;
+import com.hexlindia.drool.user.dto.UserAccountDto;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +35,29 @@ class UserAccountIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    MongoOperations mongoOperations;
+
+    @BeforeEach
+    void setUp() {
+        UserAccountDoc userAccountDocPriyanka = new UserAccountDoc();
+
+        UserAccountDoc userAccountDocSonam = new UserAccountDoc();
+        userAccountDocSonam.setEmailId("sonam99@gmail.com");
+        userAccountDocSonam.setPassword("sonam");
+        userAccountDocSonam.setActive(true);
+        mongoOperations.save(userAccountDocSonam);
+
+        UserProfileDoc userProfileDoc = new UserProfileDoc();
+        userProfileDoc.setId(userAccountDocPriyanka.getId());
+        userProfileDoc.setCity("Bilaspur");
+        userProfileDoc.setGender("F");
+        userProfileDoc.setMobile("9876543210");
+        userProfileDoc.setName("Sonam Sharama");
+        userProfileDoc.setUsername("SonamLove");
+        mongoOperations.save(userProfileDoc);
+    }
+
     // To-Do Log these error messages
     /*
     User registration fails because email already exist
@@ -39,19 +66,26 @@ class UserAccountIT {
     void testUserRegistrationFailedDuplicateEmail() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject userRegistrationDetails = new JSONObject();
-        userRegistrationDetails.put("username", "priyanka99");
-        userRegistrationDetails.put("email", "talk_to_priyanka@gmail.com");
-        userRegistrationDetails.put("password", "priyanka");
-        HttpEntity<String> request = new HttpEntity<>(userRegistrationDetails.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
-        assertEquals(500, responseEntity.getStatusCodeValue());
-        assertEquals("Not able to perform action at this time. Try again in some time.", responseEntity.getBody());
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/priyanka99", HttpMethod.GET, httpEntity, String.class);
-        Assertions.assertEquals(404, responseEntityProile.getStatusCodeValue());
-        Assertions.assertEquals("User profile with username priyanka99 not found", responseEntityProile.getBody());
+        JSONObject userAccountDto = new JSONObject();
+        userAccountDto.put("emailId", "sonam99@gmail.com");
+        userAccountDto.put("password", "sonam");
+
+        JSONObject userProfileDto = new JSONObject();
+        userProfileDto.put("city", "Chandigarh");
+        userProfileDto.put("gender", "M");
+        userProfileDto.put("mobile", "9876543210");
+        userProfileDto.put("name", "Sonam Singh");
+        userProfileDto.put("username", "Sonam_singh");
+
+        JSONObject userRegistrationDto = new JSONObject();
+        userRegistrationDto.put("account", userAccountDto);
+        userRegistrationDto.put("profile", userProfileDto);
+
+        HttpEntity<String> request = new HttpEntity<>(userRegistrationDto.toString(), headers);
+        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
+        assertEquals(409, responseEntity.getStatusCodeValue());
+        assertEquals("Email sonam99@gmail.com already exists", responseEntity.getBody());
     }
 
     // To-Do Log these error messages
@@ -62,19 +96,26 @@ class UserAccountIT {
     void testUserRegistrationFailedDuplicateUsername() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject userRegistrationDetails = new JSONObject();
-        userRegistrationDetails.put("username", "priyanka11");
-        userRegistrationDetails.put("email", "priyanka11@gmail.com");
-        userRegistrationDetails.put("password", "priyanka");
-        HttpEntity<String> request = new HttpEntity<>(userRegistrationDetails.toString(), headers);
-        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
-        assertEquals(500, responseEntity.getStatusCodeValue());
-        assertEquals("Not able to perform action at this time. Try again in some time.", responseEntity.getBody());
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/priyanka11@gmail.com", HttpMethod.GET, httpEntity, String.class);
-        Assertions.assertEquals(404, responseEntityAccount.getStatusCodeValue());
-        Assertions.assertEquals("User Account with email priyanka11@gmail.com not found", responseEntityAccount.getBody());
+        JSONObject userAccountDto = new JSONObject();
+        userAccountDto.put("emailId", "sonam9999@gmail.com");
+        userAccountDto.put("password", "sonam");
+
+        JSONObject userProfileDto = new JSONObject();
+        userProfileDto.put("city", "Chandigarh");
+        userProfileDto.put("gender", "M");
+        userProfileDto.put("mobile", "9876543210");
+        userProfileDto.put("name", "Sonam Singh");
+        userProfileDto.put("username", "SonamLove");
+
+        JSONObject userRegistrationDto = new JSONObject();
+        userRegistrationDto.put("account", userAccountDto);
+        userRegistrationDto.put("profile", userProfileDto);
+
+        HttpEntity<String> request = new HttpEntity<>(userRegistrationDto.toString(), headers);
+        ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
+        assertEquals(409, responseEntity.getStatusCodeValue());
+        assertEquals("Username SonamLove already exists", responseEntity.getBody());
     }
 
     /*
@@ -84,34 +125,42 @@ class UserAccountIT {
     void testUserRegisteredSuccessfully() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        JSONObject userRegistrationDetails = new JSONObject();
-        userRegistrationDetails.put("username", "filo72");
-        userRegistrationDetails.put("email", "abhishek.gupta@gmail.com");
-        userRegistrationDetails.put("password", "abhishek");
-        HttpEntity<String> request = new HttpEntity<>(userRegistrationDetails.toString(), headers);
+
+        JSONObject userAccountDto = new JSONObject();
+        userAccountDto.put("emailId", "priya@gmail.com");
+        userAccountDto.put("password", "priya");
+
+        JSONObject userProfileDto = new JSONObject();
+        userProfileDto.put("city", "Chandigarh");
+        userProfileDto.put("gender", "M");
+        userProfileDto.put("mobile", "9876543210");
+        userProfileDto.put("name", "Priya Sharma");
+        userProfileDto.put("username", "Priya11");
+
+        JSONObject userRegistrationDto = new JSONObject();
+        userRegistrationDto.put("account", userAccountDto);
+        userRegistrationDto.put("profile", userProfileDto);
+
+        HttpEntity<String> request = new HttpEntity<>(userRegistrationDto.toString(), headers);
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<UserAccountTo> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/abhishek.gupta@gmail.com", HttpMethod.GET, httpEntity, UserAccountTo.class);
-        assertEquals("abhishek.gupta@gmail.com", responseEntityAccount.getBody().getEmail());
+        ResponseEntity<UserAccountDto> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/priya@gmail.com", HttpMethod.GET, httpEntity, UserAccountDto.class);
+        assertEquals("priya@gmail.com", responseEntityAccount.getBody().getEmailId());
 
-        ResponseEntity<UserProfileTo> responseEntityProile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/filo72", HttpMethod.GET, httpEntity, UserProfileTo.class);
-        assertEquals("filo72", responseEntityProile.getBody().getUsername());
-
-        ResponseEntity<UserProfileTo> responseEntityProileId = restTemplate.exchange(getUserProfileFindByIdUri() + "/" + responseEntityAccount.getBody().getId(), HttpMethod.GET, httpEntity, UserProfileTo.class);
-        assertEquals("filo72", responseEntityProile.getBody().getUsername());
+        ResponseEntity<UserProfileDto> responseEntityProfile = restTemplate.exchange(getUserProfileFindByUsernameUri() + "/Priya11", HttpMethod.GET, httpEntity, UserProfileDto.class);
+        assertEquals("Priya11", responseEntityProfile.getBody().getUsername());
     }
 
     @Test
-    void testFindingAvailableEmailAndValidateResponse() {
+    void testFindingValidEmail() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<UserAccountTo> responseEntity = restTemplate.exchange(getFindEmailUri() + "/talk_to_priyanka@gmail.com", HttpMethod.GET, httpEntity, UserAccountTo.class);
-        UserAccountTo userAccountToReturned = responseEntity.getBody();
-        assertEquals(1L, userAccountToReturned.getId());
-        assertEquals("talk_to_priyanka@gmail.com", userAccountToReturned.getEmail());
+        ResponseEntity<UserAccountDto> responseEntity = restTemplate.exchange(getFindEmailUri() + "/sonam99@gmail.com", HttpMethod.GET, httpEntity, UserAccountDto.class);
+        UserAccountDto userAccountDtoReturned = responseEntity.getBody();
+        assertEquals("sonam99@gmail.com", userAccountDtoReturned.getEmailId());
     }
 
     @Test

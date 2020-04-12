@@ -20,18 +20,18 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     private static final Log logger = LogFactory.getLog(com.hexlindia.drool.user.business.UserDetailsWithId.class);
     private String password;
     private final String username;
-    private final Long userId;
+    private final String userId;
     private final Set<GrantedAuthority> authorities;
     private final boolean accountNonExpired;
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final boolean enabled;
 
-    public UserDetailsWithId(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsWithId(String userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this(userId, username, password, true, true, true, true, authorities);
     }
 
-    public UserDetailsWithId(Long userId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsWithId(String userId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         if (username != null && !"".equals(username) && password != null) {
             this.userId = userId;
             this.username = username;
@@ -50,7 +50,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
         return this.authorities;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -160,7 +160,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     }
 
     public static class UserBuilder {
-        private Long userId;
+        private String userId;
         private String username;
         private String password;
         private List<GrantedAuthority> authorities;

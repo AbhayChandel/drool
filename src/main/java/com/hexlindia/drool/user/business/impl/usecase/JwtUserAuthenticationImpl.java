@@ -2,9 +2,9 @@ package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.UserDetailsWithId;
-import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.usecase.JwtUserAuthentication;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.exception.UserAccountNotFoundException;
 import com.hexlindia.drool.user.services.AuthenticatedUserDetails;
 import com.hexlindia.drool.user.services.JwtResponse;
@@ -37,8 +37,8 @@ public class JwtUserAuthenticationImpl implements JwtUserAuthentication {
         log.info("User authenticated successfully");
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetailsWithId) {
-            UserProfileTo userProfileTo = userProfile.findById(((UserDetailsWithId) principal).getUserId());
-            return new JwtResponse(jwtUtil.generateToken(username), new AuthenticatedUserDetails(userProfileTo.getId(), userProfileTo.getUsername()));
+            UserProfileDto userProfileDto = userProfile.findById(((UserDetailsWithId) principal).getUserId());
+            return new JwtResponse(jwtUtil.generateToken(username), new AuthenticatedUserDetails(userProfileDto.getId(), userProfileDto.getUsername()));
         }
         throw new UserAccountNotFoundException("");
     }

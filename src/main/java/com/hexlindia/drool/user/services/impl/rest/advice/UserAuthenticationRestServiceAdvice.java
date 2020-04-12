@@ -1,7 +1,9 @@
 package com.hexlindia.drool.user.services.impl.rest.advice;
 
+import com.hexlindia.drool.user.exception.EmailExistException;
 import com.hexlindia.drool.user.exception.UserAccountNotFoundException;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
+import com.hexlindia.drool.user.exception.UsernameExistException;
 import com.hexlindia.drool.user.services.impl.rest.JwtUserAuthenticationRestServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,22 @@ public class UserAuthenticationRestServiceAdvice {
     @ExceptionHandler(UserProfileNotFoundException.class)
     @ResponseBody
     String handleUserProfileNotFoundException(UserProfileNotFoundException e) {
+        log.error(e.getMessage());
+        return e.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(EmailExistException.class)
+    @ResponseBody
+    String handleUserProfileNotFoundException(EmailExistException e) {
+        log.error(e.getMessage());
+        return e.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(UsernameExistException.class)
+    @ResponseBody
+    String handleUserProfileNotFoundException(UsernameExistException e) {
         log.error(e.getMessage());
         return e.getMessage();
     }

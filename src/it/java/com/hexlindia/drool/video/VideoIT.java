@@ -3,6 +3,7 @@ package com.hexlindia.drool.video;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
@@ -19,12 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
+@Import({MongoDataInsertion.class})
 public class VideoIT {
 
     @Value("${rest.uri.version}")
@@ -45,12 +48,17 @@ public class VideoIT {
 
     private String videoCommentInsertedId;
 
+    @Autowired
+    private MongoDataInsertion mongoDataInsertion;
+
     @BeforeEach
     private void setup() throws JSONException, JsonProcessingException {
+        mongoDataInsertion.insertUserData();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();

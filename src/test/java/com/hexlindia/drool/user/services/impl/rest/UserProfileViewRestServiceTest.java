@@ -1,8 +1,8 @@
 package com.hexlindia.drool.user.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
+import com.hexlindia.drool.user.dto.ContributionSummaryDto;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDto;

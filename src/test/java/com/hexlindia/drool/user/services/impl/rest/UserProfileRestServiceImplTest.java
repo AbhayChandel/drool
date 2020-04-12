@@ -1,9 +1,10 @@
 package com.hexlindia.drool.user.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.user.business.api.to.UserProfileTo;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,23 +56,11 @@ class UserProfileRestServiceImplTest {
 
     @Test
     public void findById_ParametersPassedToBusinessLayer() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/8"));
-        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        ObjectId accountId = new ObjectId();
+        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/" + accountId.toHexString()));
+        ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(this.userProfile, times(1)).findById(idArgumentCaptor.capture());
-        assertEquals(8, idArgumentCaptor.getValue().longValue());
-    }
-
-    @Test
-    void findById_ValidateJsonResponse() throws Exception {
-        UserProfileTo userProfileTo = new UserProfileTo(2L, "priya21", 8765432109L, "Pune", 'F');
-        when(this.userProfile.findById(2L)).thenReturn(userProfileTo);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2L))
-                .andExpect(jsonPath("$.username").value("priya21"))
-                .andExpect(jsonPath("$.mobile").value(8765432109L))
-                .andExpect(jsonPath("$.city").value("Pune"))
-                .andExpect(jsonPath("$.gender").value("F"));
+        assertEquals(accountId.toHexString(), idArgumentCaptor.getValue());
     }
 
     @Test
@@ -96,20 +85,26 @@ class UserProfileRestServiceImplTest {
 
     @Test
     void findByUsername_ValidateJsonResponse() throws Exception {
-        UserProfileTo userProfileTo = new UserProfileTo(2L, "priya21", 8765432109L, "Pune", 'F');
-        when(this.userProfile.findByUsername("priya21")).thenReturn(userProfileTo);
+        UserProfileDto userProfileDto = new UserProfileDto();
+        ObjectId id = new ObjectId();
+        userProfileDto.setId(id.toHexString());
+        userProfileDto.setUsername("priya21");
+        userProfileDto.setMobile("8765432109");
+        userProfileDto.setCity("Pune");
+        userProfileDto.setGender("F");
+        when(this.userProfile.findByUsername("priya21")).thenReturn(userProfileDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindUsernameUri() + "/priya21"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.id").value(id.toHexString()))
                 .andExpect(jsonPath("$.username").value("priya21"))
-                .andExpect(jsonPath("$.mobile").value(8765432109L))
+                .andExpect(jsonPath("$.mobile").value("8765432109"))
                 .andExpect(jsonPath("$.city").value("Pune"))
                 .andExpect(jsonPath("$.gender").value("F"));
     }
 
     @Test
     public void update_HttpMethodNotAllowedError() throws Exception {
-        UserProfileTo userProfileTo = new UserProfileTo(2L, "priya21", 8765432109L, "Pune", 'F');
+        UserProfileDto userProfileTo = new UserProfileDto();
         this.mockMvc.perform(MockMvcRequestBuilders.post(getUpdateUri()))
                 .andExpect(status().isMethodNotAllowed());
     }
@@ -119,21 +114,6 @@ class UserProfileRestServiceImplTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put(getUpdateUri())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void update_ValidateJsonResponse() throws Exception {
-        UserProfileTo userProfileTo = new UserProfileTo(2L, "priya21", 8765432109L, "Pune", 'F');
-        when(this.userProfile.update(any())).thenReturn(userProfileTo);
-        String requestBody = objectMapper.writeValueAsString(userProfileTo);
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getUpdateUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2L))
-                .andExpect(jsonPath("$.username").value("priya21"))
-                .andExpect(jsonPath("$.mobile").value(8765432109L))
-                .andExpect(jsonPath("$.city").value("Pune"))
-                .andExpect(jsonPath("$.gender").value("F"));
     }
 
     private String getFindByIdUri() {
