@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.data.repository.api;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import org.bson.types.ObjectId;
 
-public interface DiscussionReplyMongoRepository {
+public interface DiscussionReplyRepository {
 
     public boolean saveReply(DiscussionReplyDoc discussionReplyDoc, ObjectId discussionId);
 

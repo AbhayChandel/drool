@@ -1,10 +1,10 @@
-package com.hexlindia.drool.discussion.data.mongodb.impl;
+package com.hexlindia.drool.discussion.data.impl;
 
 import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Import(MongoDBConfig.class)
-class DiscussionReplyMongoRepositoryImplTest {
+class DiscussionReplyRepositoryImplTest {
 
     @Autowired
-    DiscussionReplyMongoRepository discussionReplyMongoRepository;
+    DiscussionReplyRepository discussionReplyRepository;
 
     @Autowired
     MongoOperations mongoOperations;
@@ -44,27 +44,27 @@ class DiscussionReplyMongoRepositoryImplTest {
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setUserRef(new UserRef(ObjectId.get().toHexString(), "shabana"));
         discussionReplyDoc.setDatePosted(LocalDateTime.now());
-        assertTrue(discussionReplyMongoRepository.saveReply(discussionReplyDoc, insertDiscussionTopic));
+        assertTrue(discussionReplyRepository.saveReply(discussionReplyDoc, insertDiscussionTopic));
     }
 
     @Test
     void updateReply() {
-        assertTrue(discussionReplyMongoRepository.updateReply("This is the upated reply", insertedReplyId, insertDiscussionTopic));
+        assertTrue(discussionReplyRepository.updateReply("This is the upated reply", insertedReplyId, insertDiscussionTopic));
     }
 
     @Test
     void incrementLikes() {
-        assertEquals(191, discussionReplyMongoRepository.incrementLikes(insertedReplyId, insertDiscussionTopic));
+        assertEquals(191, discussionReplyRepository.incrementLikes(insertedReplyId, insertDiscussionTopic));
     }
 
     @Test
     void decrementLikes() {
-        assertEquals(189, discussionReplyMongoRepository.decrementLikes(insertedReplyId, insertDiscussionTopic));
+        assertEquals(189, discussionReplyRepository.decrementLikes(insertedReplyId, insertDiscussionTopic));
     }
 
     @Test
     void setInactive() {
-        assertTrue(discussionReplyMongoRepository.setStatus(false, insertedReplyId, insertDiscussionTopic));
+        assertTrue(discussionReplyRepository.setStatus(false, insertedReplyId, insertDiscussionTopic));
     }
 
     private void insertDiscussionTopicDocs() {

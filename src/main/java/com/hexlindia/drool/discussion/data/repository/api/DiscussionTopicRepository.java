@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.data.repository.api;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import org.bson.types.ObjectId;
 
-public interface DiscussionTopicMongoRepository {
+public interface DiscussionTopicRepository {
 
     public DiscussionTopicDoc save(DiscussionTopicDoc discussionTopicDoc);
 

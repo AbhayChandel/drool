@@ -1,10 +1,10 @@
-package com.hexlindia.drool.discussion.data.mongodb.impl;
+package com.hexlindia.drool.discussion.data.impl;
 
 import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(MongoDBConfig.class)
-class DiscussionTopicMongoRepositoryImplTest {
+class DiscussionTopicRepositoryImplTest {
 
     @Autowired
-    private DiscussionTopicMongoRepository discussionTopicMongoRepository;
+    private DiscussionTopicRepository discussionTopicRepository;
 
     private ObjectId insertDiscussionTopic;
 
@@ -47,38 +47,38 @@ class DiscussionTopicMongoRepositoryImplTest {
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
 
-        discussionTopicDoc = discussionTopicMongoRepository.save(discussionTopicDoc);
+        discussionTopicDoc = discussionTopicRepository.save(discussionTopicDoc);
         assertNotNull(discussionTopicDoc.getId());
 
     }
 
     @Test
     void findById() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.findById(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.findById(insertDiscussionTopic);
         assertNotNull(discussionTopicDoc);
     }
 
     @Test
     void updateTopicTitle() {
-        assertTrue(discussionTopicMongoRepository.updateTopicTitle("This title was updated", insertDiscussionTopic));
+        assertTrue(discussionTopicRepository.updateTopicTitle("This title was updated", insertDiscussionTopic));
     }
 
     @Test
     void incrementViews() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.incrementViews(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementViews(insertDiscussionTopic);
         assertEquals(1191, discussionTopicDoc.getViews());
     }
 
     @Test
     void incrementLikes() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.incrementLikes(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementLikes(insertDiscussionTopic);
         assertEquals(501, discussionTopicDoc.getLikes());
 
     }
 
     @Test
     void decrementLikes() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.decrementLikes(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.decrementLikes(insertDiscussionTopic);
         assertEquals(499, discussionTopicDoc.getLikes());
     }
 

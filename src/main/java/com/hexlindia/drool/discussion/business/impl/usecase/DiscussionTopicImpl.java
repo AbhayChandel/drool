@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicMongoRepository;
+import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class DiscussionTopicImpl implements DiscussionTopic {
 
-    private final DiscussionTopicMongoRepository discussionTopicMongoRepository;
+    private final DiscussionTopicRepository discussionTopicRepository;
     private final DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
 
     @Override
@@ -28,24 +28,24 @@ public class DiscussionTopicImpl implements DiscussionTopic {
         discussionTopicDoc.setDatePosted(datePosted);
         discussionTopicDoc.setDateLastActive(datePosted);
         discussionTopicDoc.setActive(true);
-        discussionTopicDoc = discussionTopicMongoRepository.save(discussionTopicDoc);
+        discussionTopicDoc = discussionTopicRepository.save(discussionTopicDoc);
         log.debug("DiscussionTopic: '{}', id: '{}' created", discussionTopicDoc.getTitle(), discussionTopicDoc.getId());
         return discussionTopicDtoDocMapper.toDto(discussionTopicDoc);
     }
 
     @Override
     public DiscussionTopicDto findById(String id) {
-        return discussionTopicDtoDocMapper.toDto(discussionTopicMongoRepository.findById(new ObjectId(id)));
+        return discussionTopicDtoDocMapper.toDto(discussionTopicRepository.findById(new ObjectId(id)));
     }
 
     @Override
     public boolean updateTopicTitle(String title, String id) {
-        return discussionTopicMongoRepository.updateTopicTitle(title, new ObjectId(id));
+        return discussionTopicRepository.updateTopicTitle(title, new ObjectId(id));
     }
 
     @Override
     public String incrementViews(String id) {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.incrementViews(new ObjectId(id));
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementViews(new ObjectId(id));
         if (discussionTopicDoc != null) {
             return MetaFieldValueFormatter.getCompactFormat(discussionTopicDoc.getViews());
         }
@@ -54,7 +54,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     public String incrementLikes(String id, String userId) {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.incrementLikes(new ObjectId(id));
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementLikes(new ObjectId(id));
         if (discussionTopicDoc != null) {
             return MetaFieldValueFormatter.getCompactFormat(discussionTopicDoc.getLikes());
         }
@@ -63,7 +63,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     public String decrementLikes(String id, String userId) {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicMongoRepository.decrementLikes(new ObjectId(id));
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.decrementLikes(new ObjectId(id));
         if (discussionTopicDoc != null) {
             return MetaFieldValueFormatter.getCompactFormat(discussionTopicDoc.getLikes());
         }
