@@ -1,4 +1,4 @@
-package com.hexlindia.drool.user.business.api.to;
+package com.hexlindia.drool.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;

@@ -3,9 +3,11 @@ package com.hexlindia.drool.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
-import com.hexlindia.drool.user.business.api.to.UserProfileTo;
+import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
+import com.hexlindia.drool.user.dto.ContributionSummaryDto;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.video.dto.VideoDto;
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,12 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import({MongoDataInsertion.class})
 public class UserProfileIT {
 
     @Value("${rest.uri.version}")
@@ -34,14 +38,21 @@ public class UserProfileIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private MongoDataInsertion mongoDataInsertion;
+
+    private ObjectId insertedAccountId = null;
+
     private String authToken;
 
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
+        insertedAccountId = mongoDataInsertion.insertUserData();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();
@@ -54,19 +65,18 @@ public class UserProfileIT {
         insertVideoData(headers);
     }
 
+
     @Test
     void testFindingAvailableUsernameAndValidateResponse() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<UserProfileTo> responseEntity = restTemplate.exchange(getFindUsernameUri() + "/priya21", HttpMethod.GET, httpEntity, UserProfileTo.class);
-        UserProfileTo userProfileToReturned = responseEntity.getBody();
-        assertEquals(2L, userProfileToReturned.getId());
-        assertEquals("priya21", userProfileToReturned.getUsername());
-        assertEquals(8765432109L, userProfileToReturned.getMobile());
-        assertEquals("Pune", userProfileToReturned.getCity());
-        assertEquals('F', userProfileToReturned.getGender());
+        ResponseEntity<UserProfileDto> responseEntity = restTemplate.exchange(getFindUsernameUri() + "/EshikaLove", HttpMethod.GET, httpEntity, UserProfileDto.class);
+        UserProfileDto userProfileDtoReturned = responseEntity.getBody();
+        assertEquals("EshikaLove", userProfileDtoReturned.getUsername());
+        assertEquals("9876543210", userProfileDtoReturned.getMobile());
+        assertEquals("Bilaspur", userProfileDtoReturned.getCity());
+        assertEquals("F", userProfileDtoReturned.getGender());
     }
 
     @Test
@@ -75,13 +85,13 @@ public class UserProfileIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<UserProfileTo> responseEntity = restTemplate.exchange(getUserProfileFindByIdUri() + "/2", HttpMethod.GET, httpEntity, UserProfileTo.class);
-        UserProfileTo userProfileToReturned = responseEntity.getBody();
-        assertEquals(2L, userProfileToReturned.getId());
-        assertEquals("priya21", userProfileToReturned.getUsername());
-        assertEquals(8765432109L, userProfileToReturned.getMobile());
-        assertEquals("Pune", userProfileToReturned.getCity());
-        assertEquals('F', userProfileToReturned.getGender());
+        ResponseEntity<UserProfileDto> responseEntity = restTemplate.exchange(getUserProfileFindByIdUri() + "/" + insertedAccountId.toHexString(), HttpMethod.GET, httpEntity, UserProfileDto.class);
+        UserProfileDto userProfileDtoReturned = responseEntity.getBody();
+        assertEquals(insertedAccountId.toHexString(), userProfileDtoReturned.getId());
+        assertEquals("EshikaLove", userProfileDtoReturned.getUsername());
+        assertEquals("9876543210", userProfileDtoReturned.getMobile());
+        assertEquals("Bilaspur", userProfileDtoReturned.getCity());
+        assertEquals("F", userProfileDtoReturned.getGender());
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -28,7 +29,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(MongoDBConfig.class)
+@Import({MongoDBConfig.class, MongoDataInsertion.class})
 public class DiscussionReplyIT {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -50,16 +51,24 @@ public class DiscussionReplyIT {
     @Autowired
     MongoOperations mongoOperations;
 
+    @Autowired
+    MongoDataInsertion mongoDataInsertion;
+
     private String authToken;
+    private ObjectId insertedAccountId = null;
+
     private ObjectId insertDiscussionTopic;
     private ObjectId insertedReplyId;
 
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
+        insertedAccountId = mongoDataInsertion.insertUserData();
+
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();
@@ -140,7 +149,6 @@ public class DiscussionReplyIT {
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
         JSONObject parameters = new JSONObject();
-        parameters.put("likes", 499);
         parameters.put("replyId", insertedReplyId.toHexString());
         parameters.put("discussionId", insertDiscussionTopic.toHexString());
         parameters.put("userId", ObjectId.get().toHexString());

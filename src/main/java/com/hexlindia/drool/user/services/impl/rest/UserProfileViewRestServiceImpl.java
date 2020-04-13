@@ -1,7 +1,7 @@
 package com.hexlindia.drool.user.services.impl.rest;
 
-import com.hexlindia.drool.user.business.api.to.ContributionSummaryDto;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
+import com.hexlindia.drool.user.dto.ContributionSummaryDto;
 import com.hexlindia.drool.user.services.api.rest.UserProfileViewRestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

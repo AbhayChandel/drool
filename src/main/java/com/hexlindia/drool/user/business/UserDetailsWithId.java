@@ -18,24 +18,26 @@ import java.util.function.Function;
 public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     private static final long serialVersionUID = 520L;
     private static final Log logger = LogFactory.getLog(com.hexlindia.drool.user.business.UserDetailsWithId.class);
+    private final String userId;
+    private final String emailId;
     private String password;
-    private final String username;
-    private final Long userId;
+    private final String publicUsername;
     private final Set<GrantedAuthority> authorities;
     private final boolean accountNonExpired;
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final boolean enabled;
 
-    public UserDetailsWithId(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this(userId, username, password, true, true, true, true, authorities);
+    public UserDetailsWithId(String userId, String emailId, String password, String publicUsername, Collection<? extends GrantedAuthority> authorities) {
+        this(userId, emailId, password, publicUsername, true, true, true, true, authorities);
     }
 
-    public UserDetailsWithId(Long userId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        if (username != null && !"".equals(username) && password != null) {
+    public UserDetailsWithId(String userId, String emailId, String password, String publicUsername, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+        if (emailId != null && !"".equals(emailId) && password != null) {
             this.userId = userId;
-            this.username = username;
+            this.emailId = emailId;
             this.password = password;
+            this.publicUsername = publicUsername;
             this.enabled = enabled;
             this.accountNonExpired = accountNonExpired;
             this.credentialsNonExpired = credentialsNonExpired;
@@ -50,16 +52,20 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
         return this.authorities;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
+    }
+
+    public String getUsername() {
+        return emailId;
     }
 
     public String getPassword() {
         return this.password;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getPublicUsername() {
+        return this.publicUsername;
     }
 
     public boolean isEnabled() {
@@ -97,19 +103,20 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     }
 
     public boolean equals(Object rhs) {
-        return rhs instanceof com.hexlindia.drool.user.business.UserDetailsWithId ? this.username.equals(((com.hexlindia.drool.user.business.UserDetailsWithId) rhs).username) : false;
+        return rhs instanceof com.hexlindia.drool.user.business.UserDetailsWithId ? this.emailId.equals(((com.hexlindia.drool.user.business.UserDetailsWithId) rhs).emailId) : false;
     }
 
     public int hashCode() {
-        return this.username.hashCode();
+        return this.emailId.hashCode();
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(": ");
         sb.append("userId: ").append(this.userId).append("; ");
-        sb.append("Username: ").append(this.username).append("; ");
+        sb.append("EmailId: ").append(this.emailId).append("; ");
         sb.append("Password: [PROTECTED]; ");
+        sb.append("PublicUsername: ").append(this.publicUsername).append("; ");
         sb.append("Enabled: ").append(this.enabled).append("; ");
         sb.append("AccountNonExpired: ").append(this.accountNonExpired).append("; ");
         sb.append("credentialsNonExpired: ").append(this.credentialsNonExpired).append("; ");
@@ -160,9 +167,10 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     }
 
     public static class UserBuilder {
-        private Long userId;
-        private String username;
+        private String userId;
+        private String emailId;
         private String password;
+        private String publicUsername;
         private List<GrantedAuthority> authorities;
         private boolean accountExpired;
         private boolean accountLocked;
@@ -176,9 +184,9 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
             };
         }
 
-        public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder username(String username) {
-            Assert.notNull(username, "username cannot be null");
-            this.username = username;
+        public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder username(String emailId) {
+            Assert.notNull(emailId, "emailId cannot be null");
+            this.emailId = emailId;
             return this;
         }
 
@@ -191,6 +199,12 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
         public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder passwordEncoder(Function<String, String> encoder) {
             Assert.notNull(encoder, "encoder cannot be null");
             this.passwordEncoder = encoder;
+            return this;
+        }
+
+        public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder publicUsername(String publicUsername) {
+            Assert.notNull(emailId, "publicUsername cannot be null");
+            this.publicUsername = publicUsername;
             return this;
         }
 
@@ -245,7 +259,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
 
         public UserDetails build() {
             String encodedPassword = (String) this.passwordEncoder.apply(this.password);
-            return new com.hexlindia.drool.user.business.UserDetailsWithId(this.userId, this.username, encodedPassword, !this.disabled, !this.accountExpired, !this.credentialsExpired, !this.accountLocked, this.authorities);
+            return new com.hexlindia.drool.user.business.UserDetailsWithId(this.userId, this.emailId, encodedPassword, this.publicUsername, !this.disabled, !this.accountExpired, !this.credentialsExpired, !this.accountLocked, this.authorities);
         }
     }
 

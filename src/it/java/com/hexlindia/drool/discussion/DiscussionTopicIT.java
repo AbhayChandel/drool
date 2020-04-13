@@ -3,8 +3,8 @@ package com.hexlindia.drool.discussion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
-@Import(MongoDBConfig.class)
+@Import({MongoDataInsertion.class})
 public class DiscussionTopicIT {
 
     @Value("${rest.uri.version}")
@@ -51,12 +51,17 @@ public class DiscussionTopicIT {
     @Autowired
     MongoOperations mongoOperations;
 
+    @Autowired
+    MongoDataInsertion mongoDataInsertion;
+
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
+        mongoDataInsertion.insertUserData();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
+        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();

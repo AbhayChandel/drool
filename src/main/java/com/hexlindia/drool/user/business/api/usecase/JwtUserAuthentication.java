@@ -4,5 +4,5 @@ import com.hexlindia.drool.user.services.JwtResponse;
 
 public interface JwtUserAuthentication {
 
-    JwtResponse authenticate(String username, String password);
+    JwtResponse authenticate(String emailId, String password);
 }
