@@ -27,7 +27,7 @@ public class JwtUserAuthenticationImpl implements JwtUserAuthentication {
         log.info("User authenticated successfully");
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetailsWithId) {
-            return new JwtResponse(jwtUtil.generateToken(emailId), new AuthenticatedUserDetails(((UserDetailsWithId) principal).getUserId(), ((UserDetailsWithId) principal).getUsername()));
+            return new JwtResponse(jwtUtil.generateToken(emailId), new AuthenticatedUserDetails(((UserDetailsWithId) principal).getUserId(), ((UserDetailsWithId) principal).getPublicUsername()));
         }
         throw new UserAccountNotFoundException("");
     }

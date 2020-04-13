@@ -2,7 +2,6 @@ package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.api.usecase.JwtUserAuthentication;
-import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +22,6 @@ class JwtUserAuthenticationImplTest {
     private JwtUserAuthentication jwtUserAuthentication;
 
     @MockBean
-    UserProfile userProfileMocked;
-
-    @MockBean
     JwtUtil jwtUtilMocked;
 
     @MockBean
@@ -33,7 +29,7 @@ class JwtUserAuthenticationImplTest {
 
     @BeforeEach
     void setUp() {
-        this.jwtUserAuthentication = Mockito.spy(new JwtUserAuthenticationImpl(authenticationManagerMocked, jwtUtilMocked, userProfileMocked));
+        this.jwtUserAuthentication = Mockito.spy(new JwtUserAuthenticationImpl(authenticationManagerMocked, jwtUtilMocked));
     }
 
     @Test
