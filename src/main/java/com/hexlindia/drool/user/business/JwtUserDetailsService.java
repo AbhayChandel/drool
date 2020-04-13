@@ -25,7 +25,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (userAccountDoc.isPresent()) {
             log.info("User with email {} found", email);
             return new UserDetailsWithId(userAccountDoc.get().getId().toHexString(), userAccountDoc.get().getEmailId(), userAccountDoc.get().getPassword(),
-                    new ArrayList<>());
+                    userAccountDoc.get().getUsername(), new ArrayList<>());
         } else {
             log.warn("User with email {} not found" + email);
             throw new UsernameNotFoundException("User not found with username: " + email);

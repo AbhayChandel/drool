@@ -14,6 +14,7 @@ public class UserAccountDoc {
 
     private String emailId;
     private String password;
+    private String username;
     private boolean active;
 
 }

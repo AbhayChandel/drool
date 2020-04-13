@@ -51,8 +51,10 @@ class JwtSecurityIT {
     void setUp() {
 
         UserAccountDoc userAccountDocSonam = new UserAccountDoc();
+        String username = "SonamLove";
         userAccountDocSonam.setEmailId("sonam99@gmail.com");
         userAccountDocSonam.setPassword(passwordEncoder.encode("sonam"));
+        userAccountDocSonam.setUsername(username);
         userAccountDocSonam.setActive(true);
         mongoOperations.save(userAccountDocSonam);
         insertedDocId = userAccountDocSonam.getId();
@@ -63,7 +65,7 @@ class JwtSecurityIT {
         userProfileDoc.setGender("F");
         userProfileDoc.setMobile("9876543210");
         userProfileDoc.setName("Sonam Sharama");
-        userProfileDoc.setUsername("SonamLove");
+        userProfileDoc.setUsername(username);
         mongoOperations.save(userProfileDoc);
     }
 

@@ -17,4 +17,6 @@ public class UserAccountDto {
 
     @NotEmpty(message = "Password cannot be empty", groups = {NewAccount.class})
     String password;
+
+    String username;
 }

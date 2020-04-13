@@ -41,6 +41,7 @@ public class UserAccountImpl implements UserAccount {
     public JwtResponse register(UserRegistrationDto userRegistrationDto) {
         UserAccountDoc userAccountDoc = userAccountMapper.toDoc(userRegistrationDto.getUserAccountDto());
         setEncodedPassword(userAccountDoc);
+        userAccountDoc.setUsername(userRegistrationDto.getUserProfileDto().getUsername());
         userAccountDoc.setActive(true);
         userAccountDoc = userAccountRepository.save(userAccountDoc);
 
