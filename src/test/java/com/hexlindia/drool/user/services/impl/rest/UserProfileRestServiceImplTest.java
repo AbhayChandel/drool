@@ -40,7 +40,7 @@ class UserProfileRestServiceImplTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    UserProfile userProfile;
+    UserProfile userProfileMock;
 
     @Test
     public void findById_HttpMethodNotAllowedError() throws Exception {
@@ -59,7 +59,7 @@ class UserProfileRestServiceImplTest {
         ObjectId accountId = new ObjectId();
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindByIdUri() + "/" + accountId.toHexString()));
         ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.userProfile, times(1)).findById(idArgumentCaptor.capture());
+        verify(this.userProfileMock, times(1)).findById(idArgumentCaptor.capture());
         assertEquals(accountId.toHexString(), idArgumentCaptor.getValue());
     }
 
@@ -79,7 +79,7 @@ class UserProfileRestServiceImplTest {
     public void findByUsername_ParametersPassedToBusinessLayer() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindUsernameUri() + "/priya21"));
         ArgumentCaptor<String> usernameArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.userProfile, times(1)).findByUsername(usernameArgumentCaptor.capture());
+        verify(this.userProfileMock, times(1)).findByUsername(usernameArgumentCaptor.capture());
         assertEquals("priya21", usernameArgumentCaptor.getValue());
     }
 
@@ -92,7 +92,7 @@ class UserProfileRestServiceImplTest {
         userProfileDto.setMobile("8765432109");
         userProfileDto.setCity("Pune");
         userProfileDto.setGender("F");
-        when(this.userProfile.findByUsername("priya21")).thenReturn(userProfileDto);
+        when(this.userProfileMock.findByUsername("priya21")).thenReturn(userProfileDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindUsernameUri() + "/priya21"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toHexString()))
@@ -114,6 +114,30 @@ class UserProfileRestServiceImplTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put(getUpdateUri())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void update_ParametersPassedToBusinessLayer() throws Exception {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setGender("M");
+        userProfileDto.setCity("Jaipur");
+        userProfileDto.setMobile("9876543210");
+        userProfileDto.setUsername("priya11");
+        ObjectId accountId = new ObjectId();
+        userProfileDto.setId(accountId.toHexString());
+        userProfileDto.setName("Priya Gupta");
+        String requestBody = objectMapper.writeValueAsString(userProfileDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getUpdateUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON));
+
+        ArgumentCaptor<UserProfileDto> userProfileDtoArgumentCaptor = ArgumentCaptor.forClass(UserProfileDto.class);
+        verify(this.userProfileMock, times(1)).update(userProfileDtoArgumentCaptor.capture());
+        assertEquals("M", userProfileDtoArgumentCaptor.getValue().getGender());
+        assertEquals("Jaipur", userProfileDtoArgumentCaptor.getValue().getCity());
+        assertEquals("9876543210", userProfileDtoArgumentCaptor.getValue().getMobile());
+        assertEquals("priya11", userProfileDtoArgumentCaptor.getValue().getUsername());
+        assertEquals(accountId.toHexString(), userProfileDtoArgumentCaptor.getValue().getId());
+        assertEquals("Priya Gupta", userProfileDtoArgumentCaptor.getValue().getName());
     }
 
     private String getFindByIdUri() {

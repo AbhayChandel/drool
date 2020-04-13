@@ -6,11 +6,13 @@ import com.hexlindia.drool.common.data.doc.ProductRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -158,6 +160,26 @@ class UserActivityFeedImplTest {
         assertEquals("c123", videoCommentDtoArgumentCaptor.getValue().getId());
         assertEquals("v123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
         assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
+    }
+
+    @Test
+    void addTextReview_passingObjecttoRepositoryLayer() {
+        ReviewDoc reviewDoc = new ReviewDoc();
+        reviewDoc.setUserRef(new UserRef("123", "shabana"));
+        ObjectId postId = new ObjectId();
+        reviewDoc.setId(postId);
+        reviewDoc.setReviewSummary("This is a great dummy review summary");
+        LocalDateTime datePosted = LocalDateTime.now();
+        reviewDoc.setDatePosted(datePosted);
+        when(this.userActivityRepositoryMock.addTextReview(any())).thenReturn(null);
+        userActivitySpy.addTextReview(reviewDoc);
+        ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
+        verify(userActivityRepositoryMock, times(1)).addTextReview(reviewDocArgumentCaptor.capture());
+        assertEquals("123", reviewDocArgumentCaptor.getValue().getUserRef().getId());
+        assertEquals("shabana", reviewDocArgumentCaptor.getValue().getUserRef().getUsername());
+        assertEquals(postId, reviewDocArgumentCaptor.getValue().getId());
+        assertEquals("This is a great dummy review summary", reviewDocArgumentCaptor.getValue().getReviewSummary());
+        assertEquals(datePosted, reviewDocArgumentCaptor.getValue().getDatePosted());
     }
 
 
