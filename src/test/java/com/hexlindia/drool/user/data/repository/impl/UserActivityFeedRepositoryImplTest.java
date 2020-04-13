@@ -5,6 +5,7 @@ import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
@@ -12,6 +13,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,12 +102,21 @@ class UserActivityFeedRepositoryImplTest {
         assertTrue(updateResult.getModifiedCount() > 0);
     }
 
+    @Test
+    void addTextReview() {
+        ReviewDoc reviewDoc = new ReviewDoc();
+        reviewDoc.setUserRef(new UserRef("123", "shabana"));
+        reviewDoc.setId(ObjectId.get());
+        reviewDoc.setReviewSummary("This is a great dummy review summary");
+        reviewDoc.setDatePosted(LocalDateTime.now());
+        assertTrue(userActivityRepository.addTextReview(reviewDoc).getModifiedCount() > 0);
+    }
+
     @BeforeEach
     public void setUp() {
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.videos", new VideoLike("abc", "This video is part of test setup")), UserActivityDoc.class);
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef("p123", "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
         mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef("p123", "a test post", null, null, null), null)), UserActivityDoc.class);
     }
-
 
 }

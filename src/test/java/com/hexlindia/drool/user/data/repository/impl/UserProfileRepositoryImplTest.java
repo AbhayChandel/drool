@@ -3,7 +3,9 @@ package com.hexlindia.drool.user.data.repository.impl;
 import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
 import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
+import com.hexlindia.drool.user.exception.UsernameExistException;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +57,44 @@ class UserProfileRepositoryImplTest {
     }
 
     @Test
+    void saveUsernameExistException() {
+        UserProfileDoc userProfileDoc = new UserProfileDoc();
+        userProfileDoc.setId(ObjectId.get());
+        userProfileDoc.setCity("Bilaspur");
+        userProfileDoc.setGender("F");
+        userProfileDoc.setMobile("9876543210");
+        userProfileDoc.setName("Eshika Sharama");
+        userProfileDoc.setUsername("EshikaLove");
+
+        Assertions.assertThrows(UsernameExistException.class, () -> {
+            userProfileRepository.save(userProfileDoc);
+        });
+    }
+
+    @Test
     void findById() {
-        assertTrue(userProfileRepository.findById(insertedProfileAccountId).isPresent());
+        Optional<UserProfileDoc> userProfileDocOptional = userProfileRepository.findById(insertedProfileAccountId);
+        assertTrue(userProfileDocOptional.isPresent());
+        UserProfileDoc userProfileDoc = userProfileDocOptional.get();
+        assertEquals(insertedProfileAccountId, userProfileDoc.getId());
+        assertEquals("Bilaspur", userProfileDoc.getCity());
+        assertEquals("F", userProfileDoc.getGender());
+        assertEquals("9876543210", userProfileDoc.getMobile());
+        assertEquals("Eshika Sharama", userProfileDoc.getName());
+        assertEquals("EshikaLove", userProfileDoc.getUsername());
     }
 
     @Test
     void findByUsername() {
-        assertTrue(userProfileRepository.findByUsername("EshikaLove").isPresent());
+        Optional<UserProfileDoc> userProfileDocOptional = userProfileRepository.findByUsername("EshikaLove");
+        assertTrue(userProfileDocOptional.isPresent());
+        UserProfileDoc userProfileDoc = userProfileDocOptional.get();
+        assertEquals(insertedProfileAccountId, userProfileDoc.getId());
+        assertEquals("Bilaspur", userProfileDoc.getCity());
+        assertEquals("F", userProfileDoc.getGender());
+        assertEquals("9876543210", userProfileDoc.getMobile());
+        assertEquals("Eshika Sharama", userProfileDoc.getName());
+        assertEquals("EshikaLove", userProfileDoc.getUsername());
     }
 
     @Test
