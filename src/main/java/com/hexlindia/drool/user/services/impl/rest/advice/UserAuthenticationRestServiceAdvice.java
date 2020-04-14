@@ -24,14 +24,6 @@ public class UserAuthenticationRestServiceAdvice {
         return "Wrong Username or Password";
     }
 
-    /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(DataAccessException.class)
-    @ResponseBody
-    String handleMethodArgumentNotValidException(DataAccessException e) {
-        log.error("DataAccessException is thrown with following message: {}" + e.getMessage());
-        return "Not able to register user at this time. Try again in some time.";
-    }*/
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserAccountNotFoundException.class)
     @ResponseBody
