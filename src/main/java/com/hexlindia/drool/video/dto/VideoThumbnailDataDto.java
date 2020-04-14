@@ -7,9 +7,6 @@ public class VideoThumbnailDataDto {
     Integer totalVideoCount;
     List<VideoThumbnailDto> videoThumbnailList;
 
-    public VideoThumbnailDataDto() {
-    }
-
     public Integer getTotalVideoCount() {
         return totalVideoCount;
     }
