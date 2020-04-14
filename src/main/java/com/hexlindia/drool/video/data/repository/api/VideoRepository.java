@@ -8,10 +8,12 @@ import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import org.bson.types.ObjectId;
 
-public interface VideoTemplateRepository {
+import java.util.Optional;
+
+public interface VideoRepository {
     VideoDoc save(VideoDoc videoDoc);
 
-    VideoDoc findByIdAndActiveTrue(String id);
+    Optional<VideoDoc> findByIdAndActiveTrue(String id);
 
     String saveVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 

@@ -61,7 +61,6 @@ class UserAccountRepositoryImplTest {
         userAccountDocSonal.setPassword("sonal");
         userAccountDocSonal.setActive(true);
         assertNotNull(userAccountRepository.save(userAccountDocSonal));
-
     }
 
     @Test

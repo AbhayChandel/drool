@@ -4,7 +4,7 @@ import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -30,7 +31,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
+public class VideoRepositoryImpl implements VideoRepository {
 
     private static final String VIDEO_COLLECTION_NAME = "videos";
 
@@ -47,8 +48,9 @@ public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
     }
 
     @Override
-    public VideoDoc findByIdAndActiveTrue(String id) {
-        return mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+    public Optional<VideoDoc> findByIdAndActiveTrue(String id) {
+        VideoDoc videoDoc = mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+        return videoDoc == null ? Optional.empty() : Optional.of(videoDoc);
     }
 
     @Override
