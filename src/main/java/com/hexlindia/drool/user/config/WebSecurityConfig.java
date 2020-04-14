@@ -32,7 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService jwtUserDetailsService;
     private final JwtValidationFilter jwtValidationFilter;
     private final String[] unsecuredEndpoints = {"/accessall/**", "/view/**"};
-    //private final String[] unsecuredEndpoints = {"/accessall/user/account/authenticate", "/accessall/user/account/register", "/accessall/user/account/find/email/*", "/accessall/user/profile/find/username/*", "/view/**"};
 
     @Autowired
     public WebSecurityConfig(@Value("${rest.uri.version}") final String restUriVersion, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtValidationFilter jwtValidationFilter) {

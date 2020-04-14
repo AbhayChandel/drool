@@ -2,7 +2,6 @@ package com.hexlindia.drool.video.data.repository.impl;
 
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
-import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
@@ -10,9 +9,9 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import com.mongodb.client.result.UpdateResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -30,20 +29,15 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @Slf4j
+@RequiredArgsConstructor
 public class VideoTemplateRepositoryImpl implements VideoTemplateRepository {
 
     private static final String VIDEO_COLLECTION_NAME = "videos";
 
     private final MongoOperations mongoOperations;
-    private final UserActivityRepository userActivityRepository;
 
     private static final String COMMENT_LIST = "commentList";
 
-    @Autowired
-    public VideoTemplateRepositoryImpl(MongoOperations mongoOperations, UserActivityRepository userActivityRepository) {
-        this.mongoOperations = mongoOperations;
-        this.userActivityRepository = userActivityRepository;
-    }
 
     @Override
     public VideoDoc save(VideoDoc videoDoc) {

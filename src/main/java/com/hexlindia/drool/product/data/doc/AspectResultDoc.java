@@ -22,7 +22,7 @@ public class AspectResultDoc {
         this.displayComponent = displayComponent;
         this.title = title;
         this.votes = votes;
-        this.options = new ArrayList<AspectOption>();
+        this.options = new ArrayList<>();
         this.options = options;
     }
 }

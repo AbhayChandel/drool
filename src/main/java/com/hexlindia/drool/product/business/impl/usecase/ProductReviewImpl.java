@@ -80,12 +80,6 @@ public class ProductReviewImpl implements ProductReview {
         return null;
     }
 
-    private void updateReviewIdInVideoDoc(ObjectId videoId, ObjectId reviewId) {
-        if (videoId != null) {
-            video.updateReviewId(videoId, reviewId);
-        }
-    }
-
     private void saveAspectVotingDetails(ReviewDto reviewDto) {
         if (!reviewDto.getAspectVotingDtoList().isEmpty()) {
             this.aspectVotingDetails.save(new AspectVotingDetailsDto(reviewDto.getAspectVotingDtoList(), reviewDto.getId(), reviewDto.getProductRefDto(), reviewDto.getUserRefDto()));

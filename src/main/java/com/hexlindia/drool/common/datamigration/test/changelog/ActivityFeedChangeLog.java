@@ -14,12 +14,16 @@ import java.util.Arrays;
 @ChangeLog
 public class ActivityFeedChangeLog {
 
+    private static final String POST_TYPE_GUIDE = "guide";
+    private static final String POST_TYPE_REVIEW = "review";
+    private static final String POST_MEDIUM_VIDEO = "video";
+
     @ChangeSet(order = "005", id = "activity_feed", author = "")
     public void insertInitialProduct(MongoTemplate mongoTemplate) {
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
         feedDocLakmeFoundation.setPostId(ObjectId.get());
-        feedDocLakmeFoundation.setPostType("guide");
-        feedDocLakmeFoundation.setPostMedium("video");
+        feedDocLakmeFoundation.setPostType(POST_TYPE_GUIDE);
+        feedDocLakmeFoundation.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
         feedDocLakmeFoundation.setSourceId("QW46ldTDiBY");
         feedDocLakmeFoundation.setDatePosted(LocalDateTime.now().minusHours(2));
@@ -27,13 +31,13 @@ public class ActivityFeedChangeLog {
         feedDocLakmeFoundation.setViews("4.3M");
         feedDocLakmeFoundation.setComments(580);
         feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
-        feedDocLakmeFoundation.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeFoundation.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakmeFoundation);
 
         FeedDoc feedDocEasyNudeMakeup = new FeedDoc();
         feedDocEasyNudeMakeup.setPostId(ObjectId.get());
-        feedDocEasyNudeMakeup.setPostType("guide");
-        feedDocEasyNudeMakeup.setPostMedium("video");
+        feedDocEasyNudeMakeup.setPostType(POST_TYPE_GUIDE);
+        feedDocEasyNudeMakeup.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocEasyNudeMakeup.setTitle(("Easy Nude Makeup look | My Go-to Sunday look | Malvika Sitlani"));
         feedDocEasyNudeMakeup.setSourceId("BrRViqbD0Mw");
         feedDocEasyNudeMakeup.setDatePosted(LocalDateTime.now().minusDays(2));
@@ -41,13 +45,13 @@ public class ActivityFeedChangeLog {
         feedDocEasyNudeMakeup.setViews("1.5M");
         feedDocEasyNudeMakeup.setComments(1099);
         feedDocEasyNudeMakeup.setProductRefList(Arrays.asList(new ProductRef("1", "Clinique FOundation", "foundation")));
-        feedDocEasyNudeMakeup.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocEasyNudeMakeup.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocEasyNudeMakeup);
 
         FeedDoc feedDocHonestReviewOfKay = new FeedDoc();
         feedDocHonestReviewOfKay.setPostId(ObjectId.get());
-        feedDocHonestReviewOfKay.setPostType("review");
-        feedDocHonestReviewOfKay.setPostMedium("video");
+        feedDocHonestReviewOfKay.setPostType(POST_TYPE_REVIEW);
+        feedDocHonestReviewOfKay.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocHonestReviewOfKay.setTitle(("HONEST Review of KAY By Katrina Kaif Beauty! Swatches included"));
         feedDocHonestReviewOfKay.setSourceId("GEvx9fwkehA");
         feedDocHonestReviewOfKay.setDatePosted(LocalDateTime.now().minusMonths(1));
@@ -55,13 +59,13 @@ public class ActivityFeedChangeLog {
         feedDocHonestReviewOfKay.setViews("131k");
         feedDocHonestReviewOfKay.setComments(196);
         feedDocHonestReviewOfKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
-        feedDocHonestReviewOfKay.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocHonestReviewOfKay.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocHonestReviewOfKay);
 
         FeedDoc feedDocBeforeBuyKay = new FeedDoc();
         feedDocBeforeBuyKay.setPostId(ObjectId.get());
-        feedDocBeforeBuyKay.setPostType("review");
-        feedDocBeforeBuyKay.setPostMedium("video");
+        feedDocBeforeBuyKay.setPostType(POST_TYPE_REVIEW);
+        feedDocBeforeBuyKay.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBeforeBuyKay.setTitle(("WATCH THIS BEFORE BUYING KayByKatrina!! | Honest review + swatches of all products | Manasi Mau"));
         feedDocBeforeBuyKay.setSourceId("11QYh6RIW50");
         feedDocBeforeBuyKay.setDatePosted(LocalDateTime.now().minusDays(6));
@@ -69,13 +73,13 @@ public class ActivityFeedChangeLog {
         feedDocBeforeBuyKay.setViews("70.5k");
         feedDocBeforeBuyKay.setComments(125);
         feedDocBeforeBuyKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
-        feedDocBeforeBuyKay.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBeforeBuyKay.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocBeforeBuyKay);
 
         FeedDoc feedDocBlueHeavenCandy = new FeedDoc();
         feedDocBlueHeavenCandy.setPostId(ObjectId.get());
-        feedDocBlueHeavenCandy.setPostType("review");
-        feedDocBlueHeavenCandy.setPostMedium("video");
+        feedDocBlueHeavenCandy.setPostType(POST_TYPE_REVIEW);
+        feedDocBlueHeavenCandy.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBlueHeavenCandy.setTitle(("Blue Heaven Candy Lip Colour Review "));
         feedDocBlueHeavenCandy.setSourceId("EW_1tWFIbyo");
         feedDocBlueHeavenCandy.setDatePosted(LocalDateTime.now().minusWeeks(2));
@@ -83,13 +87,13 @@ public class ActivityFeedChangeLog {
         feedDocBlueHeavenCandy.setViews("4.9k");
         feedDocBlueHeavenCandy.setComments(18);
         feedDocBlueHeavenCandy.setProductRefList(Arrays.asList(new ProductRef("1", "Candy lip color", "products")));
-        feedDocBlueHeavenCandy.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBlueHeavenCandy.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocBlueHeavenCandy);
 
         FeedDoc feedDocBlueHeavenMatteLipstick = new FeedDoc();
         feedDocBlueHeavenMatteLipstick.setPostId(ObjectId.get());
-        feedDocBlueHeavenMatteLipstick.setPostType("review");
-        feedDocBlueHeavenMatteLipstick.setPostMedium("video");
+        feedDocBlueHeavenMatteLipstick.setPostType(POST_TYPE_REVIEW);
+        feedDocBlueHeavenMatteLipstick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBlueHeavenMatteLipstick.setTitle(("Blue Heaven Saphire Matte Liquid Lipsticks Review & Swtaches | All 12 Shades | Nidhi Katiyar"));
         feedDocBlueHeavenMatteLipstick.setSourceId("bCnieuvgedM");
         feedDocBlueHeavenMatteLipstick.setDatePosted(LocalDateTime.now().minusWeeks(6));
@@ -97,13 +101,13 @@ public class ActivityFeedChangeLog {
         feedDocBlueHeavenMatteLipstick.setViews("30.8k");
         feedDocBlueHeavenMatteLipstick.setComments(217);
         feedDocBlueHeavenMatteLipstick.setProductRefList(Arrays.asList(new ProductRef("1", "Blue Heaven Saphire Matte lipstick", "lipstick")));
-        feedDocBlueHeavenMatteLipstick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBlueHeavenMatteLipstick.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocBlueHeavenMatteLipstick);
 
         FeedDoc feedDocLakme9to5Mousse = new FeedDoc();
         feedDocLakme9to5Mousse.setPostId(ObjectId.get());
-        feedDocLakme9to5Mousse.setPostType("guide");
-        feedDocLakme9to5Mousse.setPostMedium("video");
+        feedDocLakme9to5Mousse.setPostType(POST_TYPE_GUIDE);
+        feedDocLakme9to5Mousse.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakme9to5Mousse.setTitle(("NEW SHADES LAKME 9 TO 5 WEIGHTLESS MATTE MOUSSE LIP AND CHEEK COLOR II ALL SHADES SWATCHED II"));
         feedDocLakme9to5Mousse.setSourceId("bCnieuvgedM");
         feedDocLakme9to5Mousse.setDatePosted(LocalDateTime.now().minusMonths(4));
@@ -111,13 +115,13 @@ public class ActivityFeedChangeLog {
         feedDocLakme9to5Mousse.setViews("616k");
         feedDocLakme9to5Mousse.setComments(362);
         feedDocLakme9to5Mousse.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9 to 5 matte mousse", "mousse")));
-        feedDocLakme9to5Mousse.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakme9to5Mousse.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakme9to5Mousse);
 
         FeedDoc feedDocNykaaUltralipstick = new FeedDoc();
         feedDocNykaaUltralipstick.setPostId(ObjectId.get());
-        feedDocNykaaUltralipstick.setPostType("guide");
-        feedDocNykaaUltralipstick.setPostMedium("video");
+        feedDocNykaaUltralipstick.setPostType(POST_TYPE_GUIDE);
+        feedDocNykaaUltralipstick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocNykaaUltralipstick.setTitle(("Nykaa Ultra Matte Lipstick Swatches "));
         feedDocNykaaUltralipstick.setSourceId("TmbON_M7rSE");
         feedDocNykaaUltralipstick.setDatePosted(LocalDateTime.now().minusWeeks(4));
@@ -125,13 +129,13 @@ public class ActivityFeedChangeLog {
         feedDocNykaaUltralipstick.setViews("153k");
         feedDocNykaaUltralipstick.setComments(145);
         feedDocNykaaUltralipstick.setProductRefList(Arrays.asList(new ProductRef("1", "Nykaa Ultra LIpstick swatches", "lipstick")));
-        feedDocNykaaUltralipstick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocNykaaUltralipstick.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocNykaaUltralipstick);
 
         FeedDoc feedDocMaybellineBoldsLisptick = new FeedDoc();
         feedDocMaybellineBoldsLisptick.setPostId(ObjectId.get());
-        feedDocMaybellineBoldsLisptick.setPostType("guide");
-        feedDocMaybellineBoldsLisptick.setPostMedium("video");
+        feedDocMaybellineBoldsLisptick.setPostType(POST_TYPE_GUIDE);
+        feedDocMaybellineBoldsLisptick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocMaybellineBoldsLisptick.setTitle(("Maybelline Loaded Bolds Lipstick Swatches"));
         feedDocMaybellineBoldsLisptick.setSourceId("pLvyrlR0cD4");
         feedDocMaybellineBoldsLisptick.setDatePosted(LocalDateTime.now().minusDays(7));
@@ -139,13 +143,13 @@ public class ActivityFeedChangeLog {
         feedDocMaybellineBoldsLisptick.setViews("146k");
         feedDocMaybellineBoldsLisptick.setComments(101);
         feedDocMaybellineBoldsLisptick.setProductRefList(Arrays.asList(new ProductRef("1", "Maybelline Loaded Bolds Lipstick", "lipstick")));
-        feedDocMaybellineBoldsLisptick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocMaybellineBoldsLisptick.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocMaybellineBoldsLisptick);
 
         FeedDoc feedDocSugarSuedeLipcolor = new FeedDoc();
         feedDocSugarSuedeLipcolor.setPostId(ObjectId.get());
-        feedDocSugarSuedeLipcolor.setPostType("guide");
-        feedDocSugarSuedeLipcolor.setPostMedium("video");
+        feedDocSugarSuedeLipcolor.setPostType(POST_TYPE_GUIDE);
+        feedDocSugarSuedeLipcolor.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocSugarSuedeLipcolor.setTitle(("SUGAR Suede Secret Matte Lipcolor SWATCHES"));
         feedDocSugarSuedeLipcolor.setSourceId("7k27CVpoK9I");
         feedDocSugarSuedeLipcolor.setDatePosted(LocalDateTime.now().minusMonths(7));
@@ -153,13 +157,13 @@ public class ActivityFeedChangeLog {
         feedDocSugarSuedeLipcolor.setViews("93.1k");
         feedDocSugarSuedeLipcolor.setComments(84);
         feedDocSugarSuedeLipcolor.setProductRefList(Arrays.asList(new ProductRef("1", "MSUGAR Suede Secret Matte Lipcolor", "lipcolor")));
-        feedDocSugarSuedeLipcolor.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocSugarSuedeLipcolor.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocSugarSuedeLipcolor);
 
         FeedDoc feedDocLakmeInstalliner = new FeedDoc();
         feedDocLakmeInstalliner.setPostId(ObjectId.get());
-        feedDocLakmeInstalliner.setPostType("review");
-        feedDocLakmeInstalliner.setPostMedium("video");
+        feedDocLakmeInstalliner.setPostType(POST_TYPE_REVIEW);
+        feedDocLakmeInstalliner.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeInstalliner.setTitle(("Lakme INSTA LINER BLACK DEMO & REVIEW"));
         feedDocLakmeInstalliner.setSourceId("7k27CVpoK9I");
         feedDocLakmeInstalliner.setDatePosted(LocalDateTime.now().minusWeeks(7));
@@ -167,13 +171,13 @@ public class ActivityFeedChangeLog {
         feedDocLakmeInstalliner.setViews("20.4k");
         feedDocLakmeInstalliner.setComments(138);
         feedDocLakmeInstalliner.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme INSTA LINER BLACK", "eyeliner")));
-        feedDocLakmeInstalliner.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeInstalliner.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakmeInstalliner);
 
         FeedDoc feedDocLakmeArgainOilSerum = new FeedDoc();
         feedDocLakmeArgainOilSerum.setPostId(ObjectId.get());
-        feedDocLakmeArgainOilSerum.setPostType("review");
-        feedDocLakmeArgainOilSerum.setPostMedium("video");
+        feedDocLakmeArgainOilSerum.setPostType(POST_TYPE_REVIEW);
+        feedDocLakmeArgainOilSerum.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeArgainOilSerum.setTitle(("lakme absolute argan oil serum foundation SPF 45 review & demo"));
         feedDocLakmeArgainOilSerum.setSourceId("BufzCV-mOQs");
         feedDocLakmeArgainOilSerum.setDatePosted(LocalDateTime.now().minusMonths(9));
@@ -181,13 +185,13 @@ public class ActivityFeedChangeLog {
         feedDocLakmeArgainOilSerum.setViews("413k");
         feedDocLakmeArgainOilSerum.setComments(412);
         feedDocLakmeArgainOilSerum.setProductRefList(Arrays.asList(new ProductRef("1", "Llakme absolute argan oil serum foundation SPF 45", "foundation")));
-        feedDocLakmeArgainOilSerum.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeArgainOilSerum.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakmeArgainOilSerum);
 
         FeedDoc feedDocLakmeAbsoluteFoundation = new FeedDoc();
         feedDocLakmeAbsoluteFoundation.setPostId(ObjectId.get());
-        feedDocLakmeAbsoluteFoundation.setPostType("review");
-        feedDocLakmeAbsoluteFoundation.setPostMedium("video");
+        feedDocLakmeAbsoluteFoundation.setPostType(POST_TYPE_REVIEW);
+        feedDocLakmeAbsoluteFoundation.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeAbsoluteFoundation.setTitle(("Lakme absolute mousse hydrating foundation for summers"));
         feedDocLakmeAbsoluteFoundation.setSourceId("mdH6GRiffI4");
         feedDocLakmeAbsoluteFoundation.setDatePosted(LocalDateTime.now().minusYears(2));
@@ -195,8 +199,12 @@ public class ActivityFeedChangeLog {
         feedDocLakmeAbsoluteFoundation.setViews("57.7k");
         feedDocLakmeAbsoluteFoundation.setComments(203);
         feedDocLakmeAbsoluteFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "LLakme absolute mousse hydrating foundation for summers", "foundation")));
-        feedDocLakmeAbsoluteFoundation.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeAbsoluteFoundation.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakmeAbsoluteFoundation);
 
+    }
+
+    private UserRef getUserShabana() {
+        return new UserRef("123", "shabanastyle");
     }
 }

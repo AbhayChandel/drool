@@ -10,12 +10,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class MongobeeConfig {
 
-    @Autowired
-    MongoTemplate mongoTemplate;
-
     @Bean
     @Profile("test")
-    public Mongobee mongobee() {
+    @Autowired
+    public Mongobee mongobee(MongoTemplate mongoTemplate) {
         Mongobee runner = new Mongobee("mongodb://localhost:27017/testdrool");
         runner.setMongoTemplate(mongoTemplate);
         runner.setChangeLogsScanPackage(
