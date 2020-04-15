@@ -9,7 +9,7 @@ import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoTemplateRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.*;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class VideoImpl implements Video {
 
     private final VideoDocDtoMapper videoDocDtoMapper;
 
-    private final VideoTemplateRepository videoTemplateRepository;
+    private final VideoRepository videoRepository;
 
     private final VideoCommentMapper videoCommentMapper;
 
@@ -43,7 +45,7 @@ public class VideoImpl implements Video {
     @Override
     public VideoDto save(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
-        videoDoc = videoTemplateRepository.save(videoDoc);
+        videoDoc = videoRepository.save(videoDoc);
         if (videoDoc.getId() != null) {
             userActivity.addVideo(videoDoc);
             activityFeed.addVideo(videoDoc);
@@ -55,24 +57,28 @@ public class VideoImpl implements Video {
 
     @Override
     public VideoDto findById(String id) {
-        return videoDocDtoMapper.toDto(findInRepository("Video search", id));
+        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(id);
+        if (videoDocOptional.isPresent()) {
+            return videoDocDtoMapper.toDto(videoDocOptional.get());
+        }
+        throw new VideoNotFoundException("Video with Id " + id + " not found");
     }
 
     @Override
     public VideoThumbnailDataDto getLatestThreeVideoThumbnails(String userId) {
-        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoTemplateRepository.getLatestThreeVideosByUser(userId);
+        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoRepository.getLatestThreeVideosByUser(userId);
         return videoThumbnailDataMapper.toDto(videoThumbnailDataAggregation);
 
     }
 
     @Override
     public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
-        return videoTemplateRepository.updateReviewId(videoId, reviewId);
+        return videoRepository.updateReviewId(videoId, reviewId);
     }
 
     @Override
     public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        String likes = videoTemplateRepository.saveVideoLikes(videoLikeUnlikeDto);
+        String likes = videoRepository.saveVideoLikes(videoLikeUnlikeDto);
         userActivity.addVideoLike(videoLikeUnlikeDto);
         activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocFields.likes, likes);
         return likes;
@@ -80,7 +86,7 @@ public class VideoImpl implements Video {
 
     @Override
     public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        String likes = videoTemplateRepository.deleteVideoLikes(videoLikeUnlikeDto);
+        String likes = videoRepository.deleteVideoLikes(videoLikeUnlikeDto);
         userActivity.deleteVideoLike(videoLikeUnlikeDto);
         activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocFields.likes, likes);
         return likes;
@@ -90,7 +96,7 @@ public class VideoImpl implements Video {
     public VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
         PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
-        videoCommentDto = videoCommentMapper.toDto(videoTemplateRepository.insertComment(postRef, videoComment));
+        videoCommentDto = videoCommentMapper.toDto(videoRepository.insertComment(postRef, videoComment));
         if (videoCommentDto != null) {
             userActivity.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
             activityFeed.incrementDecrementField(new ObjectId(postRef.getId()), FeedDocFields.comments, 1);
@@ -102,7 +108,7 @@ public class VideoImpl implements Video {
 
     @Override
     public boolean deleteComment(VideoCommentDto videoCommentDto) {
-        boolean result = videoTemplateRepository.deleteComment(videoCommentDto);
+        boolean result = videoRepository.deleteComment(videoCommentDto);
         if (result) {
             userActivity.deleteVideoComment(videoCommentDto);
             activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getPostRefDto().getId()), FeedDocFields.comments, -1);
@@ -114,7 +120,7 @@ public class VideoImpl implements Video {
 
     @Override
     public String saveCommentLike(VideoCommentDto videoCommentDto) {
-        String likes = videoTemplateRepository.saveCommentLike(videoCommentDto);
+        String likes = videoRepository.saveCommentLike(videoCommentDto);
         if (Integer.valueOf(likes) > Integer.valueOf(videoCommentDto.getLikes())) {
             userActivity.addCommentLike(videoCommentDto);
         } else {
@@ -125,22 +131,12 @@ public class VideoImpl implements Video {
 
     @Override
     public String deleteCommentLike(VideoCommentDto videoCommentDto) {
-        String likes = videoTemplateRepository.deleteCommentLike(videoCommentDto);
+        String likes = videoRepository.deleteCommentLike(videoCommentDto);
         if (Integer.valueOf(likes) < Integer.valueOf(videoCommentDto.getLikes())) {
             userActivity.deleteCommentLike(videoCommentDto);
         } else {
             log.error("Video comment like not deleted");
         }
         return likes;
-    }
-
-    private VideoDoc findInRepository(String action, String id) {
-        VideoDoc videoDoc = videoTemplateRepository.findByIdAndActiveTrue(id);
-        if (videoDoc != null) {
-            return videoDoc;
-        }
-        StringBuilder errorMessage = new StringBuilder(action);
-        errorMessage.append(" failed. Video with id " + id + " not found");
-        throw new VideoNotFoundException(errorMessage.toString());
     }
 }
