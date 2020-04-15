@@ -32,22 +32,22 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
         this.postRefMapper = postRefMapper;
     }
 
-    private static final String USER_ID = "userId";
+    private static final String ID = "id";
 
     @Override
     public UpdateResult addVideo(VideoDoc videoDoc) {
         String arrayPath = videoDoc.getType().equalsIgnoreCase("guide") ? "post.videos.guides" : "post.videos.reviews";
-        return mongoOperations.upsert(query(where(USER_ID).is(videoDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(videoDoc.getId(), videoDoc.getTitle(), null, null, videoDoc.getDatePosted())), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(ID).is(videoDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(videoDoc.getId(), videoDoc.getTitle(), null, null, videoDoc.getDatePosted())), UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult addVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return mongoOperations.upsert(query(where(USER_ID).is(videoLikeUnlikeDto.getUserId())), new Update().addToSet("likes.videos", new VideoLike(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle())), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(ID).is(videoLikeUnlikeDto.getUserId())), new Update().addToSet("likes.videos", new VideoLike(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle())), UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoLikeUnlikeDto.getUserId())));
+        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoLikeUnlikeDto.getUserId())));
         Query queryVideo = Query.query(Criteria.where("videoId").is(new ObjectId(videoLikeUnlikeDto.getVideoId())));
         Update update = new Update().pull("likes.videos", queryVideo);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
@@ -55,12 +55,12 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
 
     @Override
     public UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef) {
-        return mongoOperations.upsert(query(where(USER_ID).is(userId)), new Update().addToSet("comments", commentRef), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(ID).is(userId)), new Update().addToSet("comments", commentRef), UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
+        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("comments", queryComment);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
@@ -70,12 +70,12 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     public UpdateResult addCommentLike(VideoCommentDto videoCommentDto) {
         PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
         Update update = new Update().addToSet("likes.comments", new CommentRef(videoCommentDto.getId(), videoCommentDto.getComment(), postRef, null));
-        return mongoOperations.upsert(query(where(USER_ID).is(videoCommentDto.getUserRefDto().getId())), update, UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(ID).is(videoCommentDto.getUserRefDto().getId())), update, UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
+        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("likes.comments", queryComment);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
@@ -84,6 +84,6 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     @Override
     public UpdateResult addTextReview(ReviewDoc reviewDoc) {
         String arrayPath = "post.textReviews";
-        return mongoOperations.upsert(query(where(USER_ID).is(reviewDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), null, null, reviewDoc.getDatePosted())), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(ID).is(reviewDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), null, null, reviewDoc.getDatePosted())), UserActivityDoc.class);
     }
 }
