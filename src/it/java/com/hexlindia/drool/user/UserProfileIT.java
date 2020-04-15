@@ -100,7 +100,7 @@ public class UserProfileIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<ContributionSummaryDto> responseEntity = restTemplate.exchange(getContributionSummaryUri() + "/u123", HttpMethod.GET, httpEntity, ContributionSummaryDto.class);
+        ResponseEntity<ContributionSummaryDto> responseEntity = restTemplate.exchange(getContributionSummaryUri() + "/" + userId.toHexString(), HttpMethod.GET, httpEntity, ContributionSummaryDto.class);
         ContributionSummaryDto contributionSummaryDto = responseEntity.getBody();
         assertTrue(contributionSummaryDto.getVideoThumbnailDataDto().getTotalVideoCount() > 0);
         assertEquals("Review for Tom Ford Vetiver", contributionSummaryDto.getVideoThumbnailDataDto().getVideoThumbnailList().get(0).getTitle());
@@ -112,7 +112,7 @@ public class UserProfileIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<ContributionSummaryDto> responseEntity = restTemplate.exchange(getContributionSummaryUri() + "/u1233", HttpMethod.GET, httpEntity, ContributionSummaryDto.class);
+        ResponseEntity<ContributionSummaryDto> responseEntity = restTemplate.exchange(getContributionSummaryUri() + "/" + ObjectId.get().toHexString(), HttpMethod.GET, httpEntity, ContributionSummaryDto.class);
         ContributionSummaryDto contributionSummaryDto = responseEntity.getBody();
         assertEquals(0, contributionSummaryDto.getVideoThumbnailDataDto().getTotalVideoCount());
         assertEquals(0, contributionSummaryDto.getVideoThumbnailDataDto().getVideoThumbnailList().size());
@@ -153,6 +153,8 @@ public class UserProfileIT {
         return "/" + restUriVersion + "/video/save";
     }
 
+    private ObjectId userId = new ObjectId();
+
     private void insertVideoData(HttpHeaders headers) throws JSONException {
         JSONObject productRefDto1 = new JSONObject();
         productRefDto1.put("id", "p123");
@@ -166,7 +168,7 @@ public class UserProfileIT {
         productRefDtoList.put(productRefDto1);
         productRefDtoList.put(productRefDto2);
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", userId.toHexString());
         UserRefDto.put("username", "user123");
         JSONObject videoDoc = new JSONObject();
         videoDoc.put("type", "review");

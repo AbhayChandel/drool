@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@Document(collection = "profiles")
+@Document(collection = "user_profiles")
 public class UserProfileDoc {
 
     private ObjectId id;

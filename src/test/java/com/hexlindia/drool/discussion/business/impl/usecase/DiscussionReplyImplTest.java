@@ -45,7 +45,7 @@ class DiscussionReplyImplTest {
         discussionReplyDocMocked.setLikes(50);
         ObjectId discussionId = new ObjectId();
         ObjectId userId = new ObjectId();
-        discussionReplyDocMocked.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDocMocked.setUserRef(new UserRef(userId, "shabana"));
         ObjectId discussionIdMocked = new ObjectId();
         when(this.discussionReplyDtoDocMapperMocked.toDoc(any())).thenReturn(discussionReplyDocMocked);
         when(this.discussionReplyRepositoryMocked.saveReply(discussionReplyDocMocked, discussionIdMocked)).thenReturn(true);
@@ -58,7 +58,7 @@ class DiscussionReplyImplTest {
         assertEquals("This is a test reply", discussionReplyDocArgumentCaptor.getValue().getReply());
         assertTrue(discussionReplyDocArgumentCaptor.getValue().isActive());
         assertEquals(50, discussionReplyDocArgumentCaptor.getValue().getLikes());
-        assertEquals(userId.toHexString(), discussionReplyDocArgumentCaptor.getValue().getUserRef().getId());
+        assertEquals(userId, discussionReplyDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", discussionReplyDocArgumentCaptor.getValue().getUserRef().getUsername());
         assertEquals(discussionId, discussionIdArgumentCaptor.getValue());
     }

@@ -29,7 +29,8 @@ class AspectVotingDetailsMapperTest {
         aspectVotingDotOccasion.setAspectId("2");
         aspectVotingDotOccasion.setSelectedOptions(Arrays.asList("Wedding", "Party"));
         String reviewId = ObjectId.get().toHexString();
-        AspectVotingDetailsDto aspectVotingDetailsDto = new AspectVotingDetailsDto(Arrays.asList(aspectVotingDtoStyle, aspectVotingDotOccasion), reviewId, new ProductRefDto("123", "Collosal Kajal", "Kajal"), new UserRefDto("u123", "username123"));
+        ObjectId userId = new ObjectId();
+        AspectVotingDetailsDto aspectVotingDetailsDto = new AspectVotingDetailsDto(Arrays.asList(aspectVotingDtoStyle, aspectVotingDotOccasion), reviewId, new ProductRefDto("123", "Collosal Kajal", "Kajal"), new UserRefDto(userId.toHexString(), "username123"));
         AspectVotingDetailsDoc aspectVotingDetailsDoc = aspectVotingDetailsMapper.toDoc(aspectVotingDetailsDto);
         assertEquals("1", aspectVotingDetailsDoc.getAspectVotingDocList().get(0).getAspectId());
         assertEquals("Retro", aspectVotingDetailsDoc.getAspectVotingDocList().get(0).getSelectedOptions().get(0));
@@ -40,7 +41,7 @@ class AspectVotingDetailsMapperTest {
         assertEquals("123", aspectVotingDetailsDoc.getProductRef().getId());
         assertEquals("Collosal Kajal", aspectVotingDetailsDoc.getProductRef().getName());
         assertEquals("Kajal", aspectVotingDetailsDoc.getProductRef().getType());
-        assertEquals("u123", aspectVotingDetailsDoc.getUserRef().getId());
+        assertEquals(userId, aspectVotingDetailsDoc.getUserRef().getId());
         assertEquals("username123", aspectVotingDetailsDoc.getUserRef().getUsername());
         assertEquals(new ObjectId(reviewId), aspectVotingDetailsDoc.getReviewId());
     }

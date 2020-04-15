@@ -205,6 +205,6 @@ public class ActivityFeedChangeLog {
     }
 
     private UserRef getUserShabana() {
-        return new UserRef("123", "shabanastyle");
+        return new UserRef(ObjectId.get(), "shabanastyle");
     }
 }

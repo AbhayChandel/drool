@@ -44,16 +44,18 @@ class UserActivityFeedImplTest {
 
     @Test
     void addVideo_passingObjectToRepositoryLayer() {
+        ObjectId userId = new ObjectId();
         VideoDoc videoDocMock = new VideoDoc("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
-                new UserRef("123", "shabana"));
-        videoDocMock.setId("v123");
+                new UserRef(userId, "shabana"));
+        ObjectId videoId = new ObjectId();
+        videoDocMock.setId(videoId);
         videoDocMock.setDatePosted(LocalDateTime.now());
         when(this.userActivityRepositoryMock.addVideo(videoDocMock)).thenReturn(null);
         this.userActivitySpy.addVideo(videoDocMock);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
         verify(this.userActivityRepositoryMock, times(1)).addVideo(videoDocArgumentCaptor.capture());
-        assertEquals("v123", videoDocArgumentCaptor.getValue().getId());
+        assertEquals(videoId, videoDocArgumentCaptor.getValue().getId());
         assertNotNull(videoDocArgumentCaptor.getValue().getDatePosted());
         assertEquals("review", videoDocArgumentCaptor.getValue().getType());
         assertEquals("L'oreal Collosal Kajal Review", videoDocArgumentCaptor.getValue().getTitle());
@@ -63,7 +65,7 @@ class UserActivityFeedImplTest {
         assertEquals("abc", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getId());
         assertEquals("Loreal Kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getName());
         assertEquals("kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getType());
-        assertEquals("123", videoDocArgumentCaptor.getValue().getUserRef().getId());
+        assertEquals(userId, videoDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", videoDocArgumentCaptor.getValue().getUserRef().getUsername());
     }
 
@@ -96,14 +98,14 @@ class UserActivityFeedImplTest {
     }
 
     @Test
-    void iaddVideoComment_passingObjectToRepositoryLayer() {
+    void addVideoComment_passingObjectToRepositoryLayer() {
         LocalDateTime datePosted = LocalDateTime.parse("2020-02-04 19:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        PostRef postRef = new PostRef("p123", "This is a test post title", "guide", "video", null);
+        PostRef postRef = new PostRef(ObjectId.get(), "This is a test post title", "guide", "video", null);
         CommentRef commentRef = new CommentRef("c123", "This is a comment to test videoCommentMapper toDto()",
                 postRef, datePosted);
-        when(this.userActivityRepositoryMock.addVideoComment(anyString(), any())).thenReturn(null);
-        userActivitySpy.addVideoComment("456", commentRef);
-        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        when(this.userActivityRepositoryMock.addVideoComment(any(), any())).thenReturn(null);
+        userActivitySpy.addVideoComment(ObjectId.get(), commentRef);
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<CommentRef> commentRefArgumentCaptor = ArgumentCaptor.forClass(CommentRef.class);
         verify(userActivityRepositoryMock, times(1)).addVideoComment(userIdArgumentCaptor.capture(), commentRefArgumentCaptor.capture());
         assertEquals("c123", commentRefArgumentCaptor.getValue().getId());
@@ -165,7 +167,8 @@ class UserActivityFeedImplTest {
     @Test
     void addTextReview_passingObjecttoRepositoryLayer() {
         ReviewDoc reviewDoc = new ReviewDoc();
-        reviewDoc.setUserRef(new UserRef("123", "shabana"));
+        ObjectId userId = new ObjectId();
+        reviewDoc.setUserRef(new UserRef(userId, "shabana"));
         ObjectId postId = new ObjectId();
         reviewDoc.setId(postId);
         reviewDoc.setReviewSummary("This is a great dummy review summary");
@@ -175,7 +178,7 @@ class UserActivityFeedImplTest {
         userActivitySpy.addTextReview(reviewDoc);
         ArgumentCaptor<ReviewDoc> reviewDocArgumentCaptor = ArgumentCaptor.forClass(ReviewDoc.class);
         verify(userActivityRepositoryMock, times(1)).addTextReview(reviewDocArgumentCaptor.capture());
-        assertEquals("123", reviewDocArgumentCaptor.getValue().getUserRef().getId());
+        assertEquals(userId, reviewDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", reviewDocArgumentCaptor.getValue().getUserRef().getUsername());
         assertEquals(postId, reviewDocArgumentCaptor.getValue().getId());
         assertEquals("This is a great dummy review summary", reviewDocArgumentCaptor.getValue().getReviewSummary());

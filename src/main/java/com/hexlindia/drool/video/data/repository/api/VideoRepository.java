@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface VideoRepository {
     VideoDoc save(VideoDoc videoDoc);
 
-    Optional<VideoDoc> findByIdAndActiveTrue(String id);
+    Optional<VideoDoc> findByIdAndActiveTrue(ObjectId id);
 
     String saveVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
@@ -27,7 +27,7 @@ public interface VideoRepository {
 
     String deleteCommentLike(VideoCommentDto videoCommentDto);
 
-    VideoThumbnailDataAggregation getLatestThreeVideosByUser(String userId);
+    VideoThumbnailDataAggregation getLatestThreeVideosByUser(ObjectId userId);
 
     boolean updateReviewId(ObjectId videoId, ObjectId reviewId);
 }

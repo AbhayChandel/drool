@@ -48,13 +48,13 @@ public class VideoRepositoryImpl implements VideoRepository {
     }
 
     @Override
-    public Optional<VideoDoc> findByIdAndActiveTrue(String id) {
+    public Optional<VideoDoc> findByIdAndActiveTrue(ObjectId id) {
         VideoDoc videoDoc = mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
         return videoDoc == null ? Optional.empty() : Optional.of(videoDoc);
     }
 
     @Override
-    public VideoThumbnailDataAggregation getLatestThreeVideosByUser(String userId) {
+    public VideoThumbnailDataAggregation getLatestThreeVideosByUser(ObjectId userId) {
 
         MatchOperation matchUserVideos = match(new Criteria("userRef._id").is(userId).andOperator(new Criteria("active").is(true)));
         FacetOperation facet = facet(sort(Sort.Direction.DESC, "datePosted"), limit(3)).as("videoThumbnailList")

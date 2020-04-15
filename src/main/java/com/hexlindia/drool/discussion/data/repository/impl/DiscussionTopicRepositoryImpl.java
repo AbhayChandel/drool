@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -27,7 +29,7 @@ public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository 
     }
 
     @Override
-    public DiscussionTopicDoc findById(ObjectId id) {
+    public Optional<DiscussionTopicDoc> findById(ObjectId id) {
         MatchOperation match = match(new Criteria("_id").is(id).andOperator(new Criteria("active").is(true)));
         ProjectionOperation project = Aggregation.project("title", "userRef", "datePosted", "dateLastActive", "views", "likes", "replies").
                 and(ArrayOperators.arrayOf("replies").length()).as("repliesCount");
@@ -36,7 +38,8 @@ public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository 
                 match,
                 project
         ), "discussions", DiscussionTopicDoc.class);
-        return results.getUniqueMappedResult();
+        DiscussionTopicDoc discussionTopicDoc = results.getUniqueMappedResult();
+        return discussionTopicDoc == null ? Optional.empty() : Optional.of(discussionTopicDoc);
     }
 
     @Override

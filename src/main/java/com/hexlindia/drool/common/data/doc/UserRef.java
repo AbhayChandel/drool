@@ -1,11 +1,13 @@
 package com.hexlindia.drool.common.data.doc;
 
+import org.bson.types.ObjectId;
+
 public class UserRef {
 
-    private String id;
+    private ObjectId id;
     private String username;
 
-    public UserRef(String id, String username) {
+    public UserRef(ObjectId id, String username) {
         this.id = id;
         this.username = username;
     }
@@ -13,7 +15,7 @@ public class UserRef {
     public UserRef() {
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
@@ -21,7 +23,7 @@ public class UserRef {
         return username;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

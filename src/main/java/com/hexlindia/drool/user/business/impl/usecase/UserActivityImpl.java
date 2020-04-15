@@ -8,6 +8,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,7 +37,7 @@ public class UserActivityImpl implements UserActivity {
     }
 
     @Override
-    public UpdateResult addVideoComment(String userId, CommentRef commentRef) {
+    public UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef) {
         return this.userActivityRepository.addVideoComment(userId, commentRef);
     }
 

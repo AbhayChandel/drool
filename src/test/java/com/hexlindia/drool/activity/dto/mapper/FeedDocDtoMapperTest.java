@@ -37,7 +37,8 @@ class FeedDocDtoMapperTest {
         feedDocLakmeFoundation.setViews("4.3M");
         feedDocLakmeFoundation.setComments(580);
         feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
-        feedDocLakmeFoundation.setUserRef(new UserRef("123", "shabanastyle"));
+        ObjectId userId = ObjectId.get();
+        feedDocLakmeFoundation.setUserRef(new UserRef(userId, "shabanastyle"));
         FeedDto feedDto = feedDocDtoMapper.toDto(feedDocLakmeFoundation);
 
         assertEquals(postId.toHexString(), feedDto.getPostId());
@@ -52,7 +53,7 @@ class FeedDocDtoMapperTest {
         assertEquals("1", feedDto.getProductRefDtoList().get(0).getId());
         assertEquals("Lakme Foundation", feedDto.getProductRefDtoList().get(0).getName());
         assertEquals("foundation", feedDto.getProductRefDtoList().get(0).getType());
-        assertEquals("123", feedDto.getUserRefDto().getId());
+        assertEquals(userId.toHexString(), feedDto.getUserRefDto().getId());
         assertEquals("shabanastyle", feedDto.getUserRefDto().getUsername());
 
     }

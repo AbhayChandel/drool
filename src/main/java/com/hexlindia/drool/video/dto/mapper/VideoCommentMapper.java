@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.dto.mapper;
 
+import com.hexlindia.drool.common.dto.mapper.UserRefMapper;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
@@ -10,7 +11,7 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserRefMapper.class})
 public abstract class VideoCommentMapper {
 
     @Mapping(target = "userRefDto", source = "userRef")

@@ -28,7 +28,7 @@ class AspectVotingDetailsRepositoryTest {
         AspectVotingDoc aspectVotingDocOccasion = new AspectVotingDoc();
         aspectVotingDocOccasion.setAspectId("2");
         aspectVotingDocOccasion.setSelectedOptions(Arrays.asList("Wedding", "Party"));
-        AspectVotingDetailsDoc aspectVotingDetailsDoc = new AspectVotingDetailsDoc(null, new ObjectId(), Arrays.asList(aspectVotingDocStyle, aspectVotingDocOccasion), new ProductRef("123", "Collosal Kajal", "Kajal"), new UserRef("u123", "username123"));
+        AspectVotingDetailsDoc aspectVotingDetailsDoc = new AspectVotingDetailsDoc(null, new ObjectId(), Arrays.asList(aspectVotingDocStyle, aspectVotingDocOccasion), new ProductRef("123", "Collosal Kajal", "Kajal"), new UserRef(ObjectId.get(), "username123"));
         assertNotNull(aspectVotingDetailsRepository.save(aspectVotingDetailsDoc));
     }
 }

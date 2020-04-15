@@ -6,6 +6,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 
 public interface UserActivity {
 
@@ -15,7 +16,7 @@ public interface UserActivity {
 
     UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    UpdateResult addVideoComment(String userId, CommentRef commentRef);
+    UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef);
 
     UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto);
 

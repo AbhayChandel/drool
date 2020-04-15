@@ -6,6 +6,7 @@ import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,13 +43,15 @@ public class VideoViewsIT {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    private String populatedVideoId = "";
+    private ObjectId populatedVideoId = null;
+    private ObjectId userId = new ObjectId();
 
     @BeforeEach
     public void setUp() {
+        ;
         VideoDoc videoDoc = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"), new ProductRef("pqr", "Chambor", "kajal"), new ProductRef("xyz", "Tom Ford Vetiver", "fragrance")),
-                new UserRef("123", "shabana"));
+                new UserRef(userId, "shabana"));
         videoDoc.setActive(true);
         videoDoc.setDatePosted(LocalDateTime.now());
         populatedVideoId = this.mongoTemplate.insert(videoDoc).getId();
@@ -71,7 +74,7 @@ public class VideoViewsIT {
         assertEquals("abc", videoDto.getProductRefDtoList().get(0).getId());
         assertEquals("Lakme 9to5 Lipcolor", videoDto.getProductRefDtoList().get(0).getName());
         assertEquals("lipcolor", videoDto.getProductRefDtoList().get(0).getType());
-        assertEquals("123", videoDto.getUserRefDto().getId());
+        assertEquals(userId.toHexString(), videoDto.getUserRefDto().getId());
         assertEquals("shabana", videoDto.getUserRefDto().getUsername());
     }
 

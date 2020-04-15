@@ -27,7 +27,7 @@ class DiscussionReplyDtoDOcMapperTest {
 
         DiscussionReplyDoc discussionReplyDoc = discussionReplyDtoDocMapper.toDoc(discussionReplyDto);
         assertEquals("This is going to be a great reply", discussionReplyDoc.getReply());
-        assertEquals(userId.toHexString(), discussionReplyDoc.getUserRef().getId());
+        assertEquals(userId, discussionReplyDoc.getUserRef().getId());
         assertEquals("shabana", discussionReplyDoc.getUserRef().getUsername());
     }
 
@@ -36,7 +36,7 @@ class DiscussionReplyDtoDOcMapperTest {
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
         ObjectId userId = ObjectId.get();
-        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
 

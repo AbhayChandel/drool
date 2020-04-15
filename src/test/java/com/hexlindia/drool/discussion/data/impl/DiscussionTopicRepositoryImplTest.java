@@ -39,10 +39,10 @@ class DiscussionTopicRepositoryImplTest {
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
         discussionTopicDoc.setTitle("This topic is returned from db");
         ObjectId userId = ObjectId.get();
-        discussionTopicDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionTopicDoc.setUserRef(new UserRef(userId, "shabana"));
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
-        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
@@ -53,9 +53,13 @@ class DiscussionTopicRepositoryImplTest {
     }
 
     @Test
-    void findById() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.findById(insertDiscussionTopic);
-        assertNotNull(discussionTopicDoc);
+    void findById_ValidId() {
+        assertTrue(discussionTopicRepository.findById(insertDiscussionTopic).isPresent());
+    }
+
+    @Test
+    void findById_InvalidId() {
+        assertFalse(discussionTopicRepository.findById(ObjectId.get()).isPresent());
     }
 
     @Test
@@ -86,13 +90,13 @@ class DiscussionTopicRepositoryImplTest {
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
         discussionTopicDoc.setTitle("This a dummy discussion topic");
         ObjectId userId = ObjectId.get();
-        discussionTopicDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionTopicDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionTopicDoc.setActive(true);
         discussionTopicDoc.setViews(1190);
         discussionTopicDoc.setLikes(500);
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
-        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));

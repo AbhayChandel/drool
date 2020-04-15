@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.config.MongoDBConfig;
 import com.hexlindia.drool.user.data.doc.UserAccountDoc;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
 import com.hexlindia.drool.user.dto.UserAccountDto;
@@ -12,15 +13,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(MongoDBConfig.class)
+@ImportAutoConfiguration(TransactionAutoConfiguration.class)
 class UserAccountIT {
 
     @Value("${rest.uri.version}")
@@ -64,6 +70,8 @@ class UserAccountIT {
      */
     @Test
     void testUserRegistrationFailedDuplicateEmail() throws JSONException {
+        String username = "Sonam_singh";
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -76,7 +84,7 @@ class UserAccountIT {
         userProfileDto.put("gender", "M");
         userProfileDto.put("mobile", "9876543210");
         userProfileDto.put("name", "Sonam Singh");
-        userProfileDto.put("username", "Sonam_singh");
+        userProfileDto.put("username", username);
 
         JSONObject userRegistrationDto = new JSONObject();
         userRegistrationDto.put("account", userAccountDto);
@@ -86,6 +94,14 @@ class UserAccountIT {
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(409, responseEntity.getStatusCodeValue());
         assertEquals("Email sonam99@gmail.com already exists", responseEntity.getBody());
+
+        // No insertion is done in profiles collection if insertion into account fails
+        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> responseEntityUserProfile = restTemplate.exchange(getFindUsernameUri() + "/" + username, HttpMethod.GET, httpEntity, String.class);
+        Assertions.assertEquals(404, responseEntityUserProfile.getStatusCodeValue());
+        Assertions.assertEquals("User profile with username " + username + " not found", responseEntityUserProfile.getBody());
+
+
     }
 
     // To-Do Log these error messages
@@ -97,8 +113,10 @@ class UserAccountIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        String emailId = "sonam9999@gmail.com";
+
         JSONObject userAccountDto = new JSONObject();
-        userAccountDto.put("emailId", "sonam9999@gmail.com");
+        userAccountDto.put("emailId", emailId);
         userAccountDto.put("password", "sonam");
 
         JSONObject userProfileDto = new JSONObject();
@@ -116,6 +134,11 @@ class UserAccountIT {
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(409, responseEntity.getStatusCodeValue());
         assertEquals("Username SonamLove already exists", responseEntity.getBody());
+
+        /*HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/" + emailId, HttpMethod.GET, httpEntity, String.class);
+        Assertions.assertEquals(404, responseEntityAccount.getStatusCodeValue());
+        Assertions.assertEquals("User Account with email " + emailId + " not found", responseEntityAccount.getBody());*/
     }
 
     /*
@@ -179,6 +202,10 @@ class UserAccountIT {
 
     private String getRegisterUri() {
         return "/" + restUriVersion + "/accessall/user/account/register";
+    }
+
+    private String getFindUsernameUri() {
+        return "/" + restUriVersion + "/accessall/user/profile/find/username";
     }
 
     private String getUserProfileFindByIdUri() {
