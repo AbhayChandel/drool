@@ -45,7 +45,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDoc.setViews("0");
         feedDoc.setComments(0);
         feedDoc.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")));
-        feedDoc.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDoc.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
 
         assertNotNull(activityFeedRepository.save(feedDoc));
     }
@@ -101,7 +101,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDoc.setViews("300");
         feedDoc.setComments(400);
         feedDoc.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")));
-        feedDoc.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDoc.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDoc);
 
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
@@ -115,7 +115,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocLakmeFoundation.setViews("4.3M");
         feedDocLakmeFoundation.setComments(580);
         feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
-        feedDocLakmeFoundation.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeFoundation.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocLakmeFoundation);
 
         FeedDoc feedDocEasyNudeMakeup = new FeedDoc();
@@ -129,7 +129,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocEasyNudeMakeup.setViews("1.5M");
         feedDocEasyNudeMakeup.setComments(1099);
         feedDocEasyNudeMakeup.setProductRefList(Arrays.asList(new ProductRef("1", "Clinique FOundation", "foundation")));
-        feedDocEasyNudeMakeup.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocEasyNudeMakeup.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocEasyNudeMakeup);
 
         FeedDoc feedDocHonestReviewOfKay = new FeedDoc();
@@ -143,7 +143,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocHonestReviewOfKay.setViews("131k");
         feedDocHonestReviewOfKay.setComments(196);
         feedDocHonestReviewOfKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
-        feedDocHonestReviewOfKay.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocHonestReviewOfKay.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocHonestReviewOfKay);
 
         FeedDoc feedDocBeforeBuyKay = new FeedDoc();
@@ -157,7 +157,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocBeforeBuyKay.setViews("70.5k");
         feedDocBeforeBuyKay.setComments(125);
         feedDocBeforeBuyKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
-        feedDocBeforeBuyKay.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBeforeBuyKay.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocBeforeBuyKay);
 
         FeedDoc feedDocBlueHeavenCandy = new FeedDoc();
@@ -171,7 +171,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocBlueHeavenCandy.setViews("4.9k");
         feedDocBlueHeavenCandy.setComments(18);
         feedDocBlueHeavenCandy.setProductRefList(Arrays.asList(new ProductRef("1", "Candy lip color", "products")));
-        feedDocBlueHeavenCandy.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBlueHeavenCandy.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocBlueHeavenCandy);
 
         FeedDoc feedDocBlueHeavenMatteLipstick = new FeedDoc();
@@ -185,7 +185,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocBlueHeavenMatteLipstick.setViews("30.8k");
         feedDocBlueHeavenMatteLipstick.setComments(217);
         feedDocBlueHeavenMatteLipstick.setProductRefList(Arrays.asList(new ProductRef("1", "Blue Heaven Saphire Matte lipstick", "lipstick")));
-        feedDocBlueHeavenMatteLipstick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocBlueHeavenMatteLipstick.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocBlueHeavenMatteLipstick);
 
         FeedDoc feedDocLakme9to5Mousse = new FeedDoc();
@@ -199,7 +199,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocLakme9to5Mousse.setViews("616k");
         feedDocLakme9to5Mousse.setComments(362);
         feedDocLakme9to5Mousse.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme 9 to 5 matte mousse", "mousse")));
-        feedDocLakme9to5Mousse.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakme9to5Mousse.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocLakme9to5Mousse);
 
         FeedDoc feedDocNykaaUltralipstick = new FeedDoc();
@@ -213,7 +213,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocNykaaUltralipstick.setViews("153k");
         feedDocNykaaUltralipstick.setComments(145);
         feedDocNykaaUltralipstick.setProductRefList(Arrays.asList(new ProductRef("1", "Nykaa Ultra LIpstick swatches", "lipstick")));
-        feedDocNykaaUltralipstick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocNykaaUltralipstick.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocNykaaUltralipstick);
 
         FeedDoc feedDocMaybellineBoldsLisptick = new FeedDoc();
@@ -227,7 +227,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocMaybellineBoldsLisptick.setViews("146k");
         feedDocMaybellineBoldsLisptick.setComments(101);
         feedDocMaybellineBoldsLisptick.setProductRefList(Arrays.asList(new ProductRef("1", "Maybelline Loaded Bolds Lipstick", "lipstick")));
-        feedDocMaybellineBoldsLisptick.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocMaybellineBoldsLisptick.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocMaybellineBoldsLisptick);
 
         FeedDoc feedDocSugarSuedeLipcolor = new FeedDoc();
@@ -241,7 +241,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocSugarSuedeLipcolor.setViews("93.1k");
         feedDocSugarSuedeLipcolor.setComments(84);
         feedDocSugarSuedeLipcolor.setProductRefList(Arrays.asList(new ProductRef("1", "MSUGAR Suede Secret Matte Lipcolor", "lipcolor")));
-        feedDocSugarSuedeLipcolor.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocSugarSuedeLipcolor.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocSugarSuedeLipcolor);
 
         FeedDoc feedDocLakmeInstalliner = new FeedDoc();
@@ -255,7 +255,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocLakmeInstalliner.setViews("20.4k");
         feedDocLakmeInstalliner.setComments(138);
         feedDocLakmeInstalliner.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme INSTA LINER BLACK", "eyeliner")));
-        feedDocLakmeInstalliner.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeInstalliner.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocLakmeInstalliner);
 
         FeedDoc feedDocLakmeArgainOilSerum = new FeedDoc();
@@ -269,7 +269,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocLakmeArgainOilSerum.setViews("413k");
         feedDocLakmeArgainOilSerum.setComments(412);
         feedDocLakmeArgainOilSerum.setProductRefList(Arrays.asList(new ProductRef("1", "Llakme absolute argan oil serum foundation SPF 45", "foundation")));
-        feedDocLakmeArgainOilSerum.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeArgainOilSerum.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocLakmeArgainOilSerum);
 
         FeedDoc feedDocLakmeAbsoluteFoundation = new FeedDoc();
@@ -283,7 +283,7 @@ class ActivityFeedFeedRepositoryImplTest {
         feedDocLakmeAbsoluteFoundation.setViews("57.7k");
         feedDocLakmeAbsoluteFoundation.setComments(203);
         feedDocLakmeAbsoluteFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "LLakme absolute mousse hydrating foundation for summers", "foundation")));
-        feedDocLakmeAbsoluteFoundation.setUserRef(new UserRef("123", "shabanastyle"));
+        feedDocLakmeAbsoluteFoundation.setUserRef(new UserRef(ObjectId.get(), "shabanastyle"));
         this.mongoOperations.save(feedDocLakmeAbsoluteFoundation);
     }
 }

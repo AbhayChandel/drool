@@ -22,16 +22,17 @@ class VideoToFeedDocMapperTest {
 
     @Test
     void testToFeedDoc() {
+        ObjectId userId = new ObjectId();
         VideoDoc videoDoc = new VideoDoc("review", "This video is going to activity feed", "This is a description for test video", "aanx323faid",
                 Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")),
-                new UserRef("123", "shabanastyle"));
-        String id = ObjectId.get().toHexString();
+                new UserRef(userId, "shabanastyle"));
+        ObjectId id = new ObjectId();
         videoDoc.setId(id);
         LocalDateTime datePosted = LocalDateTime.now();
         videoDoc.setDatePosted(datePosted);
 
         FeedDoc feedDoc = videoToFeedDocMapper.toFeedDoc(videoDoc);
-        assertEquals(id, feedDoc.getPostId().toHexString());
+        assertEquals(id, feedDoc.getPostId());
         assertEquals("review", feedDoc.getPostType());
         assertEquals("video", feedDoc.getPostMedium());
         assertEquals("This video is going to activity feed", feedDoc.getTitle());
@@ -47,7 +48,7 @@ class VideoToFeedDocMapperTest {
         assertEquals("2", feedDoc.getProductRefList().get(1).getId());
         assertEquals("Maybelline Collosal Kajal", feedDoc.getProductRefList().get(1).getName());
         assertEquals("kajal", feedDoc.getProductRefList().get(1).getType());
-        assertEquals("123", feedDoc.getUserRef().getId());
+        assertEquals(userId, feedDoc.getUserRef().getId());
         assertEquals("shabanastyle", feedDoc.getUserRef().getUsername());
     }
 

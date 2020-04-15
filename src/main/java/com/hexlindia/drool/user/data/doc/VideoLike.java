@@ -1,20 +1,13 @@
 package com.hexlindia.drool.user.data.doc;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bson.types.ObjectId;
+
+@Getter
+@AllArgsConstructor
 public class VideoLike {
 
-    private String videoId;
+    private ObjectId videoId;
     private String title;
-
-    public VideoLike(String videoId, String title) {
-        this.videoId = videoId;
-        this.title = title;
-    }
-
-    public String getVideoId() {
-        return videoId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
 }

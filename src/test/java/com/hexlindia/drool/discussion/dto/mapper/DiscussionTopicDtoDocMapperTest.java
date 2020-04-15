@@ -38,11 +38,11 @@ class DiscussionTopicDtoDocMapperTest {
 
         DiscussionTopicDoc discussionTopicDoc = discussionTopicDtoDocMapper.toDoc(discussionTopicDto);
         assertEquals("This is a new topic", discussionTopicDoc.getTitle());
-        assertEquals(userId.toHexString(), discussionTopicDoc.getUserRef().getId());
+        assertEquals(userId, discussionTopicDoc.getUserRef().getId());
         assertEquals("shabana", discussionTopicDoc.getUserRef().getUsername());
         assertEquals(2, discussionTopicDoc.getDiscussionReplyDocList().size());
         assertEquals("This is going to be a great reply", discussionTopicDoc.getDiscussionReplyDocList().get(0).getReply());
-        assertEquals(userId.toHexString(), discussionTopicDoc.getDiscussionReplyDocList().get(0).getUserRef().getId());
+        assertEquals(userId, discussionTopicDoc.getDiscussionReplyDocList().get(0).getUserRef().getId());
         assertEquals("shabana", discussionTopicDoc.getDiscussionReplyDocList().get(0).getUserRef().getUsername());
 
 
@@ -53,13 +53,13 @@ class DiscussionTopicDtoDocMapperTest {
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
         discussionTopicDoc.setTitle("This topic is returned from db");
         ObjectId userId = ObjectId.get();
-        discussionTopicDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionTopicDoc.setUserRef(new UserRef(userId, "shabana"));
         LocalDateTime datePosted = LocalDateTime.now();
         discussionTopicDoc.setDatePosted(datePosted);
         discussionTopicDoc.setDateLastActive(datePosted);
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
-        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionReplyDoc.setDatePosted(LocalDateTime.now());

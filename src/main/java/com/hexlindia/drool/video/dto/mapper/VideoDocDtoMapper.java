@@ -19,13 +19,14 @@ public abstract class VideoDocDtoMapper {
     @Mapping(target = "productRefList", source = "productRefDtoList")
     @Mapping(target = "userRef", source = "userRefDto")
     @Mapping(source = "reviewId", target = "reviewId", qualifiedBy = StringToObjectIdMapping.class)
-    public abstract VideoDoc
-    toDoc(VideoDto videoDto);
+    @Mapping(source = "id", target = "id", qualifiedBy = StringToObjectIdMapping.class)
+    public abstract VideoDoc toDoc(VideoDto videoDto);
 
     @Mapping(target = "productRefDtoList", source = "productRefList")
     @Mapping(target = "userRefDto", source = "userRef")
     @Mapping(target = "videoCommentDtoList", source = "commentList")
     @Mapping(source = "reviewId", target = "reviewId", qualifiedBy = ObjectIdToStringMapping.class)
+    @Mapping(source = "id", target = "id", qualifiedBy = ObjectIdToStringMapping.class)
     public abstract VideoDto toDto(VideoDoc videoDoc);
 
     @AfterMapping

@@ -29,22 +29,23 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @SpringBootTest
-class UserActivityFeedRepositoryImplTest {
+class UserActivityRepositoryImplTest {
 
     private final UserActivityRepository userActivityRepository;
     private final MongoOperations mongoOperations;
 
+
     @Autowired
-    public UserActivityFeedRepositoryImplTest(UserActivityRepository userActivityRepository, MongoTemplate mongoOperations) {
+    public UserActivityRepositoryImplTest(UserActivityRepository userActivityRepository, MongoTemplate mongoOperations) {
         this.userActivityRepository = userActivityRepository;
         this.mongoOperations = mongoOperations;
     }
 
     @Test
     void addVideo() {
-        UserRef userRef = new UserRef("123", null);
+        UserRef userRef = new UserRef(userId, null);
         VideoDoc videoDoc = new VideoDoc("guide", "This is a dummy video gudie", null, null, null, userRef);
-        videoDoc.setId("v123");
+        videoDoc.setId(userId);
         videoDoc.setDatePosted(LocalDateTime.now());
         UpdateResult updateResult = userActivityRepository.addVideo(videoDoc);
         assertEquals(1, updateResult.getModifiedCount());
@@ -53,9 +54,9 @@ class UserActivityFeedRepositoryImplTest {
     @Test
     void addVideoLike() {
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
-        videoLikeUnlikeDto.setVideoId("pqr");
+        videoLikeUnlikeDto.setVideoId(videoId.toHexString());
         videoLikeUnlikeDto.setVideoTitle("Testing adding video like");
-        videoLikeUnlikeDto.setUserId("987");
+        videoLikeUnlikeDto.setUserId(userId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.addVideoLike(videoLikeUnlikeDto);
         assertEquals(0, updateResult.getMatchedCount());
         assertNotNull(updateResult.getUpsertedId());
@@ -64,9 +65,9 @@ class UserActivityFeedRepositoryImplTest {
     @Test
     void removeVideoLike() {
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
-        videoLikeUnlikeDto.setVideoId("abc");
+        videoLikeUnlikeDto.setVideoId(videoId.toHexString());
         videoLikeUnlikeDto.setVideoTitle("Testing removing video like");
-        videoLikeUnlikeDto.setUserId("123");
+        videoLikeUnlikeDto.setUserId(userId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.deleteVideoLike(videoLikeUnlikeDto);
         assertEquals(1, updateResult.getMatchedCount());
         assertEquals(1, updateResult.getModifiedCount());
@@ -74,13 +75,13 @@ class UserActivityFeedRepositoryImplTest {
 
     @Test
     void addVideoComment() {
-        UpdateResult updateResult = this.userActivityRepository.addVideoComment("123", new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef("v123", "This is a dummy video for testing comment insetion in UserActivityDoc", "guide", "video", null), LocalDateTime.now()));
+        UpdateResult updateResult = this.userActivityRepository.addVideoComment(userId, new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef(ObjectId.get(), "This is a dummy video for testing comment insetion in UserActivityDoc", "guide", "video", null), LocalDateTime.now()));
         assertTrue(updateResult.getModifiedCount() > 0);
     }
 
     @Test
     void removeVideoComment() {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto("123", ""), null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto(userId.toHexString(), ""), null);
         videoCommentDto.setId("c123");
         UpdateResult updateResult = this.userActivityRepository.deleteVideoComment(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
@@ -88,7 +89,7 @@ class UserActivityFeedRepositoryImplTest {
 
     @Test
     void addCommentLike() {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test insert", "review", "video", null), new UserRefDto("456", "username1"), "This is a test comment");
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(ObjectId.get().toHexString(), "This is a test insert", "review", "video", null), new UserRefDto("456", "username1"), "This is a test comment");
         UpdateResult updateResult = this.userActivityRepository.addCommentLike(videoCommentDto);
         assertEquals(0, updateResult.getMatchedCount());
         assertNotNull(updateResult.getUpsertedId());
@@ -96,7 +97,7 @@ class UserActivityFeedRepositoryImplTest {
 
     @Test
     void deleteCommentLike() {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", null, null, null, null), new UserRefDto("123", null), null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", null, null, null, null), new UserRefDto(userId.toHexString(), null), null);
         videoCommentDto.setId("c123");
         UpdateResult updateResult = this.userActivityRepository.deleteCommentLike(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
@@ -105,18 +106,21 @@ class UserActivityFeedRepositoryImplTest {
     @Test
     void addTextReview() {
         ReviewDoc reviewDoc = new ReviewDoc();
-        reviewDoc.setUserRef(new UserRef("123", "shabana"));
+        reviewDoc.setUserRef(new UserRef(userId, "shabana"));
         reviewDoc.setId(ObjectId.get());
         reviewDoc.setReviewSummary("This is a great dummy review summary");
         reviewDoc.setDatePosted(LocalDateTime.now());
         assertTrue(userActivityRepository.addTextReview(reviewDoc).getModifiedCount() > 0);
     }
 
+    private ObjectId userId = new ObjectId();
+    private ObjectId videoId = new ObjectId();
+
     @BeforeEach
     public void setUp() {
-        mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.videos", new VideoLike("abc", "This video is part of test setup")), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef("p123", "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("userId").is("123")), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef("p123", "a test post", null, null, null), null)), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("likes.videos", new VideoLike(videoId, "This video is part of test setup")), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
 
 }

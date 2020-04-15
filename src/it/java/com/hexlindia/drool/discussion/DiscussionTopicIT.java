@@ -77,7 +77,7 @@ public class DiscussionTopicIT {
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
         discussionTopicDoc.setTitle("This a dummy discussion topic");
         ObjectId userId = ObjectId.get();
-        discussionTopicDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionTopicDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionTopicDoc.setActive(true);
         discussionTopicDoc.setViews(1190);
         discussionTopicDoc.setLikes(500);
@@ -86,7 +86,7 @@ public class DiscussionTopicIT {
         discussionTopicDoc.setDateLastActive(datePosted);
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
-        discussionReplyDoc.setUserRef(new UserRef(userId.toHexString(), "shabana"));
+        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
         discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
@@ -106,7 +106,8 @@ public class DiscussionTopicIT {
         JSONObject discussion = new JSONObject();
         discussion.put("title", "A new topic needs to be created");
         JSONObject user = new JSONObject();
-        user.put("id", "55");
+        ObjectId userId = new ObjectId();
+        user.put("id", userId.toHexString());
         user.put("username", "shabana");
         discussion.put("user", user);
 
@@ -117,7 +118,7 @@ public class DiscussionTopicIT {
         assertTrue(discussionTopicDtoRetrieved.isActive());
         assertNotNull(discussionTopicDtoRetrieved.getId());
         assertEquals("A new topic needs to be created", discussionTopicDtoRetrieved.getTitle());
-        assertEquals("55", discussionTopicDtoRetrieved.getUserRefDto().getId());
+        assertEquals(userId.toHexString(), discussionTopicDtoRetrieved.getUserRefDto().getId());
         assertEquals("0", discussionTopicDtoRetrieved.getLikes());
         assertEquals("0", discussionTopicDtoRetrieved.getViews());
         assertEquals("0", discussionTopicDtoRetrieved.getReplies());

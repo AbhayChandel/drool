@@ -2,17 +2,21 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
+import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
+import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -22,16 +26,19 @@ class DiscussionTopicImplTest {
     private DiscussionTopicImpl discussionTopicImplSpy;
 
     @Mock
-    private DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
+    private DiscussionTopicDtoDocMapper discussionTopicDtoDocMapperMocked;
 
     @Mock
-    DiscussionTopicRepository discussionTopicRepository;
+    private DiscussionTopicRepository discussionTopicRepository;
+
+    @Autowired
+    private DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
 
     //START FIXING TEST FOR DISCUSSION TOPIC AND REPLY : REPOSITORY AND BUSINESS
 
     @BeforeEach
     void setUp() {
-        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapper));
+        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked));
     }
 
     @Test
@@ -41,7 +48,7 @@ class DiscussionTopicImplTest {
         discussionTopicDocMocked.setLikes(0);
         discussionTopicDocMocked.setViews(0);
         discussionTopicDocMocked.setActive(true);
-        when(this.discussionTopicDtoDocMapper.toDoc(any())).thenReturn(discussionTopicDocMocked);
+        when(this.discussionTopicDtoDocMapperMocked.toDoc(any())).thenReturn(discussionTopicDocMocked);
         when(this.discussionTopicRepository.save(any())).thenReturn(discussionTopicDocMocked);
         this.discussionTopicImplSpy.post(null);
         ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
@@ -55,11 +62,36 @@ class DiscussionTopicImplTest {
     @Test
     void findById_testPassingEntityToRepository() {
         ObjectId id = new ObjectId();
-        when(this.discussionTopicRepository.findById(id)).thenReturn(new DiscussionTopicDoc());
+        when(this.discussionTopicRepository.findById(id)).thenReturn(Optional.of(new DiscussionTopicDoc()));
         discussionTopicImplSpy.findById(id.toHexString());
         ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(discussionTopicRepository, times(1)).findById(idArgumentCaptor.capture());
         assertEquals(id, idArgumentCaptor.getValue());
+    }
+
+    @Test
+    void findById_docFoundResponse() {
+        DiscussionTopicDoc discussionTopicDocMocked = new DiscussionTopicDoc();
+        discussionTopicDocMocked.setTitle("THis is a test discusion title");
+        discussionTopicDocMocked.setLikes(10);
+        discussionTopicDocMocked.setViews(20);
+        discussionTopicDocMocked.setActive(true);
+        Optional<DiscussionTopicDoc> discussionTopicDocOptional = Optional.of(discussionTopicDocMocked);
+        when(this.discussionTopicRepository.findById(any())).thenReturn(discussionTopicDocOptional);
+        when(this.discussionTopicDtoDocMapperMocked.toDto(discussionTopicDocMocked)).thenReturn(discussionTopicDtoDocMapper.toDto(discussionTopicDocMocked));
+        DiscussionTopicDto discussionTopicDtoReturned = discussionTopicImplSpy.findById(ObjectId.get().toHexString());
+
+        assertEquals("THis is a test discusion title", discussionTopicDtoReturned.getTitle());
+        assertEquals("10", discussionTopicDtoReturned.getLikes());
+        assertEquals("20", discussionTopicDtoReturned.getViews());
+    }
+
+    @Test
+    void findById_docNotFoundException() {
+        when(this.discussionTopicRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(DiscussionTopicNotFoundException.class, () -> {
+            discussionTopicImplSpy.findById(ObjectId.get().toHexString());
+        });
     }
 
     @Test

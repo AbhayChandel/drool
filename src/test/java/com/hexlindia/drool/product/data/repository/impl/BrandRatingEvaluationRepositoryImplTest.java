@@ -31,7 +31,7 @@ class BrandRatingEvaluationRepositoryImplTest {
         brandCriterionRatingDtoTrustable.setRating(2);
         brandRatingsDetailsDoc.setBrandRatingMetricDocList(Arrays.asList(brandCriterionRatingDtoTrendy, brandCriterionRatingDtoTrustable));
         brandRatingsDetailsDoc.setBrandRef(new BrandRef(ObjectId.get(), "Lakme"));
-        brandRatingsDetailsDoc.setUserRef(new UserRef("u123", "Username123"));
+        brandRatingsDetailsDoc.setUserRef(new UserRef(ObjectId.get(), "Username123"));
         assertNotNull(brandRatingsDetailsRepository.saveRatings(brandRatingsDetailsDoc));
 
     }

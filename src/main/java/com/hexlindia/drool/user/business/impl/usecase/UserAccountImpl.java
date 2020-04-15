@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component
-@Transactional
 @Slf4j
 @RequiredArgsConstructor
+
 public class UserAccountImpl implements UserAccount {
 
     private final UserAccountRepository userAccountRepository;
@@ -38,6 +38,7 @@ public class UserAccountImpl implements UserAccount {
 
 
     @Override
+    @Transactional
     public JwtResponse register(UserRegistrationDto userRegistrationDto) {
         UserAccountDoc userAccountDoc = userAccountMapper.toDoc(userRegistrationDto.getUserAccountDto());
         setEncodedPassword(userAccountDoc);

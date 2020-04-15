@@ -11,6 +11,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,25 +42,25 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
 
     @Override
     public UpdateResult addVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return mongoOperations.upsert(query(where(USER_ID).is(videoLikeUnlikeDto.getUserId())), new Update().addToSet("likes.videos", new VideoLike(videoLikeUnlikeDto.getVideoId(), videoLikeUnlikeDto.getVideoTitle())), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(USER_ID).is(videoLikeUnlikeDto.getUserId())), new Update().addToSet("likes.videos", new VideoLike(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle())), UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(videoLikeUnlikeDto.getUserId()));
-        Query queryVideo = Query.query(Criteria.where("videoId").is(videoLikeUnlikeDto.getVideoId()));
+        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoLikeUnlikeDto.getUserId())));
+        Query queryVideo = Query.query(Criteria.where("videoId").is(new ObjectId(videoLikeUnlikeDto.getVideoId())));
         Update update = new Update().pull("likes.videos", queryVideo);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
     }
 
     @Override
-    public UpdateResult addVideoComment(String userId, CommentRef commentRef) {
+    public UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef) {
         return mongoOperations.upsert(query(where(USER_ID).is(userId)), new Update().addToSet("comments", commentRef), UserActivityDoc.class);
     }
 
     @Override
     public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(videoCommentDto.getUserRefDto().getId()));
+        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("comments", queryComment);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
@@ -74,7 +75,7 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
 
     @Override
     public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(USER_ID).is(videoCommentDto.getUserRefDto().getId()));
+        Query queryUser = Query.query(Criteria.where(USER_ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
         Update update = new Update().pull("likes.comments", queryComment);
         return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
@@ -83,6 +84,6 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     @Override
     public UpdateResult addTextReview(ReviewDoc reviewDoc) {
         String arrayPath = "post.textReviews";
-        return mongoOperations.upsert(query(where(USER_ID).is(reviewDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(reviewDoc.getId().toHexString(), reviewDoc.getReviewSummary(), null, null, reviewDoc.getDatePosted())), UserActivityDoc.class);
+        return mongoOperations.upsert(query(where(USER_ID).is(reviewDoc.getUserRef().getId())), new Update().addToSet(arrayPath, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), null, null, reviewDoc.getDatePosted())), UserActivityDoc.class);
     }
 }

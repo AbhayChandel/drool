@@ -6,12 +6,14 @@ import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
+import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -35,7 +37,11 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     public DiscussionTopicDto findById(String id) {
-        return discussionTopicDtoDocMapper.toDto(discussionTopicRepository.findById(new ObjectId(id)));
+        Optional<DiscussionTopicDoc> discussionTopicDocOptional = discussionTopicRepository.findById(new ObjectId(id));
+        if (discussionTopicDocOptional.isPresent()) {
+            return discussionTopicDtoDocMapper.toDto(discussionTopicDocOptional.get());
+        }
+        throw new DiscussionTopicNotFoundException("Discussion topic with Id " + id + " not found");
     }
 
     @Override

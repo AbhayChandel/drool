@@ -57,7 +57,7 @@ public class VideoImpl implements Video {
 
     @Override
     public VideoDto findById(String id) {
-        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(id);
+        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(new ObjectId(id));
         if (videoDocOptional.isPresent()) {
             return videoDocDtoMapper.toDto(videoDocOptional.get());
         }
@@ -66,7 +66,7 @@ public class VideoImpl implements Video {
 
     @Override
     public VideoThumbnailDataDto getLatestThreeVideoThumbnails(String userId) {
-        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoRepository.getLatestThreeVideosByUser(userId);
+        VideoThumbnailDataAggregation videoThumbnailDataAggregation = videoRepository.getLatestThreeVideosByUser(new ObjectId(userId));
         return videoThumbnailDataMapper.toDto(videoThumbnailDataAggregation);
 
     }
@@ -99,7 +99,7 @@ public class VideoImpl implements Video {
         videoCommentDto = videoCommentMapper.toDto(videoRepository.insertComment(postRef, videoComment));
         if (videoCommentDto != null) {
             userActivity.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
-            activityFeed.incrementDecrementField(new ObjectId(postRef.getId()), FeedDocFields.comments, 1);
+            activityFeed.incrementDecrementField(postRef.getId(), FeedDocFields.comments, 1);
             return videoCommentDto;
         }
         log.error("Video comment not inserted");

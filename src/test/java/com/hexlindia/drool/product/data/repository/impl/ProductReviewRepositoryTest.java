@@ -56,7 +56,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setRecommendation("1");
         reviewDoc.setDetailedReview("This is a detailed review");
         reviewDoc.setReviewSummary("This is a review summary");
-        reviewDoc.setUserRef(new UserRef("u123", "username123"));
+        reviewDoc.setUserRef(new UserRef(ObjectId.get(), "username123"));
 
         AspectVotingDto aspectVotingDtoStyle = new AspectVotingDto();
         aspectVotingDtoStyle.setAspectId(ObjectId.get().toHexString());
@@ -74,7 +74,7 @@ class ProductReviewRepositoryTest {
         reviewDoc.setReviewType(ReviewType.video);
         reviewDoc.setRecommendation("1");
         reviewDoc.setVideoId(ObjectId.get());
-        reviewDoc.setUserRef(new UserRef("u123", "username123"));
+        reviewDoc.setUserRef(new UserRef(ObjectId.get(), "username123"));
         assertNotNull(productReviewRepository.save(reviewDoc, insertedProducts.get("active"), new ArrayList<>()));
     }
 

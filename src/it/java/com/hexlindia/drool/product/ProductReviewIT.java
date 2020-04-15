@@ -132,7 +132,7 @@ public class ProductReviewIT {
         reviewDto.put("videoReview", new JSONObject());
 
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", ObjectId.get().toHexString());
         UserRefDto.put("username", "user123");
 
         reviewDto.put("user", UserRefDto);
@@ -214,7 +214,7 @@ public class ProductReviewIT {
         reviewDto.put("videoReview", videoReview);
 
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", ObjectId.get().toHexString());
         UserRefDto.put("username", "user123");
 
         reviewDto.put("user", UserRefDto);

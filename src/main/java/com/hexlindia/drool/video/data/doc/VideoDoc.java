@@ -19,7 +19,7 @@ import java.util.List;
 public class VideoDoc {
 
     @Id
-    private String id;
+    private ObjectId id;
     private String type;
     private ObjectId reviewId;
     private boolean active;

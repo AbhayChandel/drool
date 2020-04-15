@@ -5,6 +5,7 @@ import com.hexlindia.drool.video.dto.VideoThumbnail;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDto;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,8 @@ class VideoThumbnailDataMapperTest {
 
     @Test
     void toDto() {
-        VideoThumbnailDataAggregation videoThumbnailDataAggregation = new VideoThumbnailDataAggregation(50, Arrays.asList(new VideoThumbnail("abc123", "s123", "THis is a mapper test video title", 5000, 345, new UserRef("u123", "username1"))));
+        ObjectId userId = new ObjectId();
+        VideoThumbnailDataAggregation videoThumbnailDataAggregation = new VideoThumbnailDataAggregation(50, Arrays.asList(new VideoThumbnail("abc123", "s123", "THis is a mapper test video title", 5000, 345, new UserRef(userId, "username1"))));
         VideoThumbnailDataDto videoThumbnailDataDto = videoThumbnailDataMapper.toDto(videoThumbnailDataAggregation);
         assertEquals(50, videoThumbnailDataDto.getTotalVideoCount());
         VideoThumbnailDto videoThumbnailDto = videoThumbnailDataDto.getVideoThumbnailList().get(0);
@@ -30,6 +32,6 @@ class VideoThumbnailDataMapperTest {
         assertEquals("THis is a mapper test video title", videoThumbnailDto.getTitle());
         assertEquals("5k", videoThumbnailDto.getViews());
         assertEquals("345", videoThumbnailDto.getLikes());
-        assertEquals("u123", videoThumbnailDto.getUserRef().getId());
+        assertEquals(userId, videoThumbnailDto.getUserRef().getId());
     }
 }

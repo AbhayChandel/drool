@@ -10,6 +10,7 @@ import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,6 +70,7 @@ public class VideoIT {
 
         headers.add("Authorization", "Bearer " + authToken);
 
+        ObjectId userId = new ObjectId();
         JSONObject productRefDto1 = new JSONObject();
         productRefDto1.put("id", "p123");
         productRefDto1.put("name", "Tom Ford Vetiver");
@@ -81,7 +83,7 @@ public class VideoIT {
         productRefDtoList.put(productRefDto1);
         productRefDtoList.put(productRefDto2);
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", userId.toHexString());
         UserRefDto.put("username", "user123");
         JSONObject videoDoc = new JSONObject();
         videoDoc.put("type", "review");
@@ -97,14 +99,14 @@ public class VideoIT {
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setUserRefDto(new UserRefDto(userId.toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
         ResponseEntity<VideoCommentDto> responseEntityVideoCommentDto = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
         videoCommentInsertedId = responseEntityVideoCommentDto.getBody().getId();
 
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setUserRefDto(new UserRefDto(userId.toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         videoCommentDto.setLikes("9");
         videoCommentDto.setId(videoCommentInsertedId);
@@ -128,8 +130,9 @@ public class VideoIT {
         JSONArray productRefDtoList = new JSONArray();
         productRefDtoList.put(productRefDto1);
         productRefDtoList.put(productRefDto2);
+        ObjectId userId = new ObjectId();
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", userId.toHexString());
         UserRefDto.put("username", "user123");
         JSONObject videoDoc = new JSONObject();
         videoDoc.put("type", "review");
@@ -153,7 +156,7 @@ public class VideoIT {
         assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
         assertEquals("Tom Ford Vetiver", videoDto.getProductRefDtoList().get(0).getName());
         assertEquals("Fragrance", videoDto.getProductRefDtoList().get(0).getType());
-        assertEquals("u123", videoDto.getUserRefDto().getId());
+        assertEquals(userId.toHexString(), videoDto.getUserRefDto().getId());
         assertEquals("user123", videoDto.getUserRefDto().getUsername());
     }
 
@@ -191,7 +194,7 @@ public class VideoIT {
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
         ResponseEntity<VideoCommentDto> responseEntity = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
@@ -210,7 +213,7 @@ public class VideoIT {
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
         ResponseEntity<VideoCommentDto> responseEntity = restTemplate.exchange(getInsertCommentUri(), HttpMethod.PUT, request, VideoCommentDto.class);
@@ -218,7 +221,7 @@ public class VideoIT {
         videoCommentDto = new VideoCommentDto();
         String commentId = responseEntity.getBody().getId();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, null, null, null, null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), null));
         videoCommentDto.setId(commentId);
 
         request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
@@ -235,7 +238,7 @@ public class VideoIT {
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, "This is a test post", "guide", "video", null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
+        videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         videoCommentDto.setLikes("9");
         videoCommentDto.setId(videoCommentInsertedId);
@@ -254,7 +257,7 @@ public class VideoIT {
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto(videoInsertedId, null, null, null, null));
-        videoCommentDto.setUserRefDto(new UserRefDto("u123", null));
+        videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), null));
         videoCommentDto.setId(videoCommentInsertedId);
         videoCommentDto.setLikes("10");
         HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
@@ -279,8 +282,9 @@ public class VideoIT {
         JSONArray productRefDtoList = new JSONArray();
         productRefDtoList.put(productRefDto1);
         productRefDtoList.put(productRefDto2);
+        ObjectId userId = new ObjectId();
         JSONObject UserRefDto = new JSONObject();
-        UserRefDto.put("id", "u123");
+        UserRefDto.put("id", userId.toHexString());
         UserRefDto.put("username", "user123");
         JSONObject videoDoc = new JSONObject();
         videoDoc.put("type", "review");

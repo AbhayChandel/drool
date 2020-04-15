@@ -37,6 +37,9 @@ public class MetaFieldValueFormatter {
     }
 
     public static String getDateTimeInDayMonCommaYear(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return "";
+        }
         String dateFormat = "d MMM, yyyy h:mm a";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
         return dateTimeFormatter.format(dateTime);
@@ -45,12 +48,18 @@ public class MetaFieldValueFormatter {
     }
 
     public static String getDateInDayMonCommaYear(LocalDateTime date) {
+        if (date == null) {
+            return "";
+        }
         String dateFormat = "d MMM, yyyy";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         return dateFormatter.format(date);
     }
 
     public static String getDateInDayMonCommaYear(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
         String dateFormat = "d MMM, yyyy";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         return dateFormatter.format(date);

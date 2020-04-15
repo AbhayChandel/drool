@@ -3,11 +3,13 @@ package com.hexlindia.drool.discussion.data.repository.api;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import org.bson.types.ObjectId;
 
+import java.util.Optional;
+
 public interface DiscussionTopicRepository {
 
     public DiscussionTopicDoc save(DiscussionTopicDoc discussionTopicDoc);
 
-    public DiscussionTopicDoc findById(ObjectId id);
+    public Optional<DiscussionTopicDoc> findById(ObjectId id);
 
     public boolean updateTopicTitle(String title, ObjectId discussionId);
 

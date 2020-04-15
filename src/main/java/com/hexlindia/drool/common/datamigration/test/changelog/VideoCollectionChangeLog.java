@@ -6,6 +6,7 @@ import com.hexlindia.drool.common.data.doc.ProductRef;
 import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.LocalDateTime;
@@ -32,19 +33,19 @@ public class VideoCollectionChangeLog {
                 "Music promoted by Majestic Casual\n" +
                 "Video Link: https://youtu.be/vf_S0-V6wTE", "AU3h3qPK2tU",
                 Arrays.asList(new ProductRef("p123", "Blue De Chanel Eau De Parfum", "fragrance")),
-                new UserRef("1", "shabana"));
+                new UserRef(ObjectId.get(), "shabana"));
         videoDoc1.setLikes(4000);
         videoDoc1.setViews(124308);
         videoDoc1.setActive(true);
         videoDoc1.setDatePosted(LocalDateTime.now());
 
-        VideoComment videoComment11 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "ALSO pls stop this behaviour, you can't look this good ok, teach me makeup");
+        VideoComment videoComment11 = new VideoComment(new UserRef(ObjectId.get(), "shabanastyle"), LocalDateTime.now(), "ALSO pls stop this behaviour, you can't look this good ok, teach me makeup");
         videoComment11.setLikes(368);
-        VideoComment videoComment12 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "I  liked your review... And also agree with the price point it's really expensive,  but just wanna say don't compare Kay beauty products packaging to Jeffree star and others... Makeup Brand should reflect the personality of a person.. Katrina Kaif is a person who likes her makeup to be simple and minimalistic so she wants that her minimalistic personality should reflect in her brand ..");
+        VideoComment videoComment12 = new VideoComment(new UserRef(ObjectId.get(), "shabanastyle"), LocalDateTime.now(), "I  liked your review... And also agree with the price point it's really expensive,  but just wanna say don't compare Kay beauty products packaging to Jeffree star and others... Makeup Brand should reflect the personality of a person.. Katrina Kaif is a person who likes her makeup to be simple and minimalistic so she wants that her minimalistic personality should reflect in her brand ..");
         videoComment12.setLikes(3533);
-        VideoComment videoComment13 = new VideoComment(new UserRef("2", "priya21"), LocalDateTime.now(), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
+        VideoComment videoComment13 = new VideoComment(new UserRef(ObjectId.get(), "priya21"), LocalDateTime.now(), "For a celebrity makeup line the prices are so affordable.. otherwise you can see kylie, kim and other big youtubers who launch their makeup line and their prices are sky-high");
         videoComment13.setLikes(133);
-        VideoComment videoComment14 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
+        VideoComment videoComment14 = new VideoComment(new UserRef(ObjectId.get(), "sonam31"), LocalDateTime.now(), "Instead of collaborating with Nyka people should collaborate with sugar!! Sugar cosmetics are so much better and underrated for some reason.");
         videoComment14.setLikes(76);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment11, videoComment12, videoComment13, videoComment14);
         videoDoc1.setCommentList(videoCommentList1);
@@ -81,21 +82,21 @@ public class VideoCollectionChangeLog {
                 "\n" +
                 "All the contents (from thumbnail to video) have been created by me,Deepanwita Dutta©. Don't use anything without my permission.The information provided on this channel and its videos is for general purposes only and shouldn't be conisidered as proffesional advice. We are trying to provide a perfect, valid, specific, detail information.Make Sure to Do a patch test each time before trying a new product or any kind Of DIY. \uD83D\uDE18Thanks for watching \uD83D\uDE18", "QW46ldTDiBY",
                 Arrays.asList(new ProductRef("p123", "L O'real Clossal Eyeliner", "eyeliner"), new ProductRef("p456", "Chambor Black Eyeliner", "eyeliner")),
-                new UserRef("456", "priyanaka"));
+                new UserRef(ObjectId.get(), "priyanaka"));
         videoDoc2.setLikes(29000);
         videoDoc2.setViews(3718868);
         videoDoc2.setActive(true);
         videoDoc2.setDatePosted(LocalDateTime.now());
 
-        VideoComment videoComment21 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "It looks fine on camera but we all know how in reality a lighter foundation makes us look. It definitely makes us grey or look whitish");
+        VideoComment videoComment21 = new VideoComment(new UserRef(ObjectId.get(), "shabanastyle"), LocalDateTime.now(), "It looks fine on camera but we all know how in reality a lighter foundation makes us look. It definitely makes us grey or look whitish");
         videoComment21.setLikes(10);
-        VideoComment videoComment22 = new VideoComment(new UserRef("1", "shabanastyle"), LocalDateTime.now(), "Mam daily makeup karte h to kya or kaise skin ko clean n hydrate rakhe, acne prone skin");
+        VideoComment videoComment22 = new VideoComment(new UserRef(ObjectId.get(), "shabanastyle"), LocalDateTime.now(), "Mam daily makeup karte h to kya or kaise skin ko clean n hydrate rakhe, acne prone skin");
         videoComment22.setLikes(10);
-        VideoComment videoComment23 = new VideoComment(new UserRef("1", "priya21"), LocalDateTime.now(), "Always make up  free skin is best.  Make up spoils the real beauty ...Be natural..Don't use these kind of make up products.. Full of chemicals. Good for nothing.");
+        VideoComment videoComment23 = new VideoComment(new UserRef(ObjectId.get(), "priya21"), LocalDateTime.now(), "Always make up  free skin is best.  Make up spoils the real beauty ...Be natural..Don't use these kind of make up products.. Full of chemicals. Good for nothing.");
         videoComment23.setLikes(830);
-        VideoComment videoComment24 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "The shade is too light");
+        VideoComment videoComment24 = new VideoComment(new UserRef(ObjectId.get(), "sonam31"), LocalDateTime.now(), "The shade is too light");
         videoComment24.setLikes(5600);
-        VideoComment videoComment25 = new VideoComment(new UserRef("3", "sonam31"), LocalDateTime.now(), "It'll be good to see in phone camera, but in reality it'll look like a joker.... Experienced");
+        VideoComment videoComment25 = new VideoComment(new UserRef(ObjectId.get(), "sonam31"), LocalDateTime.now(), "It'll be good to see in phone camera, but in reality it'll look like a joker.... Experienced");
         videoComment25.setLikes(1240);
         List<VideoComment> videoCommentList2 = Arrays.asList(videoComment21, videoComment22, videoComment23, videoComment24, videoComment25);
         videoDoc2.setCommentList(videoCommentList2);
