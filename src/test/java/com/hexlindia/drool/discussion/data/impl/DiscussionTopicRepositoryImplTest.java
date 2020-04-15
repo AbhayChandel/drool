@@ -1,10 +1,10 @@
 package com.hexlindia.drool.discussion.data.impl;
 
 import com.hexlindia.drool.common.config.MongoDBConfig;
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,11 +2,11 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -54,12 +54,23 @@ class UserActivityRepositoryImplTest {
     @Test
     void addVideoLike() {
         VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
-        videoLikeUnlikeDto.setVideoId(videoId.toHexString());
+        videoLikeUnlikeDto.setVideoId(ObjectId.get().toHexString());
         videoLikeUnlikeDto.setVideoTitle("Testing adding video like");
         videoLikeUnlikeDto.setUserId(userId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.addVideoLike(videoLikeUnlikeDto);
-        assertEquals(0, updateResult.getMatchedCount());
-        assertNotNull(updateResult.getUpsertedId());
+        assertEquals(1, updateResult.getMatchedCount());
+        assertEquals(1, updateResult.getModifiedCount());
+    }
+
+    @Test
+    void addVideoLikeDuplicate() {
+        VideoLikeUnlikeDto videoLikeUnlikeDto = new VideoLikeUnlikeDto();
+        videoLikeUnlikeDto.setVideoId(videoId.toHexString());
+        videoLikeUnlikeDto.setVideoTitle("This video is part of test setup");
+        videoLikeUnlikeDto.setUserId(userId.toHexString());
+        UpdateResult updateResult = this.userActivityRepository.addVideoLike(videoLikeUnlikeDto);
+        assertEquals(1, updateResult.getMatchedCount());
+        assertEquals(0, updateResult.getModifiedCount());
     }
 
     @Test
@@ -118,9 +129,9 @@ class UserActivityRepositoryImplTest {
 
     @BeforeEach
     public void setUp() {
-        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("likes.videos", new VideoLike(videoId, "This video is part of test setup")), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("userId").is(userId)), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.videos", new VideoLike(videoId, "This video is part of test setup")), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
 
 }

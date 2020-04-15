@@ -1,6 +1,6 @@
 package com.hexlindia.drool.discussion.data.doc;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.hexlindia.drool.user.data.doc;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "user_activities")
 public class UserActivityDoc {
 
-    @Id
-    private String id;
-    private String userId;
+    private ObjectId id;
     private UserLike userLike;
 
 }

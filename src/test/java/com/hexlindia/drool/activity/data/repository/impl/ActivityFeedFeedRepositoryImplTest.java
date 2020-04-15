@@ -3,8 +3,8 @@ package com.hexlindia.drool.activity.data.repository.impl;
 import com.hexlindia.drool.activity.FeedDocFields;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.product.data.doc.ProductRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +28,6 @@ class ActivityFeedFeedRepositoryImplTest {
     MongoOperations mongoOperations;
 
     ObjectId insertedPostId = ObjectId.get();
-
-    List<FeedDoc> getFeedExpectedList = new ArrayList<>();
 
     @Test
     void testSave() {

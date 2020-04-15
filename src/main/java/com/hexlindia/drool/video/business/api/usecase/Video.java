@@ -8,13 +8,13 @@ import org.bson.types.ObjectId;
 
 public interface Video {
 
-    public VideoDto save(VideoDto videoDto);
+    VideoDto save(VideoDto videoDto);
 
-    public VideoDto findById(String id);
+    VideoDto findById(String id);
 
-    public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
     VideoCommentDto insertComment(VideoCommentDto videoCommentDto);
 

@@ -1,10 +1,10 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.product.data.doc.BrandRatingMetricDoc;
 import com.hexlindia.drool.product.data.doc.BrandRatingsDetailsDoc;
 import com.hexlindia.drool.product.data.doc.BrandRef;
 import com.hexlindia.drool.product.data.repository.api.BrandRatingsDetailsRepository;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

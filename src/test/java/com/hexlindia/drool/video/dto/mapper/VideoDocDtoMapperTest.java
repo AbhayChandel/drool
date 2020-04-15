@@ -1,9 +1,9 @@
 package com.hexlindia.drool.video.dto.mapper;
 
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.product.dto.ProductRefDto;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoDto;

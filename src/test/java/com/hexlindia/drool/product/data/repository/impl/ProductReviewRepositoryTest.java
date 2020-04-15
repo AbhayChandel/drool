@@ -1,11 +1,11 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
 import com.hexlindia.drool.common.config.MongoDBConfig;
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.*;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
 import com.hexlindia.drool.product.dto.AspectVotingDto;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

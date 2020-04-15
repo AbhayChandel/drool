@@ -1,7 +1,7 @@
 package com.hexlindia.drool.common.dto.mapper;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

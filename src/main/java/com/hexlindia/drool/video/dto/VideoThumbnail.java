@@ -1,6 +1,6 @@
 package com.hexlindia.drool.video.dto;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.Getter;
 import lombok.Setter;
 
