@@ -1,4 +1,4 @@
-package com.hexlindia.drool.common.data.doc;
+package com.hexlindia.drool.product.data.doc;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

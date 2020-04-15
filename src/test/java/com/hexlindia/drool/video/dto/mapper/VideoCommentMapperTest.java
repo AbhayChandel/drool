@@ -1,8 +1,8 @@
 package com.hexlindia.drool.video.dto.mapper;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import org.bson.types.ObjectId;

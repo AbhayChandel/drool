@@ -1,11 +1,11 @@
 package com.hexlindia.drool.discussion.dto.mapper;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

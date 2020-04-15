@@ -1,10 +1,10 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionReplyDtoDocMapper;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

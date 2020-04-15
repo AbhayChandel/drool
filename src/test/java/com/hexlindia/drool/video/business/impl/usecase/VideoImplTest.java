@@ -3,12 +3,12 @@ package com.hexlindia.drool.video.business.impl.usecase;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
+import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoRepository;
@@ -75,7 +75,7 @@ class VideoImplTest {
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef(userId, "shabana"));
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoRepositoryMock.save((VideoDoc) any())).thenReturn(videoDocMock);
+        when(this.videoRepositoryMock.save(any())).thenReturn(videoDocMock);
         this.videoImplSpy.save(null);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
         verify(this.videoRepositoryMock, times(1)).save(videoDocArgumentCaptor.capture());
@@ -101,7 +101,7 @@ class VideoImplTest {
         videoDocMock.setId(videoId);
         videoDocMock.setDatePosted(LocalDateTime.now());
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoRepositoryMock.save((VideoDoc) any())).thenReturn(videoDocMock);
+        when(this.videoRepositoryMock.save(any())).thenReturn(videoDocMock);
         this.videoImplSpy.save(null);
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
         verify(this.userActivityMock, times(1)).addVideo(videoDocArgumentCaptor.capture());

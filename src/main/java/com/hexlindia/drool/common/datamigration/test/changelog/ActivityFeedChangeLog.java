@@ -3,8 +3,8 @@ package com.hexlindia.drool.common.datamigration.test.changelog;
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.product.data.doc.ProductRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

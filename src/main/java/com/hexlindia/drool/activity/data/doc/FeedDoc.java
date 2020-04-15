@@ -1,7 +1,7 @@
 package com.hexlindia.drool.activity.data.doc;
 
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.product.data.doc.ProductRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;

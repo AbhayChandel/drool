@@ -1,8 +1,8 @@
 package com.hexlindia.drool.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.product.data.doc.ProductRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,6 @@ public class VideoViewsIT {
 
     @BeforeEach
     public void setUp() {
-        ;
         VideoDoc videoDoc = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"), new ProductRef("pqr", "Chambor", "kajal"), new ProductRef("xyz", "Tom Ford Vetiver", "fragrance")),
                 new UserRef(userId, "shabana"));

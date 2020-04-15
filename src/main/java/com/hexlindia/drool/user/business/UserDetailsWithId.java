@@ -103,7 +103,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
     }
 
     public boolean equals(Object rhs) {
-        return rhs instanceof com.hexlindia.drool.user.business.UserDetailsWithId ? this.emailId.equals(((com.hexlindia.drool.user.business.UserDetailsWithId) rhs).emailId) : false;
+        return rhs instanceof UserDetailsWithId && this.emailId.equals(((UserDetailsWithId) rhs).emailId);
     }
 
     public int hashCode() {
@@ -221,11 +221,11 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
             }
 
-            return this.authorities((Collection) authorities);
+            return this.authorities(authorities);
         }
 
         public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder authorities(GrantedAuthority... authorities) {
-            return this.authorities((Collection) Arrays.asList(authorities));
+            return this.authorities(Arrays.asList(authorities));
         }
 
         public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder authorities(Collection<? extends GrantedAuthority> authorities) {
@@ -234,7 +234,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
         }
 
         public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder authorities(String... authorities) {
-            return this.authorities((Collection) AuthorityUtils.createAuthorityList(authorities));
+            return this.authorities(AuthorityUtils.createAuthorityList(authorities));
         }
 
         public com.hexlindia.drool.user.business.UserDetailsWithId.UserBuilder accountExpired(boolean accountExpired) {
@@ -258,7 +258,7 @@ public class UserDetailsWithId implements UserDetails, CredentialsContainer {
         }
 
         public UserDetails build() {
-            String encodedPassword = (String) this.passwordEncoder.apply(this.password);
+            String encodedPassword = this.passwordEncoder.apply(this.password);
             return new com.hexlindia.drool.user.business.UserDetailsWithId(this.userId, this.emailId, encodedPassword, this.publicUsername, !this.disabled, !this.accountExpired, !this.credentialsExpired, !this.accountLocked, this.authorities);
         }
     }

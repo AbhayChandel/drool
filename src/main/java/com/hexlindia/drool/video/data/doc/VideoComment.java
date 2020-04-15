@@ -1,6 +1,6 @@
 package com.hexlindia.drool.video.data.doc;
 
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;

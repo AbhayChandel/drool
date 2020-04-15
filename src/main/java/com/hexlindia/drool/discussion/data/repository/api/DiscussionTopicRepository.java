@@ -7,15 +7,15 @@ import java.util.Optional;
 
 public interface DiscussionTopicRepository {
 
-    public DiscussionTopicDoc save(DiscussionTopicDoc discussionTopicDoc);
+    DiscussionTopicDoc save(DiscussionTopicDoc discussionTopicDoc);
 
-    public Optional<DiscussionTopicDoc> findById(ObjectId id);
+    Optional<DiscussionTopicDoc> findById(ObjectId id);
 
-    public boolean updateTopicTitle(String title, ObjectId discussionId);
+    boolean updateTopicTitle(String title, ObjectId discussionId);
 
-    public DiscussionTopicDoc incrementViews(ObjectId discussionId);
+    DiscussionTopicDoc incrementViews(ObjectId discussionId);
 
-    public DiscussionTopicDoc incrementLikes(ObjectId discussionId);
+    DiscussionTopicDoc incrementLikes(ObjectId discussionId);
 
-    public DiscussionTopicDoc decrementLikes(ObjectId discussionId);
+    DiscussionTopicDoc decrementLikes(ObjectId discussionId);
 }

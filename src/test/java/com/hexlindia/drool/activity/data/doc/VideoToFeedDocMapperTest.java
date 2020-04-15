@@ -1,8 +1,8 @@
 package com.hexlindia.drool.activity.data.doc;
 
 import com.hexlindia.drool.activity.dto.mapper.VideoToFeedDocMapper;
-import com.hexlindia.drool.common.data.doc.ProductRef;
-import com.hexlindia.drool.common.data.doc.UserRef;
+import com.hexlindia.drool.product.data.doc.ProductRef;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;

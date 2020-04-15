@@ -1,4 +1,4 @@
-package com.hexlindia.drool.common.data.doc;
+package com.hexlindia.drool.user.data.doc;
 
 import org.bson.types.ObjectId;
 
