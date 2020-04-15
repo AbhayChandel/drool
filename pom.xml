@@ -18,6 +18,7 @@
         <java.version>1.8</java.version>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>false</skip.integration.tests>
+        <sonar.coverage.exclusions>**/dto/*,**/doc/*,**/changelog/*</sonar.coverage.exclusions>
     </properties>
 
 
