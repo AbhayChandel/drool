@@ -3,7 +3,7 @@ package com.hexlindia.drool.discussion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({MongoDBConfig.class, MongoDataInsertion.class})
+@Import({MongoDBTestConfig.class, MongoDataInsertion.class})
 public class DiscussionReplyIT {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";

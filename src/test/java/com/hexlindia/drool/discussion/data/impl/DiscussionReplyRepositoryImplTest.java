@@ -1,6 +1,6 @@
 package com.hexlindia.drool.discussion.data.impl;
 
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionReplyRepository;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@Import(MongoDBConfig.class)
+@Import(MongoDBTestConfig.class)
 class DiscussionReplyRepositoryImplTest {
 
     @Autowired

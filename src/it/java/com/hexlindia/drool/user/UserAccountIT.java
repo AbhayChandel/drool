@@ -1,7 +1,7 @@
 package com.hexlindia.drool.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.user.data.doc.UserAccountDoc;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
 import com.hexlindia.drool.user.dto.UserAccountDto;
@@ -25,7 +25,7 @@ import org.springframework.http.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(MongoDBConfig.class)
+@Import(MongoDBTestConfig.class)
 @ImportAutoConfiguration(TransactionAutoConfiguration.class)
 class UserAccountIT {
 
@@ -113,7 +113,7 @@ class UserAccountIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String emailId = "sonam9999@gmail.com";
+        String emailId = "sahil101@gmail.com";
 
         JSONObject userAccountDto = new JSONObject();
         userAccountDto.put("emailId", emailId);
@@ -134,11 +134,6 @@ class UserAccountIT {
         ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(getRegisterUri(), request, String.class);
         assertEquals(409, responseEntity.getStatusCodeValue());
         assertEquals("Username SonamLove already exists", responseEntity.getBody());
-
-        /*HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntityAccount = restTemplate.exchange(getFindEmailUri() + "/" + emailId, HttpMethod.GET, httpEntity, String.class);
-        Assertions.assertEquals(404, responseEntityAccount.getStatusCodeValue());
-        Assertions.assertEquals("User Account with email " + emailId + " not found", responseEntityAccount.getBody());*/
     }
 
     /*
