@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -38,7 +37,6 @@ public class UserAccountImpl implements UserAccount {
 
 
     @Override
-    @Transactional
     public JwtResponse register(UserRegistrationDto userRegistrationDto) {
         UserAccountDoc userAccountDoc = userAccountMapper.toDoc(userRegistrationDto.getUserAccountDto());
         setEncodedPassword(userAccountDoc);

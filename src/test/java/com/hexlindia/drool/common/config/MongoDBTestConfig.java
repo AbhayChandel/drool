@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import java.io.IOException;
 
 @TestConfiguration
-public class MongoDBConfig {
+public class MongoDBTestConfig {
     @Bean
     public IMongodConfig embeddedMongoConfiguration() throws IOException {
         return new MongodConfigBuilder()

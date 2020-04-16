@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.dto.FeedDto;
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(MongoDBConfig.class)
+@Import(MongoDBTestConfig.class)
 @Slf4j
 public class ActivityFeedIT {
 

@@ -1,6 +1,6 @@
 package com.hexlindia.drool.product.data.repository.impl;
 
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.data.doc.*;
 import com.hexlindia.drool.product.data.repository.api.ProductReviewRepository;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@Import(MongoDBConfig.class)
+@Import(MongoDBTestConfig.class)
 class ProductReviewRepositoryTest {
 
     private final ProductReviewRepository productReviewRepository;

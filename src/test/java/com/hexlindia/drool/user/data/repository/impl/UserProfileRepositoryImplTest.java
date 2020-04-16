@@ -1,6 +1,6 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
 import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
 import com.hexlindia.drool.user.exception.UsernameExistException;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Import(MongoDBConfig.class)
+@Import(MongoDBTestConfig.class)
 class UserProfileRepositoryImplTest {
 
     @Autowired

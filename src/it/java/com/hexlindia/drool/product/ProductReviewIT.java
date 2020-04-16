@@ -3,7 +3,7 @@ package com.hexlindia.drool.product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.config.MongoDBConfig;
+import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.product.data.doc.*;
 import com.hexlindia.drool.product.dto.AspectTemplateDto;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({MongoDBConfig.class, MongoDataInsertion.class})
+@Import({MongoDBTestConfig.class, MongoDataInsertion.class})
 @Slf4j
 public class ProductReviewIT {
 
