@@ -21,6 +21,8 @@ public interface VideoRepository {
 
     VideoComment insertComment(PostRef postRef, VideoComment videoComment);
 
+    VideoCommentDto updateComment(VideoCommentDto videoCommentDto);
+
     boolean deleteComment(VideoCommentDto videoCommentDto);
 
     String saveCommentLike(VideoCommentDto videoCommentDto);

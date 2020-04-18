@@ -243,6 +243,20 @@ class VideoImplTest {
     }
 
     @Test
+    void insertCommentUpdate_updateMethodInVideoRespositoryCalled() {
+        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "guide", "video", null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(null, new UserRefDto("u123", "priyanka11"), "This is a comment passed to VideoTemplateRespository");
+        videoCommentDto.setPostRefDto(postRefDtoMocked);
+        ObjectId commentId = ObjectId.get();
+        videoCommentDto.setId(commentId.toHexString());
+        when(this.videoRepositoryMock.updateComment(any())).thenReturn(null);
+        videoImplSpy.insertComment(videoCommentDto);
+        ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
+        verify(videoRepositoryMock, times(1)).updateComment(videoCommentDtoArgumentCaptor.capture());
+        assertEquals(commentId.toHexString(), videoCommentDtoArgumentCaptor.getValue().getId());
+    }
+
+    @Test
     void insertComment_testPassingArgumentsToUserActivity() {
         ObjectId videoId = ObjectId.get();
         PostRefDto postRefDtoMocked = new PostRefDto(videoId.toHexString(), "This is a test post title", "guide", "video", null);

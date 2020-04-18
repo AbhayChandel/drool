@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @SpringBootTest
 public class VideoRepositoryImplTest {
@@ -167,6 +169,22 @@ public class VideoRepositoryImplTest {
         VideoComment videoComment = new VideoComment(new UserRef(ObjectId.get(), "priyanka11"), null, "This is a dummy comment to test insertion");
         PostRef postRef = new PostRef(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), "Title for dummy test post", "guide", "video", null);
         assertNotNull(videoRepository.insertComment(postRef, videoComment));
+    }
+
+    @Test
+    public void test_UpdateComment() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), activeVideoLikeUnlikeDto.getVideoTitle(), null, null, null), new UserRefDto("123", "username1"), "This is an update for the comment");
+        videoCommentDto.setId(insertedVideoCommentId);
+        videoRepository.updateComment(videoCommentDto);
+        VideoDoc videoDOc = mongoTemplate.findOne(query(where("_id").is(activeVideoLikeUnlikeDto.getVideoId()).andOperator(where("active").is(true))), VideoDoc.class);
+        List<VideoComment> commentList = videoDOc.getCommentList();
+        for (VideoComment videoComment : commentList) {
+            if (videoComment.getId().equalsIgnoreCase(insertedVideoCommentId)) {
+                assertEquals("This is an update for the comment", videoComment.getComment());
+                return;
+            }
+        }
+        fail("Video comment was not updated");
     }
 
     @Test
