@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class VideoComment {
 
-    private String id;
+    private ObjectId id;
     private UserRef userRef;
     private LocalDateTime datePosted;
     private String comment;
@@ -17,18 +17,18 @@ public class VideoComment {
         this.userRef = userRef;
         this.datePosted = datePosted;
         this.comment = comment;
-        this.id = ObjectId.get().toString();
+        this.id = ObjectId.get();
     }
 
     public VideoComment() {
-        this.id = ObjectId.get().toString();
+        this.id = ObjectId.get();
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

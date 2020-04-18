@@ -1,15 +1,17 @@
 package com.hexlindia.drool.common.data.doc;
 
+import org.bson.types.ObjectId;
+
 import java.time.LocalDateTime;
 
 public class CommentRef {
 
-    private String id;
+    private ObjectId id;
     private String comment;
     private PostRef postRef;
     private LocalDateTime datePosted;
 
-    public CommentRef(String id, String comment, PostRef postRef, LocalDateTime datePosted) {
+    public CommentRef(ObjectId id, String comment, PostRef postRef, LocalDateTime datePosted) {
         this.id = id;
         this.comment = comment;
         this.postRef = postRef;
@@ -19,11 +21,11 @@ public class CommentRef {
     public CommentRef() {
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

@@ -101,14 +101,15 @@ class UserActivityFeedImplTest {
     void addVideoComment_passingObjectToRepositoryLayer() {
         LocalDateTime datePosted = LocalDateTime.parse("2020-02-04 19:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         PostRef postRef = new PostRef(ObjectId.get(), "This is a test post title", "guide", "video", null);
-        CommentRef commentRef = new CommentRef("c123", "This is a comment to test videoCommentMapper toDto()",
+        ObjectId commentId = ObjectId.get();
+        CommentRef commentRef = new CommentRef(commentId, "This is a comment to test videoCommentMapper toDto()",
                 postRef, datePosted);
         when(this.userActivityRepositoryMock.addVideoComment(any(), any())).thenReturn(null);
         userActivitySpy.addVideoComment(ObjectId.get(), commentRef);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<CommentRef> commentRefArgumentCaptor = ArgumentCaptor.forClass(CommentRef.class);
         verify(userActivityRepositoryMock, times(1)).addVideoComment(userIdArgumentCaptor.capture(), commentRefArgumentCaptor.capture());
-        assertEquals("c123", commentRefArgumentCaptor.getValue().getId());
+        assertEquals(commentId, commentRefArgumentCaptor.getValue().getId());
         assertEquals("This is a comment to test videoCommentMapper toDto()", commentRefArgumentCaptor.getValue().getComment());
         assertEquals(postRef, commentRefArgumentCaptor.getValue().getPostRef());
         assertEquals(datePosted, commentRefArgumentCaptor.getValue().getDatePosted());

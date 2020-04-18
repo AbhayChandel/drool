@@ -69,7 +69,7 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     @Override
     public UpdateResult addCommentLike(VideoCommentDto videoCommentDto) {
         PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
-        Update update = new Update().addToSet("likes.comments", new CommentRef(videoCommentDto.getId(), videoCommentDto.getComment(), postRef, null));
+        Update update = new Update().addToSet("likes.comments", new CommentRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), postRef, null));
         return mongoOperations.upsert(query(where(ID).is(videoCommentDto.getUserRefDto().getId())), update, UserActivityDoc.class);
     }
 
