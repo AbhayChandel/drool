@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @SpringBootTest
 public class VideoRepositoryImplTest {
@@ -33,7 +35,7 @@ public class VideoRepositoryImplTest {
 
     private VideoLikeUnlikeDto activeVideoLikeUnlikeDto;
     private VideoLikeUnlikeDto inactiveVideoLikeUnlikeDto;
-    private String insertedVideoCommentId;
+    private ObjectId insertedVideoCommentId;
 
     ObjectId userId = new ObjectId();
 
@@ -96,7 +98,7 @@ public class VideoRepositoryImplTest {
 
         PostRefDto postRefDto = new PostRefDto(videoDocActive.getId().toHexString(), "Title for dummy test post", "guide", "video", null);
         VideoCommentDto videoCommentDto = new VideoCommentDto(postRefDto, new UserRefDto("123", "username1"), "Test comment");
-        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setId(insertedVideoCommentId.toHexString());
         videoCommentDto.setLikes("0");
         videoRepository.saveCommentLike(videoCommentDto);
     }
@@ -170,6 +172,22 @@ public class VideoRepositoryImplTest {
     }
 
     @Test
+    public void test_UpdateComment() {
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), activeVideoLikeUnlikeDto.getVideoTitle(), null, null, null), new UserRefDto("123", "username1"), "This is an update for the comment");
+        videoCommentDto.setId(insertedVideoCommentId.toHexString());
+        videoRepository.updateComment(videoCommentDto);
+        VideoDoc videoDOc = mongoTemplate.findOne(query(where("_id").is(activeVideoLikeUnlikeDto.getVideoId()).andOperator(where("active").is(true))), VideoDoc.class);
+        List<VideoComment> commentList = videoDOc.getCommentList();
+        for (VideoComment videoComment : commentList) {
+            if (videoComment.getId().equals(insertedVideoCommentId)) {
+                assertEquals("This is an update for the comment", videoComment.getComment());
+                return;
+            }
+        }
+        fail("Video comment was not updated");
+    }
+
+    @Test
     public void test_removeComment() {
         ObjectId userId = new ObjectId();
         VideoComment videoComment = new VideoComment(new UserRef(userId, "priyanka11"), null, "This is a dummy comment to test insertion");
@@ -177,7 +195,7 @@ public class VideoRepositoryImplTest {
         videoRepository.insertComment(postRef, videoComment);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setId(videoComment.getId());
+        videoCommentDto.setId(videoComment.getId().toHexString());
         PostRefDto postRefDto = new PostRefDto();
         postRefDto.setId(activeVideoLikeUnlikeDto.getVideoId());
         videoCommentDto.setPostRefDto(postRefDto);
@@ -190,7 +208,7 @@ public class VideoRepositoryImplTest {
     @Test
     public void test_saveCommentLike() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), activeVideoLikeUnlikeDto.getVideoTitle(), null, null, null), new UserRefDto("123", "username1"), null);
-        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setId(insertedVideoCommentId.toHexString());
         videoCommentDto.setLikes("0");
         assertEquals("1", videoRepository.saveCommentLike(videoCommentDto));
     }
@@ -198,7 +216,7 @@ public class VideoRepositoryImplTest {
     @Test
     public void test_deleteCommentLike() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(activeVideoLikeUnlikeDto.getVideoId(), null, null, null, null), new UserRefDto("123", "username1"), null);
-        videoCommentDto.setId(insertedVideoCommentId);
+        videoCommentDto.setId(insertedVideoCommentId.toHexString());
         videoCommentDto.setLikes("1");
         assertEquals("0", videoRepository.deleteCommentLike(videoCommentDto));
     }

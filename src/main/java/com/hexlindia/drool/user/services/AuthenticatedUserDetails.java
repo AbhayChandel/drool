@@ -1,5 +1,6 @@
 package com.hexlindia.drool.user.services;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 @Setter
 public class AuthenticatedUserDetails implements Serializable {
 
+    @JsonProperty("userId")
     private final String accountId;
     private final String username;
 

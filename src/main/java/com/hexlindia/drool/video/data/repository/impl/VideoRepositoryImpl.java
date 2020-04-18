@@ -49,7 +49,7 @@ public class VideoRepositoryImpl implements VideoRepository {
 
     @Override
     public Optional<VideoDoc> findByIdAndActiveTrue(ObjectId id) {
-        VideoDoc videoDoc = mongoOperations.findOne(query(where("id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+        VideoDoc videoDoc = mongoOperations.findOne(query(where("_id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
         return videoDoc == null ? Optional.empty() : Optional.of(videoDoc);
     }
 
@@ -99,6 +99,17 @@ public class VideoRepositoryImpl implements VideoRepository {
     }
 
     @Override
+    public VideoCommentDto updateComment(VideoCommentDto videoCommentDto) {
+        Update update = new Update().set("commentList.$.comment", videoCommentDto.getComment());
+        mongoOperations.updateFirst(findComment(videoCommentDto), update, VideoDoc.class);
+        return videoCommentDto;
+    }
+
+    private Query findComment(VideoCommentDto videoCommentDto) {
+        return Query.query(Criteria.where("_id").is(videoCommentDto.getPostRefDto().getId()).andOperator(Criteria.where(COMMENT_LIST).elemMatch(Criteria.where("_id").is(videoCommentDto.getId()))));
+    }
+
+    @Override
     public boolean deleteComment(VideoCommentDto videoCommentDto) {
         Query queryVideo = Query.query(Criteria.where("_id").is(videoCommentDto.getPostRefDto().getId()));
         Query queryComment = Query.query(Criteria.where("_id").is(videoCommentDto.getId()));
@@ -109,17 +120,15 @@ public class VideoRepositoryImpl implements VideoRepository {
 
     @Override
     public String saveCommentLike(VideoCommentDto videoCommentDto) {
-        Query query = Query.query(Criteria.where("_id").is(videoCommentDto.getPostRefDto().getId()).andOperator(Criteria.where(COMMENT_LIST).elemMatch(Criteria.where("_id").is(videoCommentDto.getId()))));
         Update update = new Update().inc("commentList.$.likes", 1);
-        UpdateResult commentLikeResult = mongoOperations.updateFirst(query, update, VideoDoc.class);
+        UpdateResult commentLikeResult = mongoOperations.updateFirst(findComment(videoCommentDto), update, VideoDoc.class);
         return (commentLikeResult.getMatchedCount() > 0 && commentLikeResult.getModifiedCount() > 0) ? Integer.toString(Integer.valueOf(videoCommentDto.getLikes()) + 1) : videoCommentDto.getLikes();
     }
 
     @Override
     public String deleteCommentLike(VideoCommentDto videoCommentDto) {
-        Query query = Query.query(Criteria.where("_id").is(videoCommentDto.getPostRefDto().getId()).andOperator(Criteria.where(COMMENT_LIST).elemMatch(Criteria.where("_id").is(videoCommentDto.getId()))));
         Update update = new Update().inc("commentList.$.likes", -1);
-        UpdateResult commentLikeResult = mongoOperations.updateFirst(query, update, VideoDoc.class);
+        UpdateResult commentLikeResult = mongoOperations.updateFirst(findComment(videoCommentDto), update, VideoDoc.class);
         return (commentLikeResult.getMatchedCount() > 0 && commentLikeResult.getModifiedCount() > 0) ? Integer.toString(Integer.valueOf(videoCommentDto.getLikes()) - 1) : videoCommentDto.getLikes();
     }
 }

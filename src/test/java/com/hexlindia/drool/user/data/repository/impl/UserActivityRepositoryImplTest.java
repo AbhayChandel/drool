@@ -86,14 +86,19 @@ class UserActivityRepositoryImplTest {
 
     @Test
     void addVideoComment() {
-        UpdateResult updateResult = this.userActivityRepository.addVideoComment(userId, new CommentRef("c123", "This is a dummy comment to test insertion in UserActivityDoc", new PostRef(ObjectId.get(), "This is a dummy video for testing comment insetion in UserActivityDoc", "guide", "video", null), LocalDateTime.now()));
+        UpdateResult updateResult = this.userActivityRepository.addVideoComment(userId, new CommentRef(commentId, "This is a dummy comment to test insertion in UserActivityDoc", new PostRef(ObjectId.get(), "This is a dummy video for testing comment insetion in UserActivityDoc", "guide", "video", null), LocalDateTime.now()));
         assertTrue(updateResult.getModifiedCount() > 0);
+    }
+
+    @Test
+    void updateVideoComment() {
+        assertTrue(this.userActivityRepository.updateVideoComment(userId, new CommentRef(commentId, "This is a an updated test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())).getModifiedCount() > 0);
     }
 
     @Test
     void removeVideoComment() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto(userId.toHexString(), ""), null);
-        videoCommentDto.setId("c123");
+        videoCommentDto.setId(commentId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.deleteVideoComment(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
     }
@@ -101,6 +106,7 @@ class UserActivityRepositoryImplTest {
     @Test
     void addCommentLike() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto(ObjectId.get().toHexString(), "This is a test insert", "review", "video", null), new UserRefDto("456", "username1"), "This is a test comment");
+        videoCommentDto.setId(commentId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.addCommentLike(videoCommentDto);
         assertEquals(0, updateResult.getMatchedCount());
         assertNotNull(updateResult.getUpsertedId());
@@ -109,7 +115,7 @@ class UserActivityRepositoryImplTest {
     @Test
     void deleteCommentLike() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", null, null, null, null), new UserRefDto(userId.toHexString(), null), null);
-        videoCommentDto.setId("c123");
+        videoCommentDto.setId(commentId.toHexString());
         UpdateResult updateResult = this.userActivityRepository.deleteCommentLike(videoCommentDto);
         assertTrue(updateResult.getModifiedCount() > 0);
     }
@@ -126,12 +132,14 @@ class UserActivityRepositoryImplTest {
 
     private ObjectId userId = new ObjectId();
     private ObjectId videoId = new ObjectId();
+    private ObjectId commentId = new ObjectId();
 
     @BeforeEach
     public void setUp() {
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.videos", new VideoLike(videoId, "This video is part of test setup")), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef("c123", "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef("c123", "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef(commentId, "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef(commentId, "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
+
 
 }

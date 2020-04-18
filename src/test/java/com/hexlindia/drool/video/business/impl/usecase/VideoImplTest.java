@@ -243,6 +243,20 @@ class VideoImplTest {
     }
 
     @Test
+    void insertCommentUpdate_updateMethodInVideoRespositoryCalled() {
+        PostRefDto postRefDtoMocked = new PostRefDto("v123", "This is a test post title", "guide", "video", null);
+        VideoCommentDto videoCommentDto = new VideoCommentDto(null, new UserRefDto(ObjectId.get().toHexString(), "priyanka11"), "This is a comment passed to VideoTemplateRespository");
+        videoCommentDto.setPostRefDto(postRefDtoMocked);
+        ObjectId commentId = ObjectId.get();
+        videoCommentDto.setId(commentId.toHexString());
+        when(this.videoRepositoryMock.updateComment(any())).thenReturn(videoCommentDto);
+        videoImplSpy.insertComment(videoCommentDto);
+        ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
+        verify(videoRepositoryMock, times(1)).updateComment(videoCommentDtoArgumentCaptor.capture());
+        assertEquals(commentId.toHexString(), videoCommentDtoArgumentCaptor.getValue().getId());
+    }
+
+    @Test
     void insertComment_testPassingArgumentsToUserActivity() {
         ObjectId videoId = ObjectId.get();
         PostRefDto postRefDtoMocked = new PostRefDto(videoId.toHexString(), "This is a test post title", "guide", "video", null);
@@ -252,7 +266,7 @@ class VideoImplTest {
         LocalDateTime datePosted = LocalDateTime.parse("2020-02-04 19:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         ObjectId userId = new ObjectId();
         VideoComment videoComment = new VideoComment(new UserRef(userId, "priyanka11"), datePosted, "This is a comment to test videoCommentMapper toDto()");
-        String commentId = ObjectId.get().toHexString();
+        ObjectId commentId = ObjectId.get();
         videoComment.setId(commentId);
         when(this.videoCommentMapperMock.toDto(any())).thenReturn(new VideoCommentDto());
         when(this.videoCommentMapperMock.toDoc(videoCommentDto)).thenReturn(videoComment);

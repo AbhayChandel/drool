@@ -42,6 +42,11 @@ public class UserActivityImpl implements UserActivity {
     }
 
     @Override
+    public UpdateResult updateVideoComment(ObjectId userId, CommentRef commentRef) {
+        return this.userActivityRepository.updateVideoComment(userId, commentRef);
+    }
+
+    @Override
     public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
         return this.userActivityRepository.deleteVideoComment(videoCommentDto);
     }

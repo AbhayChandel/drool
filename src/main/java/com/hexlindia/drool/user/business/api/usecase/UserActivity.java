@@ -18,6 +18,8 @@ public interface UserActivity {
 
     UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef);
 
+    UpdateResult updateVideoComment(ObjectId userId, CommentRef commentRef);
+
     UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto);
 
     UpdateResult addCommentLike(VideoCommentDto videoCommentDto);
