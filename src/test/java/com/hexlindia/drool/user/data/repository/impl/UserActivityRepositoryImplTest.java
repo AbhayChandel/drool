@@ -91,6 +91,11 @@ class UserActivityRepositoryImplTest {
     }
 
     @Test
+    void updateVideoComment() {
+        assertTrue(this.userActivityRepository.updateVideoComment(userId, new CommentRef(commentId, "This is a an updated test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())).getModifiedCount() > 0);
+    }
+
+    @Test
     void removeVideoComment() {
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("", "", "", "", ""), new UserRefDto(userId.toHexString(), ""), null);
         videoCommentDto.setId(commentId.toHexString());
@@ -135,5 +140,6 @@ class UserActivityRepositoryImplTest {
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef(commentId, "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef(commentId, "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
+
 
 }
