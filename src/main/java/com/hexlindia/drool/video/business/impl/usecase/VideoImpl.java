@@ -88,12 +88,20 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
+    public VideoCommentDto insertOrUpdateComment(VideoCommentDto videoCommentDto) {
         if (videoCommentDto.getId() != null) {
-            videoCommentDto = videoRepository.updateComment(videoCommentDto);
-            userActivity.updateVideoComment(new ObjectId(videoCommentDto.getUserRefDto().getId()), new CommentRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), postRefMapper.toDoc(videoCommentDto.getPostRefDto()), null));
-            return videoCommentDto;
+            return updateComment(videoCommentDto);
         }
+        return insertComment(videoCommentDto);
+    }
+
+    private VideoCommentDto updateComment(VideoCommentDto videoCommentDto) {
+        videoCommentDto = videoRepository.updateComment(videoCommentDto);
+        userActivity.updateVideoComment(new ObjectId(videoCommentDto.getUserRefDto().getId()), new CommentRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), postRefMapper.toDoc(videoCommentDto.getPostRefDto()), null));
+        return videoCommentDto;
+    }
+
+    private VideoCommentDto insertComment(VideoCommentDto videoCommentDto) {
         PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
         videoCommentDto = videoCommentMapper.toDto(videoRepository.insertComment(postRef, videoComment));

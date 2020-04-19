@@ -42,7 +42,7 @@ public class VideoRestServiceImpl implements VideoRestService {
 
     @Override
     public ResponseEntity<VideoCommentDto> insertComment(@Validated({VideoCommentInsertValidation.class, PostRefValidation.class, UserRefValidation.class}) VideoCommentDto videoCommentDto) {
-        return ResponseEntity.ok(video.insertComment(videoCommentDto));
+        return ResponseEntity.ok(video.insertOrUpdateComment(videoCommentDto));
     }
 
     @Override

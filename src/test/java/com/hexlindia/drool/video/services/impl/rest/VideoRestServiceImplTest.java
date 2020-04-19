@@ -505,7 +505,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void insertComment_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.videoMock.insertComment(any())).thenReturn(null);
+        when(this.videoMock.insertOrUpdateComment(any())).thenReturn(null);
         VideoCommentDto videoCommentDto = new VideoCommentDto();
         videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
@@ -515,7 +515,7 @@ class VideoRestServiceImplTest {
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
-        verify(this.videoMock, times(1)).insertComment(videoCommentDtoArgumentCaptor.capture());
+        verify(this.videoMock, times(1)).insertOrUpdateComment(videoCommentDtoArgumentCaptor.capture());
         assertEquals("p123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
         assertEquals("This is a test post", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
         assertEquals("guide", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());

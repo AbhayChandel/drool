@@ -231,7 +231,7 @@ class VideoImplTest {
         when(this.videoCommentMapperMock.toDoc(videoCommentDto)).thenReturn(new VideoComment(new UserRef(userId, "priyanka11"), null, "This is a comment to test videoCommentMapper toDto()"));
         ObjectId postId = new ObjectId();
         when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(new PostRef(postId, "This is a test post title", "guide", "video", null));
-        videoImplSpy.insertComment(videoCommentDto);
+        videoImplSpy.insertOrUpdateComment(videoCommentDto);
         ArgumentCaptor<VideoComment> videoCommentArgumentCaptor = ArgumentCaptor.forClass(VideoComment.class);
         ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
         verify(videoRepositoryMock, times(1)).insertComment(postRefArgumentCaptor.capture(), videoCommentArgumentCaptor.capture());
@@ -250,7 +250,7 @@ class VideoImplTest {
         ObjectId commentId = ObjectId.get();
         videoCommentDto.setId(commentId.toHexString());
         when(this.videoRepositoryMock.updateComment(any())).thenReturn(videoCommentDto);
-        videoImplSpy.insertComment(videoCommentDto);
+        videoImplSpy.insertOrUpdateComment(videoCommentDto);
         ArgumentCaptor<VideoCommentDto> videoCommentDtoArgumentCaptor = ArgumentCaptor.forClass(VideoCommentDto.class);
         verify(videoRepositoryMock, times(1)).updateComment(videoCommentDtoArgumentCaptor.capture());
         assertEquals(commentId.toHexString(), videoCommentDtoArgumentCaptor.getValue().getId());
@@ -272,7 +272,7 @@ class VideoImplTest {
         when(this.videoCommentMapperMock.toDoc(videoCommentDto)).thenReturn(videoComment);
         PostRef postRef = new PostRef(videoId, "This is a test post title", "guide", "video", null);
         when(this.postRefMapperMock.toDoc(postRefDtoMocked)).thenReturn(postRef);
-        videoImplSpy.insertComment(videoCommentDto);
+        videoImplSpy.insertOrUpdateComment(videoCommentDto);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<CommentRef> commentRefArgumentCaptor = ArgumentCaptor.forClass(CommentRef.class);
         verify(userActivityMock, times(1)).addVideoComment(userIdArgumentCaptor.capture(), commentRefArgumentCaptor.capture());

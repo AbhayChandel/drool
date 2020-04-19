@@ -15,7 +15,7 @@ public interface Video {
 
     String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 
-    VideoCommentDto insertComment(VideoCommentDto videoCommentDto);
+    VideoCommentDto insertOrUpdateComment(VideoCommentDto videoCommentDto);
 
     boolean deleteComment(VideoCommentDto videoCommentDto);
 
