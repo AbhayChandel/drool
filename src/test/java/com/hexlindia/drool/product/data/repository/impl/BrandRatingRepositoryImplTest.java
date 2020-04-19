@@ -2,6 +2,7 @@ package com.hexlindia.drool.product.data.repository.impl;
 
 import com.hexlindia.drool.product.data.doc.BrandDoc;
 import com.hexlindia.drool.product.data.repository.api.BrandRatingRepository;
+import com.hexlindia.drool.product.dto.BrandRatingMetricDto;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class BrandRatingRatingRepositoryImplTest {
+class BrandRatingRepositoryImplTest {
 
     private final BrandRatingRepository brandRatingRepository;
     private final MongoOperations mongoOperations;
@@ -24,16 +25,32 @@ class BrandRatingRatingRepositoryImplTest {
     private List<ObjectId> insertedBrands = new ArrayList<>();
 
     @Autowired
-    public BrandRatingRatingRepositoryImplTest(BrandRatingRepository brandRatingRepository, MongoOperations mongoOperations) {
+    public BrandRatingRepositoryImplTest(BrandRatingRepository brandRatingRepository, MongoOperations mongoOperations) {
         this.brandRatingRepository = brandRatingRepository;
         this.mongoOperations = mongoOperations;
     }
 
     @Test
-    void test_getRatingMetrics() {
+    void getRatingMetrics_Found() {
         List<String> ratingMetrics = brandRatingRepository.getRatingMetrics(insertedBrands.get(0));
         assertNotNull(ratingMetrics);
         assertEquals(5, ratingMetrics.size());
+    }
+
+    @Test
+    void getRatingMetrics_NotFound() {
+        List<String> ratingMetrics = brandRatingRepository.getRatingMetrics(ObjectId.get());
+        assertNull(ratingMetrics);
+    }
+
+    @Test
+    void saveRatingSummary() {
+        BrandRatingMetricDto trustable = new BrandRatingMetricDto("Trustable", 5);
+        BrandRatingMetricDto affordable = new BrandRatingMetricDto("Affordable", 4);
+        BrandRatingMetricDto trendy = new BrandRatingMetricDto("Trendy", 0);
+        BrandRatingMetricDto quality = new BrandRatingMetricDto("Quality", 2);
+        BrandRatingMetricDto overall = new BrandRatingMetricDto("Overall", 4);
+        assertTrue(brandRatingRepository.saveRatingSummary(insertedBrands.get(0), Arrays.asList(trustable, affordable, trendy, quality, overall)));
     }
 
     @BeforeEach
@@ -55,6 +72,4 @@ class BrandRatingRatingRepositoryImplTest {
         mongoOperations.save(brandDoc);
         insertedBrands.add(brandDoc.getId());
     }
-
-
 }
