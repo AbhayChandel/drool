@@ -71,12 +71,6 @@ public class VideoRepositoryImpl implements VideoRepository {
     }
 
     @Override
-    public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
-        UpdateResult updateResult = mongoOperations.updateFirst(new Query(where("id").is(videoId)), new Update().set("reviewId", reviewId), VideoDoc.class);
-        return updateResult.getModifiedCount() > 0;
-    }
-
-    @Override
     public String saveVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         VideoDoc videoDoc = mongoOperations.findAndModify(new Query(where("id").is(videoLikeUnlikeDto.getVideoId())), new Update().inc("likes", 1), FindAndModifyOptions.options().returnNew(true), VideoDoc.class);
         return MetaFieldValueFormatter.getCompactFormat(videoDoc.getLikes());

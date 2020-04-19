@@ -72,11 +72,6 @@ public class VideoImpl implements Video {
     }
 
     @Override
-    public boolean updateReviewId(ObjectId videoId, ObjectId reviewId) {
-        return videoRepository.updateReviewId(videoId, reviewId);
-    }
-
-    @Override
     public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         String likes = videoRepository.saveVideoLikes(videoLikeUnlikeDto);
         userActivity.addVideoLike(videoLikeUnlikeDto);
@@ -107,7 +102,7 @@ public class VideoImpl implements Video {
             activityFeed.incrementDecrementField(postRef.getId(), FeedDocFields.comments, 1);
             return videoCommentDto;
         }
-        log.error("Video comment not inserted");
+        log.warn("Video comment not inserted");
         return null;
     }
 
@@ -117,10 +112,10 @@ public class VideoImpl implements Video {
         if (result) {
             userActivity.deleteVideoComment(videoCommentDto);
             activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getPostRefDto().getId()), FeedDocFields.comments, -1);
-        } else {
-            log.error("Video comment not deleted");
+            return true;
         }
-        return result;
+        log.warn("Video comment not deleted");
+        return false;
     }
 
     @Override

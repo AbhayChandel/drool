@@ -16,8 +16,8 @@ public class VideoRestServiceAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(VideoNotFoundException.class)
     @ResponseBody
-    String handleUserAccountNotFoundException(VideoNotFoundException e) {
-        log.error(e.getMessage());
+    String handleVideoNotFoundException(VideoNotFoundException e) {
+        log.warn(e.getMessage());
         return e.getMessage();
     }
 }
