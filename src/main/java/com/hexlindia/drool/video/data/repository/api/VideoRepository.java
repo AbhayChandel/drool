@@ -30,6 +30,4 @@ public interface VideoRepository {
     String deleteCommentLike(VideoCommentDto videoCommentDto);
 
     VideoThumbnailDataAggregation getLatestThreeVideosByUser(ObjectId userId);
-
-    boolean updateReviewId(ObjectId videoId, ObjectId reviewId);
 }

@@ -148,11 +148,6 @@ public class VideoRepositoryImplTest {
     }
 
     @Test
-    void test_updateReviewId() {
-        assertTrue(videoRepository.updateReviewId(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), new ObjectId()));
-    }
-
-    @Test
     public void test_IncrementLikes() {
         videoRepository.saveVideoLikes(activeVideoLikeUnlikeDto);
         assertEquals(1, videoRepository.findByIdAndActiveTrue(new ObjectId(activeVideoLikeUnlikeDto.getVideoId())).get().getLikes());

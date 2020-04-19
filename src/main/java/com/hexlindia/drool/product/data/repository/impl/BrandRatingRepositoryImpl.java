@@ -5,6 +5,7 @@ import com.hexlindia.drool.product.data.repository.api.BrandRatingRepository;
 import com.hexlindia.drool.product.dto.BrandRatingMetricDto;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,6 +18,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class BrandRatingRepositoryImpl implements BrandRatingRepository {
 
     private final MongoOperations mongoOperations;
@@ -28,7 +30,12 @@ public class BrandRatingRepositoryImpl implements BrandRatingRepository {
 
         Query query = new Query(where("_id").is(id).andOperator(where("active").is(true)));
         query.fields().include("rating_metrics").exclude("_id");
-        return mongoOperations.findOne(query, BrandDoc.class).getRatingMetrics();
+        BrandDoc brandDoc = mongoOperations.findOne(query, BrandDoc.class);
+        if (brandDoc != null) {
+            return brandDoc.getRatingMetrics();
+        }
+        log.warn("Brand with Id " + id + " not found.");
+        return null;
     }
 
     @Override
