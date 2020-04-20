@@ -4,9 +4,7 @@ import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 
 public interface DiscussionReply {
 
-    DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto);
-
-    boolean updateReply(String reply, String replyId, String discussionId);
+    DiscussionReplyDto saveOrUpdate(DiscussionReplyDto discussionReplyDto);
 
     String incrementLikes(String replyId, String discussionId, String userId);
 

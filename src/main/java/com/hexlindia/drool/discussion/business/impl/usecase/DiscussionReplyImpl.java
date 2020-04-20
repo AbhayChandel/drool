@@ -22,7 +22,23 @@ public class DiscussionReplyImpl implements DiscussionReply {
     private final DiscussionReplyDtoDocMapper discussionReplyDtoDocMapper;
 
     @Override
-    public DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto) {
+    public DiscussionReplyDto saveOrUpdate(DiscussionReplyDto discussionReplyDto) {
+        if (discussionReplyDto.getId() != null) {
+            return updateReply(discussionReplyDto);
+        }
+        return saveReply(discussionReplyDto);
+    }
+
+    private DiscussionReplyDto updateReply(DiscussionReplyDto discussionReplyDto) {
+        boolean result = discussionReplyRepository.updateReply(discussionReplyDto.getReply(), new ObjectId(discussionReplyDto.getId()), new ObjectId(discussionReplyDto.getDiscussionId()));
+        if (result) {
+            return discussionReplyDto;
+        }
+        log.warn("Discussion reply was not updated");
+        return null;
+    }
+
+    private DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto) {
         DiscussionReplyDoc discussionReplyDoc = discussionReplyDtoDocMapper.toDoc(discussionReplyDto);
         discussionReplyDoc.setDatePosted(LocalDateTime.now());
         discussionReplyDoc.setActive(true);
@@ -30,12 +46,8 @@ public class DiscussionReplyImpl implements DiscussionReply {
         if (result) {
             return discussionReplyDtoDocMapper.toDto(discussionReplyDoc);
         }
+        log.warn("Discussion reply not saved");
         return null;
-    }
-
-    @Override
-    public boolean updateReply(String reply, String replyId, String discussionId) {
-        return discussionReplyRepository.updateReply(reply, new ObjectId(replyId), new ObjectId(discussionId));
     }
 
     @Override

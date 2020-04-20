@@ -21,12 +21,13 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
 
     @Override
     public ResponseEntity<DiscussionReplyDto> saveReply(DiscussionReplyDto discussionReplyDto) {
-        return ResponseEntity.ok(this.discussionReply.saveReply(discussionReplyDto));
+        return ResponseEntity.ok(this.discussionReply.saveOrUpdate(discussionReplyDto));
     }
 
     @Override
     public ResponseEntity<Boolean> updateReply(Map<String, String> parameters) {
-        return ResponseEntity.ok(this.discussionReply.updateReply(parameters.get("reply"), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+        //return ResponseEntity.ok(this.discussionReply.updateReply(parameters.get("reply"), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+        return null;
     }
 
     @Override

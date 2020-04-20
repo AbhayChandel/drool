@@ -36,7 +36,7 @@ class DiscussionReplyImplTest {
     }
 
     @Test
-    void post_PassingObjectToRepositoryLayer() {
+    void saveOrUpdate_PassingObjectToSaveRepositoryLayer() {
         DiscussionReplyDoc discussionReplyDocMocked = new DiscussionReplyDoc();
         discussionReplyDocMocked.setReply("This is a test reply");
         LocalDateTime datePosted = LocalDateTime.now();
@@ -51,7 +51,7 @@ class DiscussionReplyImplTest {
         when(this.discussionReplyRepositoryMocked.saveReply(discussionReplyDocMocked, discussionIdMocked)).thenReturn(true);
         DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
         discussionReplyDto.setDiscussionId(discussionId.toHexString());
-        this.discussionReplyImplSpy.saveReply(discussionReplyDto);
+        this.discussionReplyImplSpy.saveOrUpdate(discussionReplyDto);
         ArgumentCaptor<DiscussionReplyDoc> discussionReplyDocArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyDoc.class);
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(this.discussionReplyRepositoryMocked, times(1)).saveReply(discussionReplyDocArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
@@ -64,12 +64,16 @@ class DiscussionReplyImplTest {
     }
 
     @Test
-    void updateReply_PassingObjectToRepositoryLayer() {
+    void saveOrUpdate_PassingObjectToUpdateRepositoryLayer() {
+        DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
         String reply = "This is updated reply";
+        discussionReplyDto.setReply(reply);
         ObjectId replyIdMocked = new ObjectId();
+        discussionReplyDto.setId(replyIdMocked.toHexString());
         ObjectId discussionIdMocked = new ObjectId();
+        discussionReplyDto.setDiscussionId(discussionIdMocked.toHexString());
         when(this.discussionReplyRepositoryMocked.updateReply(reply, replyIdMocked, discussionIdMocked)).thenReturn(true);
-        this.discussionReplyImplSpy.updateReply(reply, replyIdMocked.toHexString(), discussionIdMocked.toHexString());
+        this.discussionReplyImplSpy.saveOrUpdate(discussionReplyDto);
         ArgumentCaptor<String> replyArgumentCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ObjectId> replyIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);

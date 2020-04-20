@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -25,6 +26,8 @@ public class DiscussionTopicDoc {
     private LocalDateTime dateLastActive;
     private int views;
     private int likes;
+
+    @Transient
     private int repliesCount;
     private boolean active;
 

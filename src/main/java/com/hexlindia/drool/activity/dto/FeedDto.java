@@ -1,5 +1,6 @@
 package com.hexlindia.drool.activity.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.dto.ProductRefDto;
 import lombok.Getter;
@@ -20,7 +21,11 @@ public class FeedDto {
     private String likes;
     private String views;
     private String comments;
+
+    @JsonProperty("product")
     private List<ProductRefDto> productRefDtoList;
+
+    @JsonProperty("user")
     private UserRefDto userRefDto;
 
 }
