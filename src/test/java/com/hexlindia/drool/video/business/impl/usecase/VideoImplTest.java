@@ -119,25 +119,6 @@ class VideoImplTest {
         assertEquals("shabana", videoDocArgumentCaptor.getValue().getUserRef().getUsername());
     }
 
-    /*@Test
-    void findById_docFoundResponse() {
-        VideoDoc videoDocMocked = new VideoDoc();
-        videoDocMocked.setTitle("THis is a test discusion title");
-        videoDocMocked.setLikes(10);
-        videoDocMocked.setViews(20);
-        videoDocMocked.setActive(true);
-        videoDocMocked.setId(ObjectId.get());
-
-        Optional<DiscussionTopicDoc> discussionTopicDocOptional = Optional.of(videoDocMocked);
-        when(this.discussionTopicRepository.findById(any())).thenReturn(discussionTopicDocOptional);
-        when(this.discussionTopicDtoDocMapperMocked.toDto(videoDocMocked)).thenReturn(discussionTopicDtoDocMapper.toDto(videoDocMocked));
-        DiscussionTopicDto discussionTopicDtoReturned = discussionTopicImplSpy.findById(ObjectId.get().toHexString());
-
-        assertEquals("THis is a test discusion title", discussionTopicDtoReturned.getTitle());
-        assertEquals("10", discussionTopicDtoReturned.getLikes());
-        assertEquals("20", discussionTopicDtoReturned.getViews());
-    }*/
-
     @Test
     void findById_testPassingEntityToRepository() {
         ObjectId videoId = ObjectId.get();

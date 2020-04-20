@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class UserActivityFeedImplTest {
+class UserActivityImplTest {
 
     private UserActivity userActivitySpy;
 
@@ -185,6 +185,5 @@ class UserActivityFeedImplTest {
         assertEquals("This is a great dummy review summary", reviewDocArgumentCaptor.getValue().getReviewSummary());
         assertEquals(datePosted, reviewDocArgumentCaptor.getValue().getDatePosted());
     }
-
 
 }

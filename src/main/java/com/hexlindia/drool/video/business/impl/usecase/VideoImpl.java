@@ -51,7 +51,7 @@ public class VideoImpl implements Video {
             activityFeed.addVideo(videoDoc);
             return videoDocDtoMapper.toDto(videoDoc);
         }
-        log.error("Video not inserted");
+        log.error("Video not saved");
         return null;
     }
 

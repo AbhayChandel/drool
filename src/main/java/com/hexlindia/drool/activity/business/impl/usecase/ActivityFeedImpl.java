@@ -5,8 +5,10 @@ import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
 import com.hexlindia.drool.activity.dto.FeedDto;
+import com.hexlindia.drool.activity.dto.mapper.DiscussionToFeedDocMapper;
 import com.hexlindia.drool.activity.dto.mapper.FeedDocDtoMapper;
 import com.hexlindia.drool.activity.dto.mapper.VideoToFeedDocMapper;
+import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ public class ActivityFeedImpl implements ActivityFeed {
     private final VideoToFeedDocMapper videoToFeedDocMapper;
     private final ActivityFeedRepository activityFeedRepository;
     private final FeedDocDtoMapper feedDocDtoMapper;
+    private final DiscussionToFeedDocMapper discussionToFeedDocMapper;
 
     @Override
     public void addVideo(VideoDoc videoDoc) {
@@ -48,5 +51,8 @@ public class ActivityFeedImpl implements ActivityFeed {
         return feedDocDtoMapper.toDtoList(activityFeedRepository.getFeed(page));
     }
 
-
+    @Override
+    public void addDiscussion(DiscussionTopicDoc discussionTopicDoc) {
+        addToFeed(discussionToFeedDocMapper.toFeedDoc(discussionTopicDoc));
+    }
 }

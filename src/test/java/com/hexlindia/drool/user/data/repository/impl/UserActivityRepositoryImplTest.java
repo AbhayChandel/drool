@@ -4,6 +4,7 @@ import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
 import com.hexlindia.drool.user.data.doc.UserRef;
@@ -130,6 +131,16 @@ class UserActivityRepositoryImplTest {
         assertTrue(userActivityRepository.addTextReview(reviewDoc).getModifiedCount() > 0);
     }
 
+    @Test
+    void addDiscussion() {
+        DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
+        discussionTopicDoc.setId(ObjectId.get());
+        discussionTopicDoc.setTitle("This is not a test discussion");
+        discussionTopicDoc.setDatePosted(LocalDateTime.now());
+        discussionTopicDoc.setUserRef(new UserRef(userId, "Shabana"));
+        assertTrue(userActivityRepository.addDiscussion(discussionTopicDoc).getModifiedCount() > 0);
+    }
+
     private ObjectId userId = new ObjectId();
     private ObjectId videoId = new ObjectId();
     private ObjectId commentId = new ObjectId();
@@ -140,6 +151,4 @@ class UserActivityRepositoryImplTest {
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef(commentId, "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef(commentId, "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
-
-
 }

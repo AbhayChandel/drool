@@ -37,7 +37,7 @@ class VideoCommentMapperTest {
 
 
     @Test
-    void toDoc() {
+    void toDoc_WithId() {
         ObjectId userId = new ObjectId();
         VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", "guide", "video", null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
         ObjectId videoCommentId = ObjectId.get();
@@ -47,5 +47,15 @@ class VideoCommentMapperTest {
         assertEquals("sonam99", videoComment.getUserRef().getUsername());
         assertEquals("This is a comment to test videoCommentMapper toDoc", videoComment.getComment());
         assertEquals(videoCommentId, videoComment.getId());
+    }
+
+    @Test
+    void toDoc_WithoutId() {
+        ObjectId userId = new ObjectId();
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", "guide", "video", null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
+        VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
+        assertEquals(userId, videoComment.getUserRef().getId());
+        assertEquals("sonam99", videoComment.getUserRef().getUsername());
+        assertEquals("This is a comment to test videoCommentMapper toDoc", videoComment.getComment());
     }
 }

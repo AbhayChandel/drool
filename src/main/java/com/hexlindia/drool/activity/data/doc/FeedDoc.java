@@ -21,8 +21,8 @@ public class FeedDoc {
     private String title;
     private String sourceId;
     private LocalDateTime datePosted;
-    private String likes;
-    private String views;
+    private int likes;
+    private int views;
     private int comments;
     private List<ProductRef> productRefList;
     private UserRef userRef;

@@ -1,5 +1,6 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
+import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionTopic;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -7,6 +8,7 @@ import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicReposit
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -22,6 +24,8 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     private final DiscussionTopicRepository discussionTopicRepository;
     private final DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
+    private final UserActivity userActivity;
+    private final ActivityFeed activityFeed;
 
     @Override
     public DiscussionTopicDto post(DiscussionTopicDto discussionTopicDto) {
@@ -31,8 +35,13 @@ public class DiscussionTopicImpl implements DiscussionTopic {
         discussionTopicDoc.setDateLastActive(datePosted);
         discussionTopicDoc.setActive(true);
         discussionTopicDoc = discussionTopicRepository.save(discussionTopicDoc);
-        log.debug("DiscussionTopic: '{}', id: '{}' created", discussionTopicDoc.getTitle(), discussionTopicDoc.getId());
-        return discussionTopicDtoDocMapper.toDto(discussionTopicDoc);
+        if (discussionTopicDoc.getId() != null) {
+            userActivity.addDiscussion(discussionTopicDoc);
+            activityFeed.addDiscussion(discussionTopicDoc);
+            return discussionTopicDtoDocMapper.toDto(discussionTopicDoc);
+        }
+        log.error("Discussion not saved");
+        return null;
     }
 
     @Override

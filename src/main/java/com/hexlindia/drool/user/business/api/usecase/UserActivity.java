@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user.business.api.usecase;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
@@ -27,4 +28,6 @@ public interface UserActivity {
     UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto);
 
     UpdateResult addTextReview(ReviewDoc reviewDoc);
+
+    UpdateResult addDiscussion(DiscussionTopicDoc discussionTopicDoc);
 }

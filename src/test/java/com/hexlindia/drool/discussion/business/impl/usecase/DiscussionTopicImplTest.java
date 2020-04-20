@@ -1,10 +1,12 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
+import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +36,15 @@ class DiscussionTopicImplTest {
     @Autowired
     private DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
 
-    //START FIXING TEST FOR DISCUSSION TOPIC AND REPLY : REPOSITORY AND BUSINESS
+    @Mock
+    private UserActivity userActivityMock;
+
+    @Mock
+    private ActivityFeed activityFeedMock;
 
     @BeforeEach
     void setUp() {
-        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked));
+        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock));
     }
 
     @Test
@@ -57,6 +63,36 @@ class DiscussionTopicImplTest {
         assertEquals(0, discussionTopicDocArgumentCaptor.getValue().getLikes());
         assertEquals(0, discussionTopicDocArgumentCaptor.getValue().getViews());
         assertTrue(discussionTopicDocArgumentCaptor.getValue().isActive());
+    }
+
+    @Test
+    void post_PassingObjectToUserActivityAndActivityComponent() {
+        DiscussionTopicDoc discussionTopicDocMocked = new DiscussionTopicDoc();
+        discussionTopicDocMocked.setTitle("THis is a test discusion title");
+        discussionTopicDocMocked.setLikes(0);
+        discussionTopicDocMocked.setViews(0);
+        discussionTopicDocMocked.setActive(true);
+        ObjectId discussionId = ObjectId.get();
+        discussionTopicDocMocked.setId(discussionId);
+        when(this.discussionTopicDtoDocMapperMocked.toDoc(any())).thenReturn(discussionTopicDocMocked);
+        when(this.discussionTopicRepository.save(any())).thenReturn(discussionTopicDocMocked);
+        this.discussionTopicImplSpy.post(null);
+
+        ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptorUserActivity = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
+        verify(this.userActivityMock, times(1)).addDiscussion(discussionTopicDocArgumentCaptorUserActivity.capture());
+        assertEquals("THis is a test discusion title", discussionTopicDocArgumentCaptorUserActivity.getValue().getTitle());
+        assertEquals(0, discussionTopicDocArgumentCaptorUserActivity.getValue().getLikes());
+        assertEquals(0, discussionTopicDocArgumentCaptorUserActivity.getValue().getViews());
+        assertTrue(discussionTopicDocArgumentCaptorUserActivity.getValue().isActive());
+        assertEquals(discussionId, discussionTopicDocArgumentCaptorUserActivity.getValue().getId());
+
+        ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptorActivityFeed = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
+        verify(this.activityFeedMock, times(1)).addDiscussion(discussionTopicDocArgumentCaptorActivityFeed.capture());
+        assertEquals("THis is a test discusion title", discussionTopicDocArgumentCaptorActivityFeed.getValue().getTitle());
+        assertEquals(0, discussionTopicDocArgumentCaptorActivityFeed.getValue().getLikes());
+        assertEquals(0, discussionTopicDocArgumentCaptorActivityFeed.getValue().getViews());
+        assertTrue(discussionTopicDocArgumentCaptorActivityFeed.getValue().isActive());
+        assertEquals(discussionId, discussionTopicDocArgumentCaptorActivityFeed.getValue().getId());
     }
 
     @Test

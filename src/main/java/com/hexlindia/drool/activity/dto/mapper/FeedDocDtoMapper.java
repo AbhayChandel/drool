@@ -28,5 +28,7 @@ public abstract class FeedDocDtoMapper {
     protected void afterMappingToDto(FeedDoc feedDoc, @MappingTarget FeedDto feedDto) {
         feedDto.setDatePosted(MetaFieldValueFormatter.getDateInDayMonCommaYear(feedDoc.getDatePosted()));
         feedDto.setComments(MetaFieldValueFormatter.getCompactFormat(feedDoc.getComments()));
+        feedDto.setLikes(MetaFieldValueFormatter.getCompactFormat(feedDoc.getLikes()));
+        feedDto.setViews(MetaFieldValueFormatter.getCompactFormat(feedDoc.getViews()));
     }
 }
