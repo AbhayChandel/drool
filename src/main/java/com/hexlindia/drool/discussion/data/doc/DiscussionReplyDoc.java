@@ -23,7 +23,6 @@ public class DiscussionReplyDoc {
 
     private String reply;
     private UserRef userRef;
-    private boolean active;
     private LocalDateTime datePosted;
     private int likes;
 }

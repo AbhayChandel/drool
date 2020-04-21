@@ -41,7 +41,6 @@ public class DiscussionReplyImpl implements DiscussionReply {
     private DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto) {
         DiscussionReplyDoc discussionReplyDoc = discussionReplyDtoDocMapper.toDoc(discussionReplyDto);
         discussionReplyDoc.setDatePosted(LocalDateTime.now());
-        discussionReplyDoc.setActive(true);
         boolean result = discussionReplyRepository.saveReply(discussionReplyDoc, new ObjectId(discussionReplyDto.getDiscussionId()));
         if (result) {
             return discussionReplyDtoDocMapper.toDto(discussionReplyDoc);

@@ -37,7 +37,6 @@ class DiscussionReplyDtoDOcMapperTest {
         discussionReplyDoc.setReply("As I told it is a great reply");
         ObjectId userId = ObjectId.get();
         discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
-        discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
 
         DiscussionReplyDto discussionReplyDto = discussionReplyDtoDocMapper.toDto(discussionReplyDoc);

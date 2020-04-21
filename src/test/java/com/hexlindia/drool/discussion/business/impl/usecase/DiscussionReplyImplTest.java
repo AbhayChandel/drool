@@ -15,7 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,7 +42,6 @@ class DiscussionReplyImplTest {
         discussionReplyDocMocked.setReply("This is a test reply");
         LocalDateTime datePosted = LocalDateTime.now();
         discussionReplyDocMocked.setDatePosted(datePosted);
-        discussionReplyDocMocked.setActive(true);
         discussionReplyDocMocked.setLikes(50);
         ObjectId discussionId = new ObjectId();
         ObjectId userId = new ObjectId();
@@ -56,7 +56,6 @@ class DiscussionReplyImplTest {
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(this.discussionReplyRepositoryMocked, times(1)).saveReply(discussionReplyDocArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals("This is a test reply", discussionReplyDocArgumentCaptor.getValue().getReply());
-        assertTrue(discussionReplyDocArgumentCaptor.getValue().isActive());
         assertEquals(50, discussionReplyDocArgumentCaptor.getValue().getLikes());
         assertEquals(userId, discussionReplyDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", discussionReplyDocArgumentCaptor.getValue().getUserRef().getUsername());

@@ -87,7 +87,6 @@ public class DiscussionTopicIT {
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
         discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
-        discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
 
