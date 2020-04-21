@@ -41,7 +41,7 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
     }
 
     @Override
-    public ResponseEntity<Boolean> setStatus(Map<String, String> parameters) {
-        return ResponseEntity.ok(this.discussionReply.setStatus(Boolean.valueOf(parameters.get("status")), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+    public ResponseEntity<Boolean> delete(String replyId, String discussionId) {
+        return ResponseEntity.ok(this.discussionReply.delete(replyId, discussionId));
     }
 }

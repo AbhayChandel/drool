@@ -179,18 +179,14 @@ public class DiscussionReplyIT {
     }
 
     @Test
-    void testSetStatus() throws JSONException {
+    void testDelete() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
-        JSONObject parameters = new JSONObject();
-        parameters.put("status", false);
-        parameters.put("replyId", insertedReplyId.toHexString());
-        parameters.put("discussionId", insertDiscussionId.toHexString());
-        HttpEntity<String> httpEntity = new HttpEntity<>(parameters.toString(), headers);
+        HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(getSetStatusUri(), HttpMethod.PUT, httpEntity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(getDeleteUri() + "/" + insertDiscussionId.toHexString() + "/" + insertedReplyId.toHexString(), HttpMethod.DELETE, httpEntity, String.class);
         assertTrue(Boolean.valueOf(response.getBody()));
 
     }
@@ -204,20 +200,12 @@ public class DiscussionReplyIT {
         return "/" + restUriVersion + "/discussion/reply/post";
     }
 
-    private String getDiscussionTopicFindByIdUri() {
-        return "/" + restUriVersion + "/discussion/find/id";
-    }
-
     private String getUpdateUri() {
         return "/" + restUriVersion + "/discussion/reply/update";
     }
 
-    private String getSetStatusUri() {
-        return "/" + restUriVersion + "/discussion/reply/set";
-    }
-
-    private String getFindByIdUri() {
-        return "/" + restUriVersion + "/discussion/reply/find/id";
+    private String getDeleteUri() {
+        return "/" + restUriVersion + "/discussion/reply/delete";
     }
 
     private String getLikesIncrementUri() {

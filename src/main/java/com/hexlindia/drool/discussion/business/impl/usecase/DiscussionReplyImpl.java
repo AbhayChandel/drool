@@ -60,7 +60,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     }
 
     @Override
-    public boolean setStatus(Boolean status, String replyId, String discussionId) {
-        return discussionReplyRepository.setStatus(status, new ObjectId(replyId), new ObjectId(discussionId));
+    public boolean delete(String replyId, String discussionId) {
+        return discussionReplyRepository.delete(new ObjectId(replyId), new ObjectId(discussionId));
     }
 }

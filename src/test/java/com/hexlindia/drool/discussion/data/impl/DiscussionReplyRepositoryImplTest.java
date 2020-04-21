@@ -62,8 +62,8 @@ class DiscussionReplyRepositoryImplTest {
     }
 
     @Test
-    void setInactive() {
-        assertTrue(discussionReplyRepository.setStatus(false, insertedReplyId, insertDiscussionTopic));
+    void delete() {
+        assertTrue(discussionReplyRepository.delete(insertedReplyId, insertDiscussionTopic));
     }
 
     private void insertDiscussionTopicDocs() {

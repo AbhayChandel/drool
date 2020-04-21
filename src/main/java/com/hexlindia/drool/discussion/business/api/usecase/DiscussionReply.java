@@ -10,5 +10,5 @@ public interface DiscussionReply {
 
     String decrementLikes(String replyId, String discussionId, String userId);
 
-    boolean setStatus(Boolean status, String replyId, String discussionId);
+    boolean delete(String replyId, String discussionId);
 }

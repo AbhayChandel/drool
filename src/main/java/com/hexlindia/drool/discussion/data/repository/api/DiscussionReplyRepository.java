@@ -13,6 +13,6 @@ public interface DiscussionReplyRepository {
 
     Integer decrementLikes(ObjectId replyId, ObjectId discussionId);
 
-    boolean setStatus(Boolean status, ObjectId replyId, ObjectId discussionId);
+    boolean delete(ObjectId replyId, ObjectId discussionId);
 
 }

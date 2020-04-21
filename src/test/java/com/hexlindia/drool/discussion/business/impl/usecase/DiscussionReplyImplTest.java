@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -111,17 +110,14 @@ class DiscussionReplyImplTest {
     }
 
     @Test
-    void setInactive_PassingObjectToRepositoryLayer() {
+    void delete_PassingObjectToRepositoryLayer() {
         ObjectId replyIdMocked = new ObjectId();
         ObjectId discussionIdMocked = new ObjectId();
-        Boolean status = false;
-        when(this.discussionReplyRepositoryMocked.setStatus(status, replyIdMocked, discussionIdMocked)).thenReturn(true);
-        this.discussionReplyImplSpy.setStatus(status, replyIdMocked.toHexString(), discussionIdMocked.toHexString());
-        ArgumentCaptor<Boolean> statusArgumentCaptor = ArgumentCaptor.forClass(Boolean.class);
+        when(this.discussionReplyRepositoryMocked.delete(replyIdMocked, discussionIdMocked)).thenReturn(true);
+        this.discussionReplyImplSpy.delete(replyIdMocked.toHexString(), discussionIdMocked.toHexString());
         ArgumentCaptor<ObjectId> replyIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
-        verify(this.discussionReplyRepositoryMocked, times(1)).setStatus(statusArgumentCaptor.capture(), replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
-        assertFalse(statusArgumentCaptor.getValue());
+        verify(this.discussionReplyRepositoryMocked, times(1)).delete(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals(replyIdMocked, replyIdArgumentCaptor.getValue());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptor.getValue());
     }

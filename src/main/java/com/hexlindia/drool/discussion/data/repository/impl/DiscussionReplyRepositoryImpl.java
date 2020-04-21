@@ -24,11 +24,11 @@ public class DiscussionReplyRepositoryImpl implements DiscussionReplyRepository 
     private final MongoOperations mongoOperations;
 
     private static final String VIDEO_COLLECTION_NAME = "discussions";
-    private static final String PROPERTY_REPLIES = "replies";
+    private static final String FIELD_REPLIES = "replies";
 
     @Override
     public boolean saveReply(DiscussionReplyDoc discussionReplyDoc, ObjectId discussionId) {
-        UpdateResult result = mongoOperations.updateFirst(new Query(where("id").is(discussionId)), new Update().addToSet(PROPERTY_REPLIES, discussionReplyDoc).set("dateLastActive", LocalDateTime.now()), DiscussionTopicDoc.class);
+        UpdateResult result = mongoOperations.updateFirst(new Query(where("id").is(discussionId)), new Update().addToSet(FIELD_REPLIES, discussionReplyDoc).set("dateLastActive", LocalDateTime.now()), DiscussionTopicDoc.class);
         return result.getModifiedCount() > 0;
     }
 
@@ -66,13 +66,15 @@ public class DiscussionReplyRepositoryImpl implements DiscussionReplyRepository 
     }
 
     @Override
-    public boolean setStatus(Boolean status, ObjectId replyId, ObjectId discussionId) {
-        Update update = new Update().set("replies.$.active", status);
-        UpdateResult result = mongoOperations.updateFirst(findReply(replyId, discussionId), update, DiscussionTopicDoc.class);
+    public boolean delete(ObjectId replyId, ObjectId discussionId) {
+        Query queryDiscussion = Query.query(Criteria.where("_id").is(discussionId));
+        Query queryComment = Query.query(Criteria.where("_id").is(replyId));
+        Update update = new Update().pull(FIELD_REPLIES, queryComment);
+        UpdateResult result = mongoOperations.updateFirst(queryDiscussion, update, DiscussionTopicDoc.class);
         return result.getMatchedCount() > 0 && result.getModifiedCount() > 0;
     }
 
     private Query findReply(ObjectId replyId, ObjectId discussionId) {
-        return Query.query(Criteria.where("_id").is(discussionId).andOperator(Criteria.where(PROPERTY_REPLIES + "._id").is(replyId)));
+        return Query.query(Criteria.where("_id").is(discussionId).andOperator(Criteria.where(FIELD_REPLIES + "._id").is(replyId)));
     }
 }

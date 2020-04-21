@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -154,33 +153,28 @@ class DiscussionReplyRestServiceImplTest {
     }
 
     @Test
-    void setStatus_HttpMethodNotAllowed() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(getSetStatusUri()))
+    void delete_HttpMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteUri() + "/" + ObjectId.get().toHexString() + "/" + ObjectId.get().toHexString()))
                 .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
-    void setStatus_missingRequestObject() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getSetStatusUri()))
-                .andExpect(status().isBadRequest());
+    void delete_missingRequestObject() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(getDeleteUri() + "/" + ObjectId.get().toHexString()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    public void setStatus_ParametersPassedToBusinessLayer() throws Exception {
+    public void delete_ParametersPassedToBusinessLayer() throws Exception {
         ObjectId replyId = new ObjectId();
         ObjectId discussionId = new ObjectId();
-        Boolean status = true;
-        when(this.discussionReplyMocked.setStatus(status, replyId.toHexString(), discussionId.toHexString())).thenReturn(true);
-        String requestBody = "{\"status\":\"" + status + "\", \"replyId\": \"" + replyId.toHexString() + "\", \"discussionId\": \"" + discussionId.toHexString() + "\"}";
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getSetStatusUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+        when(this.discussionReplyMocked.delete(replyId.toHexString(), discussionId.toHexString())).thenReturn(true);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(getDeleteUri() + "/" + discussionId.toHexString() + "/" + replyId.toHexString()))
                 .andExpect(status().isOk());
 
-        ArgumentCaptor<Boolean> statusArgumentCaptor = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<String> replyIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> discussionIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.discussionReplyMocked, times(1)).setStatus(statusArgumentCaptor.capture(), replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
-        assertTrue(statusArgumentCaptor.getValue());
+        verify(this.discussionReplyMocked, times(1)).delete(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals(replyId.toHexString(), replyIdArgumentCaptor.getValue());
         assertEquals(discussionId.toHexString(), discussionIdArgumentCaptor.getValue());
     }
@@ -194,8 +188,8 @@ class DiscussionReplyRestServiceImplTest {
         return "/" + restUriVersion + "/discussion/reply/update";
     }
 
-    private String getSetStatusUri() {
-        return "/" + restUriVersion + "/discussion/reply/set";
+    private String getDeleteUri() {
+        return "/" + restUriVersion + "/discussion/reply/delete";
     }
 
     private String getLikesIncrementUri() {
