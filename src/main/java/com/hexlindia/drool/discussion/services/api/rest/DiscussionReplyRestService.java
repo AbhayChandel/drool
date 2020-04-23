@@ -16,11 +16,11 @@ public interface DiscussionReplyRestService {
     ResponseEntity<Boolean> updateReply(@RequestBody Map<String, String> parameters);
 
     @PutMapping(value = "/likes/increment")
-    ResponseEntity<String> incrementLikes(@RequestBody Map<String, String> parameters);
+    ResponseEntity<String> incrementLikes(@RequestBody DiscussionReplyDto discussionReplyDto);
 
     @PutMapping(value = "/likes/decrement")
     ResponseEntity<String> decrementLikes(@RequestBody Map<String, String> parameters);
 
-    @DeleteMapping(value = "/delete/{discussionId}/{replyId}")
-    ResponseEntity<Boolean> delete(@PathVariable("replyId") String replyId, @PathVariable("discussionId") String discussionId);
+    @DeleteMapping(value = "/delete/{discussionId}/{replyId}/{userId}")
+    ResponseEntity<Boolean> delete(@PathVariable("replyId") String replyId, @PathVariable("discussionId") String discussionId, @PathVariable("userId") String userId);
 }

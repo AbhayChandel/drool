@@ -2,6 +2,7 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
 import com.hexlindia.drool.common.data.doc.PostRef;
+import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -141,14 +142,38 @@ class UserActivityRepositoryImplTest {
         assertTrue(userActivityRepository.addDiscussion(discussionTopicDoc).getModifiedCount() > 0);
     }
 
-    private ObjectId userId = new ObjectId();
-    private ObjectId videoId = new ObjectId();
-    private ObjectId commentId = new ObjectId();
+    @Test
+    void updateDiscussionReply() {
+        assertTrue(userActivityRepository.updateDiscussionReply(userId, new ReplyRef(replyId, "This is an update to test reply.", null, null)).getModifiedCount() > 0);
+    }
+
+    @Test
+    void deleteDiscussionReply() {
+        assertTrue(userActivityRepository.deleteDiscussionReply(userId, replyId).getModifiedCount() > 0);
+    }
+
+    @Test
+    void addDiscussionReplyLike() {
+        assertTrue(userActivityRepository.addDiscussionReplyLike(userId, new ReplyRef(ObjectId.get(), "This is a new reply", new PostRef(), LocalDateTime.now())).getModifiedCount() > 0);
+    }
+
+    @Test
+    void deleteDiscussionReplyLike() {
+        assertTrue(userActivityRepository.deleteDiscussionReplyLike(userId, replyLikeId).getModifiedCount() > 0);
+    }
+
+    private ObjectId userId = ObjectId.get();
+    private ObjectId videoId = ObjectId.get();
+    private ObjectId commentId = ObjectId.get();
+    private ObjectId replyId = ObjectId.get();
+    private ObjectId replyLikeId = ObjectId.get();
 
     @BeforeEach
     public void setUp() {
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.videos", new VideoLike(videoId, "This video is part of test setup")), UserActivityDoc.class);
-        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("comments", new CommentRef(commentId, "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("video_comments", new CommentRef(commentId, "This is a test comment", new PostRef(ObjectId.get(), "This is a test post.", "guide", "video", null), LocalDateTime.now())), UserActivityDoc.class);
         mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.comments", new CommentRef(commentId, "A test comment", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("discussion_replies", new ReplyRef(replyId, "A test reply", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
+        mongoOperations.upsert(query(where("id").is(userId)), new Update().addToSet("likes.replies", new ReplyRef(replyLikeId, "A test reply", new PostRef(ObjectId.get(), "a test post", null, null, null), null)), UserActivityDoc.class);
     }
 }

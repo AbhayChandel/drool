@@ -6,9 +6,9 @@ public interface DiscussionReply {
 
     DiscussionReplyDto saveOrUpdate(DiscussionReplyDto discussionReplyDto);
 
-    String incrementLikes(String replyId, String discussionId, String userId);
+    String incrementLikes(DiscussionReplyDto discussionReplyDto);
 
     String decrementLikes(String replyId, String discussionId, String userId);
 
-    boolean delete(String replyId, String discussionId);
+    boolean delete(String replyId, String discussionId, String userId);
 }

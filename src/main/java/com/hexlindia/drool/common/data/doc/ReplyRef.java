@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentRef {
+public class ReplyRef {
 
     private ObjectId id;
-    private String comment;
+    private String reply;
     private PostRef postRef;
     private LocalDateTime datePosted;
 }

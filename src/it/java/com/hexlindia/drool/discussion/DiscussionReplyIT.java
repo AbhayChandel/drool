@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
+import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -59,6 +60,7 @@ public class DiscussionReplyIT {
 
     private ObjectId insertDiscussionId;
     private ObjectId insertedReplyId;
+    private ObjectId insertedUserId;
 
     @BeforeEach
     private void getAuthenticationToken() throws JSONException, JsonProcessingException {
@@ -95,6 +97,7 @@ public class DiscussionReplyIT {
         mongoOperations.save(discussionTopicDoc);
         insertDiscussionId = discussionTopicDoc.getId();
         insertedReplyId = discussionReplyDoc.getId();
+        insertedUserId = discussionReplyDoc.getUserRef().getId();
     }
 
     /*
@@ -107,7 +110,10 @@ public class DiscussionReplyIT {
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
         DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
-        discussionReplyDto.setDiscussionId(insertDiscussionId.toHexString());
+        PostRefDto postRefDto = new PostRefDto();
+        postRefDto.setId(insertDiscussionId.toHexString());
+        postRefDto.setTitle("A test discussion topic");
+        discussionReplyDto.setPostRefDto(postRefDto);
         discussionReplyDto.setReply("This is a new reply");
         discussionReplyDto.setLikes("0");
         ObjectId userId = new ObjectId();
@@ -134,7 +140,11 @@ public class DiscussionReplyIT {
         String reply = "This is updated reply";
         discussionReplyDto.setReply(reply);
         discussionReplyDto.setId(insertedReplyId.toHexString());
-        discussionReplyDto.setDiscussionId(insertDiscussionId.toHexString());
+        PostRefDto postRefDto = new PostRefDto();
+        postRefDto.setId(insertDiscussionId.toHexString());
+        postRefDto.setTitle("A test discussion topic");
+        discussionReplyDto.setPostRefDto(postRefDto);
+        discussionReplyDto.setUserRefDto(new UserRefDto(insertedUserId.toHexString(), "shabana"));
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionReplyDto), headers);
         ResponseEntity<DiscussionReplyDto> responseEntity = this.restTemplate.postForEntity(getPostUri(), request, DiscussionReplyDto.class);
@@ -144,16 +154,22 @@ public class DiscussionReplyIT {
     }
 
     @Test
-    void testIncrementLikes() throws JSONException {
+    void testIncrementLikes() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + this.authToken);
 
-        JSONObject parameters = new JSONObject();
-        parameters.put("replyId", insertedReplyId.toHexString());
-        parameters.put("discussionId", insertDiscussionId.toHexString());
-        parameters.put("userId", ObjectId.get().toHexString());
-        HttpEntity<String> httpEntity = new HttpEntity<>(parameters.toString(), headers);
+        DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
+        String reply = "This is updated reply";
+        discussionReplyDto.setReply(reply);
+        discussionReplyDto.setLikes("190");
+        discussionReplyDto.setId(insertedReplyId.toHexString());
+        PostRefDto postRefDto = new PostRefDto();
+        postRefDto.setId(insertDiscussionId.toHexString());
+        postRefDto.setTitle("A test discussion topic");
+        discussionReplyDto.setPostRefDto(postRefDto);
+        discussionReplyDto.setUserRefDto(new UserRefDto(insertedUserId.toHexString(), "shabana"));
+        HttpEntity<String> httpEntity = new HttpEntity<>(objectMapper.writeValueAsString(discussionReplyDto), headers);
 
         ResponseEntity<String> response = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, httpEntity, String.class);
         assertEquals(191, Integer.parseInt(response.getBody()));
@@ -186,7 +202,7 @@ public class DiscussionReplyIT {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(getDeleteUri() + "/" + insertDiscussionId.toHexString() + "/" + insertedReplyId.toHexString(), HttpMethod.DELETE, httpEntity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(getDeleteUri() + "/" + insertDiscussionId.toHexString() + "/" + insertedReplyId.toHexString() + "/" + insertedUserId.toHexString(), HttpMethod.DELETE, httpEntity, String.class);
         assertTrue(Boolean.valueOf(response.getBody()));
 
     }

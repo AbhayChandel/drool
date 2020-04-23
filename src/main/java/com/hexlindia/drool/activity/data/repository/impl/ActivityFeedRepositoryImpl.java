@@ -27,6 +27,12 @@ public class ActivityFeedRepositoryImpl implements ActivityFeedRepository {
     private final MongoOperations mongoOperations;
 
     @Override
+    public List<FeedDoc> getFeed(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("datePosted").descending());
+        return mongoOperations.find(new Query().with(pageable), FeedDoc.class);
+    }
+
+    @Override
     public FeedDoc save(FeedDoc feedDoc) {
         return this.mongoOperations.save(feedDoc);
     }
@@ -39,11 +45,5 @@ public class ActivityFeedRepositoryImpl implements ActivityFeedRepository {
     @Override
     public FeedDoc incrementDecrementField(ObjectId postId, FeedDocFields feedDocFields, int value) {
         return mongoOperations.findAndModify(new Query(where("postId").is(postId)), new Update().inc(feedDocFields.toString(), value), FindAndModifyOptions.options().returnNew(true), FeedDoc.class);
-    }
-
-    @Override
-    public List<FeedDoc> getFeed(int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("datePosted").descending());
-        return mongoOperations.find(new Query().with(pageable), FeedDoc.class);
     }
 }

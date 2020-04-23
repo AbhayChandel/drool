@@ -1,5 +1,6 @@
 package com.hexlindia.drool.discussion.dto.mapper;
 
+import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -30,7 +31,7 @@ class DiscussionTopicDtoDocMapperTest {
         discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
         DiscussionReplyDto discussionReplyDto = new DiscussionReplyDto();
-        discussionReplyDto.setDiscussionId("123");
+        discussionReplyDto.setPostRefDto(new PostRefDto());
         discussionReplyDto.setReply("This is going to be a great reply");
         discussionReplyDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 

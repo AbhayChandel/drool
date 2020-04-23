@@ -1,6 +1,7 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.product.data.doc.ReviewDoc;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
@@ -70,5 +71,30 @@ public class UserActivityImpl implements UserActivity {
     @Override
     public UpdateResult addDiscussion(DiscussionTopicDoc discussionTopicDoc) {
         return this.userActivityRepository.addDiscussion(discussionTopicDoc);
+    }
+
+    @Override
+    public UpdateResult addDiscussionReply(ObjectId userId, ReplyRef replyRef) {
+        return this.userActivityRepository.addDiscussionReply(userId, replyRef);
+    }
+
+    @Override
+    public UpdateResult updateDiscussionReply(ObjectId userId, ReplyRef replyRef) {
+        return this.userActivityRepository.updateDiscussionReply(userId, replyRef);
+    }
+
+    @Override
+    public UpdateResult deleteDiscussionReply(ObjectId userId, ObjectId replyId) {
+        return this.userActivityRepository.deleteDiscussionReply(userId, replyId);
+    }
+
+    @Override
+    public UpdateResult addDiscussionReplyLike(ObjectId userId, ReplyRef replyRef) {
+        return this.userActivityRepository.addDiscussionReplyLike(userId, replyRef);
+    }
+
+    @Override
+    public UpdateResult deleteDiscussionReplyLike(ObjectId userId, ObjectId replyId) {
+        return this.userActivityRepository.deleteDiscussionReplyLike(userId, replyId);
     }
 }

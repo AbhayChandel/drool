@@ -28,8 +28,18 @@ public class ActivityFeedImpl implements ActivityFeed {
     private final DiscussionToFeedDocMapper discussionToFeedDocMapper;
 
     @Override
+    public List<FeedDto> getFeed(int page) {
+        return feedDocDtoMapper.toDtoList(activityFeedRepository.getFeed(page));
+    }
+
+    @Override
     public void addVideo(VideoDoc videoDoc) {
         addToFeed(videoToFeedDocMapper.toFeedDoc(videoDoc));
+    }
+
+    @Override
+    public void addDiscussion(DiscussionTopicDoc discussionTopicDoc) {
+        addToFeed(discussionToFeedDocMapper.toFeedDoc(discussionTopicDoc));
     }
 
     private void addToFeed(FeedDoc feedDoc) {
@@ -46,13 +56,5 @@ public class ActivityFeedImpl implements ActivityFeed {
         activityFeedRepository.incrementDecrementField(postId, feedDocFields, value);
     }
 
-    @Override
-    public List<FeedDto> getFeed(int page) {
-        return feedDocDtoMapper.toDtoList(activityFeedRepository.getFeed(page));
-    }
 
-    @Override
-    public void addDiscussion(DiscussionTopicDoc discussionTopicDoc) {
-        addToFeed(discussionToFeedDocMapper.toFeedDoc(discussionTopicDoc));
-    }
 }
