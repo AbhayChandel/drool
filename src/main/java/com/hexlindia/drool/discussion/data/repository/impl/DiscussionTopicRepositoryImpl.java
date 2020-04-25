@@ -33,11 +33,6 @@ public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository 
     public Optional<DiscussionTopicDoc> findById(ObjectId id) {
         MatchOperation match = match(new Criteria("_id").is(id).andOperator(new Criteria("active").is(true)));
         ProjectionOperation project = Aggregation.project("title", "userRef", "datePosted", "dateLastActive", "views", "likes", "replies").
-                //and(ArrayOperators.arrayOf("replies").length()).as("repliesCount");
-                //and(ConditionalOperators.when(ConditionalOperators.ifNull("replies").then(true)).then(ArrayOperators.arrayOf("replies").length()).otherwise(0)).as("repliesCount");
-                // and(ConditionalOperators.ifNull(ArrayOperators.arrayOf("replies").length()).then(0)).as("repliesCount");
-                // and(ConditionalOperators.when(new Criteria("replies").is(null)).then(0).otherwise(ArrayOperators.arrayOf("replies").length())).as("repliesCount");
-                //and(ConditionalOperators.when(new Criteria("replies").is("missing")).then(0).otherwise(ArrayOperators.arrayOf("replies").length())).as("repliesCount");
                         and(ArrayOperators.arrayOf(ConditionalOperators.ifNull("replies").then(Collections.emptyList())).length()).as("repliesCount");
 
 

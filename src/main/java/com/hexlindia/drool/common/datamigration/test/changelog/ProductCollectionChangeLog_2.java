@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @ChangeLog
-public class ProductCollectionChangeLog {
+public class ProductCollectionChangeLog_2 {
 
     @ChangeSet(order = "002", id = "product", author = "")
     public void insertInitialProduct(MongoTemplate mongoTemplate) {

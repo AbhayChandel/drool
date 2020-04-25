@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @ChangeLog
-public class VideoCollectionChangeLog {
+public class VideoCollectionChangeLog_1 {
 
     @ChangeSet(order = "001", id = "video", author = "")
     public void importantWorkToDo(MongoTemplate mongoTemplate) {

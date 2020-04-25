@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @ChangeLog
-public class ActivityFeedChangeLog {
+public class ActivityFeedChangeLog_3 {
 
     private static final String POST_TYPE_GUIDE = "guide";
     private static final String POST_TYPE_REVIEW = "review";
@@ -20,19 +20,19 @@ public class ActivityFeedChangeLog {
 
     @ChangeSet(order = "005", id = "activity_feed", author = "")
     public void insertInitialProduct(MongoTemplate mongoTemplate) {
-        FeedDoc feedDocLakmeFoundation = new FeedDoc();
-        feedDocLakmeFoundation.setPostId(ObjectId.get());
-        feedDocLakmeFoundation.setPostType(POST_TYPE_GUIDE);
-        feedDocLakmeFoundation.setPostMedium(POST_MEDIUM_VIDEO);
-        feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
-        feedDocLakmeFoundation.setSourceId("QW46ldTDiBY");
-        feedDocLakmeFoundation.setDatePosted(LocalDateTime.now().minusHours(2));
-        feedDocLakmeFoundation.setLikes(34345);
-        feedDocLakmeFoundation.setViews(4347654);
-        feedDocLakmeFoundation.setComments(580);
-        feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
-        feedDocLakmeFoundation.setUserRef(getUserShabana());
-        mongoTemplate.save(feedDocLakmeFoundation);
+        FeedDoc feedDocHonestReviewOfKay = new FeedDoc();
+        feedDocHonestReviewOfKay.setPostId(ObjectId.get());
+        feedDocHonestReviewOfKay.setPostType(POST_TYPE_REVIEW);
+        feedDocHonestReviewOfKay.setPostMedium(POST_MEDIUM_VIDEO);
+        feedDocHonestReviewOfKay.setTitle(("HONEST Review of KAY By Katrina Kaif Beauty! Swatches included"));
+        feedDocHonestReviewOfKay.setSourceId("GEvx9fwkehA");
+        feedDocHonestReviewOfKay.setDatePosted(LocalDateTime.now().minusMonths(1));
+        feedDocHonestReviewOfKay.setLikes(2985);
+        feedDocHonestReviewOfKay.setViews(131967);
+        feedDocHonestReviewOfKay.setComments(196);
+        feedDocHonestReviewOfKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
+        feedDocHonestReviewOfKay.setUserRef(getUserShabana());
+        mongoTemplate.save(feedDocHonestReviewOfKay);
 
         FeedDoc feedDocEasyNudeMakeup = new FeedDoc();
         feedDocEasyNudeMakeup.setPostId(ObjectId.get());
@@ -47,20 +47,6 @@ public class ActivityFeedChangeLog {
         feedDocEasyNudeMakeup.setProductRefList(Arrays.asList(new ProductRef("1", "Clinique FOundation", "foundation")));
         feedDocEasyNudeMakeup.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocEasyNudeMakeup);
-
-        FeedDoc feedDocHonestReviewOfKay = new FeedDoc();
-        feedDocHonestReviewOfKay.setPostId(ObjectId.get());
-        feedDocHonestReviewOfKay.setPostType(POST_TYPE_REVIEW);
-        feedDocHonestReviewOfKay.setPostMedium(POST_MEDIUM_VIDEO);
-        feedDocHonestReviewOfKay.setTitle(("HONEST Review of KAY By Katrina Kaif Beauty! Swatches included"));
-        feedDocHonestReviewOfKay.setSourceId("GEvx9fwkehA");
-        feedDocHonestReviewOfKay.setDatePosted(LocalDateTime.now().minusMonths(1));
-        feedDocHonestReviewOfKay.setLikes(2985);
-        feedDocHonestReviewOfKay.setViews(131967);
-        feedDocHonestReviewOfKay.setComments(196);
-        feedDocHonestReviewOfKay.setProductRefList(Arrays.asList(new ProductRef("1", "KAY products", "products")));
-        feedDocHonestReviewOfKay.setUserRef(getUserShabana());
-        mongoTemplate.save(feedDocHonestReviewOfKay);
 
         FeedDoc feedDocBeforeBuyKay = new FeedDoc();
         feedDocBeforeBuyKay.setPostId(ObjectId.get());
@@ -187,6 +173,20 @@ public class ActivityFeedChangeLog {
         feedDocLakmeArgainOilSerum.setProductRefList(Arrays.asList(new ProductRef("1", "Llakme absolute argan oil serum foundation SPF 45", "foundation")));
         feedDocLakmeArgainOilSerum.setUserRef(getUserShabana());
         mongoTemplate.save(feedDocLakmeArgainOilSerum);
+
+        FeedDoc feedDocLakmeFoundation = new FeedDoc();
+        feedDocLakmeFoundation.setPostId(ObjectId.get());
+        feedDocLakmeFoundation.setPostType(POST_TYPE_GUIDE);
+        feedDocLakmeFoundation.setPostMedium(POST_MEDIUM_VIDEO);
+        feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
+        feedDocLakmeFoundation.setSourceId("QW46ldTDiBY");
+        feedDocLakmeFoundation.setDatePosted(LocalDateTime.now().minusHours(2));
+        feedDocLakmeFoundation.setLikes(34345);
+        feedDocLakmeFoundation.setViews(4347654);
+        feedDocLakmeFoundation.setComments(580);
+        feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
+        feedDocLakmeFoundation.setUserRef(getUserShabana());
+        mongoTemplate.save(feedDocLakmeFoundation);
 
         FeedDoc feedDocLakmeAbsoluteFoundation = new FeedDoc();
         feedDocLakmeAbsoluteFoundation.setPostId(ObjectId.get());
