@@ -39,6 +39,6 @@ class PostRefMapperTest {
         assertEquals("THis is a test guide video title", postRefDto.getTitle());
         assertEquals(PostType.guide, postRefDto.getType());
         assertEquals(PostMedium.video, postRefDto.getMedium());
-        assertNotNull(postRefDto.getDatePosted());
+        assertNotNull(postRefDto.getDateTime());
     }
 }
