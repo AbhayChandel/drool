@@ -29,6 +29,6 @@ public class PostRefDto {
 
     @NotNull(message = "Post medium is missing", groups = {PostRefValidation.class})
     private PostMedium medium;
-    private String datePosted;
+    private String dateTime;
 
 }
