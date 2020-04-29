@@ -2,6 +2,7 @@ package com.hexlindia.drool.discussion.data.repository.impl;
 
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -46,7 +47,7 @@ public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository 
 
     @Override
     public boolean updateTopicTitle(String title, ObjectId discussionId) {
-        return mongoOperations.updateFirst(new Query(where("id").is(discussionId)), new Update().set("topic", title), DiscussionTopicDoc.class).getModifiedCount() > 0;
+        return mongoOperations.updateFirst(new Query(where("id").is(discussionId)), new Update().set("title", title), DiscussionTopicDoc.class).getModifiedCount() > 0;
     }
 
     @Override
@@ -62,5 +63,10 @@ public class DiscussionTopicRepositoryImpl implements DiscussionTopicRepository 
     @Override
     public DiscussionTopicDoc decrementLikes(ObjectId discussionId) {
         return mongoOperations.findAndModify(new Query(where("id").is(discussionId)), new Update().inc("likes", -1), FindAndModifyOptions.options().returnNew(true), DiscussionTopicDoc.class);
+    }
+
+    @Override
+    public DiscussionTopicDoc updateUser(ObjectId discussionId, UserRef newUserRef, UserRef oldUserRef) {
+        return mongoOperations.findAndModify(new Query(where("id").is(discussionId)), new Update().set("userRef", newUserRef).set("oldUserRef", oldUserRef), FindAndModifyOptions.options().returnNew(true), DiscussionTopicDoc.class);
     }
 }

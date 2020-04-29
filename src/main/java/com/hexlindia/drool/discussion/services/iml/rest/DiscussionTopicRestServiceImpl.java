@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestService {
 
@@ -25,8 +23,8 @@ public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestServic
     }
 
     @Override
-    public ResponseEntity<Boolean> updateTitle(Map<String, String> parameters) {
-        return ResponseEntity.ok(this.discussionTopic.updateTopicTitle(parameters.get("title"), parameters.get("id")));
+    public ResponseEntity<Boolean> updateTitle(DiscussionTopicDto discussionTopicDto) {
+        return ResponseEntity.ok(this.discussionTopic.updateTopicTitle(discussionTopicDto));
     }
 
     @Override
@@ -35,12 +33,17 @@ public class DiscussionTopicRestServiceImpl implements DiscussionTopicRestServic
     }
 
     @Override
-    public ResponseEntity<String> incrementLikes(Map<String, String> parameters) {
-        return ResponseEntity.ok(discussionTopic.incrementLikes(parameters.get("id"), parameters.get("userId")));
+    public ResponseEntity<String> incrementLikes(DiscussionTopicDto discussionTopicDto) {
+        return ResponseEntity.ok(discussionTopic.incrementLikes(discussionTopicDto));
     }
 
     @Override
-    public ResponseEntity<String> decrementLikes(Map<String, String> parameters) {
-        return ResponseEntity.ok(discussionTopic.decrementLikes(parameters.get("id"), parameters.get("userId")));
+    public ResponseEntity<String> decrementLikes(DiscussionTopicDto discussionTopicDto) {
+        return ResponseEntity.ok(discussionTopic.decrementLikes(discussionTopicDto));
+    }
+
+    @Override
+    public ResponseEntity<DiscussionTopicDto> changeOwnership(DiscussionTopicDto discussionTopicDto) {
+        return ResponseEntity.ok(this.discussionTopic.changeOwnership(discussionTopicDto));
     }
 }

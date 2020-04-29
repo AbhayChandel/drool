@@ -1,5 +1,6 @@
 package com.hexlindia.drool.common.data.mongo;
 
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserAccountDoc;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
@@ -67,7 +68,7 @@ public class MongoDataInsertion {
         UserRef.setId(userId);
         UserRef.setUsername("user123");
         VideoDoc videoDoc = new VideoDoc();
-        videoDoc.setType("review");
+        videoDoc.setType(PostType.review);
         videoDoc.setTitle("Added as part of test setup");
         videoDoc.setDescription("This is an honest review of Tom Ford Vetiver");
         videoDoc.setSourceId("s123");

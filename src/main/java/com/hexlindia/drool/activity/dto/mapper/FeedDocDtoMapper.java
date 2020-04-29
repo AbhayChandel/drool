@@ -17,7 +17,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {ProductRefMapper.class, UserRefMapper.class, ObjectIdMapper.class})
 public abstract class FeedDocDtoMapper {
 
-    @Mapping(source = "postId", target = "postId", qualifiedBy = ObjectIdToStringMapping.class)
+    @Mapping(source = "id", target = "id", qualifiedBy = ObjectIdToStringMapping.class)
     @Mapping(target = "productRefDtoList", source = "productRefList")
     @Mapping(target = "userRefDto", source = "userRef")
     public abstract FeedDto toDto(FeedDoc feedDoc);

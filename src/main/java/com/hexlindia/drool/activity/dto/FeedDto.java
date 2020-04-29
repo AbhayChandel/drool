@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class FeedDto {
 
-    private String postId;
+    private String id;
     private String postType;
     private String postMedium;
     private String title;

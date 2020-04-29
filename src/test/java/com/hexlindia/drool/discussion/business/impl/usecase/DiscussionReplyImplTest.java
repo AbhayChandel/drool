@@ -1,7 +1,9 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
-import com.hexlindia.drool.activity.FeedDocFields;
+import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
@@ -13,6 +15,7 @@ import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionReplyDtoDocMapper;
 import com.hexlindia.drool.discussion.dto.mapper.ReplyDtoToRefMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,7 +73,7 @@ class DiscussionReplyImplTest {
         discussionReplyDocMocked.setUserRef(new UserRef(userId, "shabana"));
         when(this.discussionReplyDtoDocMapperMocked.toDoc(any())).thenReturn(discussionReplyDocMocked);
         when(this.discussionReplyRepositoryMocked.saveReply(discussionReplyDocMocked, discussionIdMocked)).thenReturn(true);
-        when(this.userActivityMock.addDiscussionReply(any(), any())).thenReturn(null);
+        when(this.userActivityMock.add(any(), any(), any())).thenReturn(null);
         PostRef postRef = new PostRef();
         postRef.setId(discussionIdMocked);
         postRef.setTitle("This is a test discussion topic");
@@ -93,19 +96,21 @@ class DiscussionReplyImplTest {
         assertEquals("shabana", discussionReplyDocArgumentCaptor.getValue().getUserRef().getUsername());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptor.getValue());
 
-        ArgumentCaptor<ReplyRef> replyRefArgumentCaptor = ArgumentCaptor.forClass(ReplyRef.class);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
-        verify(this.userActivityMock, times(1)).addDiscussionReply(userIdArgumentCaptor.capture(), replyRefArgumentCaptor.capture());
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).add(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
         assertEquals(userId, userIdArgumentCaptor.getValue());
-        assertEquals(replyId, replyRefArgumentCaptor.getValue().getId());
-        assertEquals("This is a test reply", replyRefArgumentCaptor.getValue().getReply());
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(discussionIdMocked, postRefArgumentCaptor.getValue().getParentPost().getId());
+        assertEquals(replyId, postRefArgumentCaptor.getValue().getId());
 
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptorActivityFeed = ArgumentCaptor.forClass(ObjectId.class);
-        ArgumentCaptor<FeedDocFields> feedDocFieldsArgumentCaptorActivityFeed = ArgumentCaptor.forClass(FeedDocFields.class);
+        ArgumentCaptor<FeedDocField> feedDocFieldsArgumentCaptorActivityFeed = ArgumentCaptor.forClass(FeedDocField.class);
         ArgumentCaptor<Integer> incrementArgumentCaptorActivityFeed = ArgumentCaptor.forClass(Integer.class);
         verify(this.activityFeedMock, times(1)).incrementDecrementField(discussionIdArgumentCaptorActivityFeed.capture(), feedDocFieldsArgumentCaptorActivityFeed.capture(), incrementArgumentCaptorActivityFeed.capture());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptorActivityFeed.getValue());
-        assertEquals(FeedDocFields.comments, feedDocFieldsArgumentCaptorActivityFeed.getValue());
+        assertEquals(FeedDocField.comments, feedDocFieldsArgumentCaptorActivityFeed.getValue());
         assertEquals(1, incrementArgumentCaptorActivityFeed.getValue());
 
 
@@ -141,12 +146,14 @@ class DiscussionReplyImplTest {
         assertEquals(replyIdMocked, replyIdArgumentCaptor.getValue());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptor.getValue());
 
-
-        ArgumentCaptor<ReplyRef> replyRefArgumentCaptor = ArgumentCaptor.forClass(ReplyRef.class);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
-        verify(this.userActivityMock, times(1)).updateDiscussionReply(userIdArgumentCaptor.capture(), replyRefArgumentCaptor.capture());
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).update(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+
         assertEquals(userIdMocked, userIdArgumentCaptor.getValue());
-        assertEquals(replyRef, replyRefArgumentCaptor.getValue());
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(replyIdMocked, postRefArgumentCaptor.getValue().getId());
     }
 
     @Test
@@ -157,8 +164,9 @@ class DiscussionReplyImplTest {
         String reply = "This is going to be a great reply";
         discussionReplyDtoMocked.setReply(reply);
         ObjectId postId = ObjectId.get();
-        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", "discussion", "text", null));
-        discussionReplyDtoMocked.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "Arpit"));
+        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
+        ObjectId userId = ObjectId.get();
+        discussionReplyDtoMocked.setUserRefDto(new UserRefDto(userId.toHexString(), "Arpit"));
         when(this.discussionReplyRepositoryMocked.incrementLikes(any(), any())).thenReturn(301);
         ReplyRef replyRef = new ReplyRef();
         when(this.replyDtoToRefMapperMocked.toReplyRef(any())).thenReturn(replyRef);
@@ -168,6 +176,15 @@ class DiscussionReplyImplTest {
         verify(this.discussionReplyRepositoryMocked, times(1)).incrementLikes(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals(replyId, replyIdArgumentCaptor.getValue());
         assertEquals(postId, discussionIdArgumentCaptor.getValue());
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).add(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.like, actionTypeArgumentCaptor.getValue());
+        assertEquals(replyId, postRefArgumentCaptor.getValue().getId());
     }
 
     @Test
@@ -182,6 +199,8 @@ class DiscussionReplyImplTest {
         verify(this.discussionReplyRepositoryMocked, times(1)).decrementLikes(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals(replyIdMocked, replyIdArgumentCaptor.getValue());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptor.getValue());
+
+
     }
 
     @Test
@@ -189,22 +208,25 @@ class DiscussionReplyImplTest {
         ObjectId replyIdMocked = ObjectId.get();
         ObjectId discussionIdMocked = ObjectId.get();
         ObjectId userIdMocked = ObjectId.get();
+
         when(this.discussionReplyRepositoryMocked.delete(replyIdMocked, discussionIdMocked)).thenReturn(true);
+        when(this.userActivityMock.delete(any(), any(), any())).thenReturn(null);
         this.discussionReplyImplSpy.delete(replyIdMocked.toHexString(), discussionIdMocked.toHexString(), userIdMocked.toHexString());
+
         ArgumentCaptor<ObjectId> replyIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<ObjectId> discussionIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(this.discussionReplyRepositoryMocked, times(1)).delete(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
         assertEquals(replyIdMocked, replyIdArgumentCaptor.getValue());
         assertEquals(discussionIdMocked, discussionIdArgumentCaptor.getValue());
 
-        when(this.userActivityMock.deleteDiscussionReply(any(), any())).thenReturn(null);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
-        ArgumentCaptor<ObjectId> replyIdArgumentCaptorUserActivity = ArgumentCaptor.forClass(ObjectId.class);
-        verify(this.userActivityMock, times(1)).deleteDiscussionReply(userIdArgumentCaptor.capture(), replyIdArgumentCaptorUserActivity.capture());
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).delete(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+
         assertEquals(userIdMocked, userIdArgumentCaptor.getValue());
-        assertEquals(replyIdMocked, replyIdArgumentCaptorUserActivity.getValue());
-
-
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(replyIdMocked, postRefArgumentCaptor.getValue().getId());
     }
 
 

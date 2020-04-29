@@ -8,11 +8,13 @@ public interface DiscussionTopic {
 
     DiscussionTopicDto findById(String id);
 
-    boolean updateTopicTitle(String title, String id);
+    boolean updateTopicTitle(DiscussionTopicDto discussionTopicDto);
 
     String incrementViews(String id);
 
-    String incrementLikes(String id, String userId);
+    String incrementLikes(DiscussionTopicDto discussionTopicDto);
 
-    String decrementLikes(String id, String userId);
+    String decrementLikes(DiscussionTopicDto discussionTopicDto);
+
+    DiscussionTopicDto changeOwnership(DiscussionTopicDto discussionTopicDto);
 }

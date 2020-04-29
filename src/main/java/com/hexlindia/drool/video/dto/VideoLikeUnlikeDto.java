@@ -1,10 +1,18 @@
 package com.hexlindia.drool.video.dto;
 
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
+import com.hexlindia.drool.common.dto.validation.PostRefValidation;
 import com.hexlindia.drool.video.dto.validation.VideoDecrementLikesValidation;
 import com.hexlindia.drool.video.dto.validation.VideoIncrementLikesValidation;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+@Getter
+@Setter
 public class VideoLikeUnlikeDto {
 
     @NotEmpty(message = "User Id is missing", groups = {VideoIncrementLikesValidation.class, VideoDecrementLikesValidation.class})
@@ -16,27 +24,9 @@ public class VideoLikeUnlikeDto {
     @NotEmpty(message = "Video title is missing", groups = {VideoIncrementLikesValidation.class})
     private String videoTitle;
 
-    public String getVideoId() {
-        return videoId;
-    }
+    @NotNull(message = "Post type is missing", groups = {PostRefValidation.class})
+    private PostType postType;
 
-    public void setVideoId(String videoId) {
-        this.videoId = videoId;
-    }
-
-    public String getVideoTitle() {
-        return videoTitle;
-    }
-
-    public void setVideoTitle(String videoTitle) {
-        this.videoTitle = videoTitle;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    @NotNull(message = "Post medium is missing", groups = {PostRefValidation.class})
+    private PostMedium postMedium;
 }

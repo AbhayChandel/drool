@@ -15,7 +15,7 @@ import java.util.List;
 @Document(collection = "activity_feed")
 public class FeedDoc {
 
-    private ObjectId postId;
+    private ObjectId id;
     private String postType;
     private String postMedium;
     private String title;

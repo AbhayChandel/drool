@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.data.doc;
 
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class VideoDoc {
 
     @Id
     private ObjectId id;
-    private String type;
+    private PostType type;
     private ObjectId reviewId;
     private boolean active;
     private String title;
@@ -33,7 +34,7 @@ public class VideoDoc {
     private UserRef userRef;
     private List<VideoComment> commentList;
 
-    public VideoDoc(String type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
+    public VideoDoc(PostType type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
         this.type = type;
         this.title = title;
         this.description = description;

@@ -1,17 +1,13 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
-import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
-import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
-import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
-import com.hexlindia.drool.product.data.doc.ReviewDoc;
+import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
-import com.hexlindia.drool.user.data.doc.VideoLike;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
-import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -41,109 +37,88 @@ public class UserActivityRepositoryImpl implements UserActivityRepository {
     private static final String FIELD_VIDEOS = "videos";
     private static final String FIELD_GUIDES = "guides";
     private static final String FIELD_REVIEWS = "reviews";
-    private static final String FIELD_TEXT_REVIEWS = "textReviews";
+    private static final String FIELD_TEXT = "text";
     private static final String FIELD_DISCUSSIONS = "discussions";
     private static final String FIELD_LIKES = "likes";
     private static final String FIELD_COMMENTS = "comments";
     private static final String FIELD_REPLIES = "replies";
-    private static final String FIELD_VIDEO_COMMENTS = "video_comments";
-    private static final String FIELD_DISCUSSION_REPLIES = "discussion_replies";
+    private static final String FIELD_VIOLATIONS = "violations";
+    private static final String FIELD_REPORTED_VIOLATIONS = "reported_violations";
 
 
     @Override
-    public UpdateResult addVideo(VideoDoc videoDoc) {
-        return mongoOperations.upsert(query(where(ID).is(videoDoc.getUserRef().getId())), new Update().addToSet(FIELD_POSTS + DOT + FIELD_VIDEOS + DOT + (videoDoc.getType().equalsIgnoreCase("guide") ? FIELD_GUIDES : FIELD_REVIEWS), new PostRef(videoDoc.getId(), videoDoc.getTitle(), null, null, videoDoc.getDatePosted())), UserActivityDoc.class);
+    public UpdateResult add(ObjectId userId, ActionType actionType, PostRef postRef) {
+        return mongoOperations.upsert(getUser(userId), new Update().addToSet(getActionField(actionType) + DOT + getFieldName(postRef.getType(), postRef.getMedium()), postRef), UserActivityDoc.class);
     }
 
     @Override
-    public UpdateResult addVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return mongoOperations.upsert(query(where(ID).is(videoLikeUnlikeDto.getUserId())), new Update().addToSet(FIELD_LIKES + DOT + FIELD_VIDEOS, new VideoLike(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle())), UserActivityDoc.class);
+    public UpdateResult delete(ObjectId userId, ActionType actionType, PostRef postRef) {
+        Query queryPost = Query.query(Criteria.where(_ID).is(postRef.getId()));
+        Update update = new Update().pull(getActionField(actionType) + DOT + getFieldName(postRef.getType(), postRef.getMedium()), queryPost);
+        return mongoOperations.updateFirst(getUser(userId), update, UserActivityDoc.class);
     }
 
     @Override
-    public UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoLikeUnlikeDto.getUserId())));
-        Query queryVideo = Query.query(Criteria.where("videoId").is(new ObjectId(videoLikeUnlikeDto.getVideoId())));
-        Update update = new Update().pull(FIELD_LIKES + DOT + FIELD_VIDEOS, queryVideo);
-        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
+    public UpdateResult update(ObjectId userId, ActionType actionType, PostRef postRef) {
+        String post = getActionField(actionType) + DOT + getFieldName(postRef.getType(), postRef.getMedium());
+        Query queryPost = Query.query(Criteria.where(ID).is(userId).andOperator(Criteria.where(post + DOT + _ID).is(postRef.getId())));
+        Update update = new Update().set(post + ".$.title", postRef.getTitle());
+        return mongoOperations.updateFirst(queryPost, update, UserActivityDoc.class);
+    }
+
+    private Query getUser(ObjectId userId) {
+        return Query.query(Criteria.where(ID).is(userId));
+    }
+
+    private String getActionField(ActionType actionType) {
+        switch (actionType) {
+            case post:
+                return FIELD_POSTS;
+            case like:
+                return FIELD_LIKES;
+            default:
+                return "";
+        }
+    }
+
+    private String getFieldName(PostType postType, PostMedium postMedium) {
+        switch (postType) {
+            case guide:
+                switch (postMedium) {
+                    case video:
+                        return FIELD_GUIDES + DOT + FIELD_VIDEOS;
+                    default:
+                        return "";
+                }
+            case review:
+                switch (postMedium) {
+                    case video:
+                        return FIELD_REVIEWS + DOT + FIELD_VIDEOS;
+                    case text:
+                        return FIELD_REVIEWS + DOT + FIELD_TEXT;
+                    default:
+                        return "";
+                }
+            case discussion:
+                return FIELD_DISCUSSIONS;
+            case reply:
+                return FIELD_REPLIES;
+            case comment:
+                return FIELD_COMMENTS;
+            default:
+                return "";
+        }
     }
 
     @Override
-    public UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef) {
-        return mongoOperations.upsert(query(where(ID).is(userId)), new Update().addToSet(FIELD_VIDEO_COMMENTS, commentRef), UserActivityDoc.class);
+    public UpdateResult addViolation(ObjectId userId, ViolationReportRef violationReportRef) {
+        return mongoOperations.upsert(query(where(ID).is(userId)), new Update().addToSet(FIELD_VIOLATIONS, violationReportRef), UserActivityDoc.class);
     }
 
     @Override
-    public UpdateResult updateVideoComment(ObjectId userId, CommentRef commentRef) {
-        Query query = Query.query(Criteria.where(ID).is(userId).andOperator(Criteria.where(FIELD_VIDEO_COMMENTS + DOT + _ID).is(commentRef.getId())));
-        Update update = new Update().set(FIELD_VIDEO_COMMENTS + ".$.comment", commentRef.getComment());
-        return mongoOperations.updateFirst(query, update, UserActivityDoc.class);
+    public UpdateResult addReportedViolation(ObjectId userId, ViolationReportRef violationReportRef) {
+        return mongoOperations.upsert(query(where(ID).is(userId)), new Update().addToSet(FIELD_REPORTED_VIOLATIONS, violationReportRef), UserActivityDoc.class);
     }
 
-    @Override
-    public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
-        Query queryComment = Query.query(Criteria.where(_ID).is(videoCommentDto.getId()));
-        Update update = new Update().pull(FIELD_VIDEO_COMMENTS, queryComment);
-        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
-    }
 
-    @Override
-    public UpdateResult addCommentLike(VideoCommentDto videoCommentDto) {
-        PostRef postRef = postRefMapper.toDoc(videoCommentDto.getPostRefDto());
-        Update update = new Update().addToSet(FIELD_LIKES + DOT + FIELD_COMMENTS, new CommentRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), postRef, null));
-        return mongoOperations.upsert(query(where(ID).is(videoCommentDto.getUserRefDto().getId())), update, UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
-        Query queryUser = Query.query(Criteria.where(ID).is(new ObjectId(videoCommentDto.getUserRefDto().getId())));
-        Query queryComment = Query.query(Criteria.where(_ID).is(videoCommentDto.getId()));
-        Update update = new Update().pull(FIELD_LIKES + DOT + FIELD_COMMENTS, queryComment);
-        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult addTextReview(ReviewDoc reviewDoc) {
-        return mongoOperations.upsert(query(where(ID).is(reviewDoc.getUserRef().getId())), new Update().addToSet(FIELD_POSTS + DOT + FIELD_TEXT_REVIEWS, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), null, null, reviewDoc.getDatePosted())), UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult addDiscussion(DiscussionTopicDoc discussionTopicDoc) {
-        return mongoOperations.upsert(query(where(ID).is(discussionTopicDoc.getUserRef().getId())), new Update().addToSet(FIELD_POSTS + DOT + FIELD_DISCUSSIONS, new PostRef(discussionTopicDoc.getId(), discussionTopicDoc.getTitle(), null, null, discussionTopicDoc.getDatePosted())), UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult addDiscussionReply(ObjectId userId, ReplyRef replyRef) {
-        return mongoOperations.upsert(query(where(ID).is(userId)), new Update().addToSet(FIELD_DISCUSSION_REPLIES, replyRef), UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult updateDiscussionReply(ObjectId userId, ReplyRef replyRef) {
-        Query query = Query.query(Criteria.where(ID).is(userId).andOperator(Criteria.where(FIELD_DISCUSSION_REPLIES + DOT + _ID).is(replyRef.getId())));
-        Update update = new Update().set(FIELD_DISCUSSION_REPLIES + ".$.reply", replyRef.getReply());
-        return mongoOperations.updateFirst(query, update, UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult deleteDiscussionReply(ObjectId userId, ObjectId replyId) {
-        Query queryUser = Query.query(Criteria.where(ID).is(userId));
-        Query queryReply = Query.query(Criteria.where(_ID).is(replyId));
-        Update update = new Update().pull(FIELD_DISCUSSION_REPLIES, queryReply);
-        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult addDiscussionReplyLike(ObjectId userId, ReplyRef replyRef) {
-        Update update = new Update().addToSet(FIELD_LIKES + DOT + FIELD_REPLIES, replyRef);
-        return mongoOperations.upsert(query(where(ID).is(userId)), update, UserActivityDoc.class);
-    }
-
-    @Override
-    public UpdateResult deleteDiscussionReplyLike(ObjectId userId, ObjectId replyId) {
-        Query queryUser = Query.query(Criteria.where(ID).is(userId));
-        Query queryComment = Query.query(Criteria.where(_ID).is(replyId));
-        Update update = new Update().pull(FIELD_LIKES + DOT + FIELD_REPLIES, queryComment);
-        return mongoOperations.updateFirst(queryUser, update, UserActivityDoc.class);
-    }
 }

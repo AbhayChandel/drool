@@ -3,6 +3,8 @@ package com.hexlindia.drool.violation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -47,9 +49,11 @@ public class ViolationIT {
     @Autowired
     MongoDataInsertion mongoDataInsertion;
 
+    private ObjectId insertedUserId;
+
     @BeforeEach
     private void setup() throws JSONException, JsonProcessingException {
-        mongoDataInsertion.insertUserData();
+        insertedUserId = mongoDataInsertion.insertUserData();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -87,11 +91,9 @@ public class ViolationIT {
         ViolationReportDto violationReportDto = new ViolationReportDto();
         violationReportDto.setViolations(Arrays.asList("Bad Language", "Sexual Content"));
         ObjectId postId = ObjectId.get();
-        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", "comment", "text", null));
-        ObjectId postOwnerId = ObjectId.get();
-        violationReportDto.setPostOwner(new UserRefDto(postOwnerId.toHexString(), "priyanka"));
-        ObjectId reportingUserId = ObjectId.get();
-        violationReportDto.setReportedBy(new UserRefDto(reportingUserId.toHexString(), "sonam99"));
+        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", PostType.comment, PostMedium.text, null));
+        violationReportDto.setPostOwner(new UserRefDto(insertedUserId.toHexString(), "priyanka"));
+        violationReportDto.setReportedBy(new UserRefDto(insertedUserId.toHexString(), "sonam99"));
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(violationReportDto), headers);
         ResponseEntity<Boolean> responseEntity = this.restTemplate.postForEntity(getViolationReportSaveUri(), request, Boolean.class);

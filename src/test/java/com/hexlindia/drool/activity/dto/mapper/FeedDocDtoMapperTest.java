@@ -26,7 +26,7 @@ class FeedDocDtoMapperTest {
 
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
         ObjectId postId = ObjectId.get();
-        feedDocLakmeFoundation.setPostId(postId);
+        feedDocLakmeFoundation.setId(postId);
         feedDocLakmeFoundation.setPostType("guide");
         feedDocLakmeFoundation.setPostMedium("video");
         feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
@@ -41,7 +41,7 @@ class FeedDocDtoMapperTest {
         feedDocLakmeFoundation.setUserRef(new UserRef(userId, "shabanastyle"));
         FeedDto feedDto = feedDocDtoMapper.toDto(feedDocLakmeFoundation);
 
-        assertEquals(postId.toHexString(), feedDto.getPostId());
+        assertEquals(postId.toHexString(), feedDto.getId());
         assertEquals("guide", feedDto.getPostType());
         assertEquals("video", feedDto.getPostMedium());
         assertEquals("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage", feedDto.getTitle());

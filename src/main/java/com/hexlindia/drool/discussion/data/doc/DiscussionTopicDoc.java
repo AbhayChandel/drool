@@ -32,4 +32,6 @@ public class DiscussionTopicDoc {
 
     @Field(value = "replies")
     private List<DiscussionReplyDoc> discussionReplyDocList;
+
+    private UserRef oldUserRef;
 }

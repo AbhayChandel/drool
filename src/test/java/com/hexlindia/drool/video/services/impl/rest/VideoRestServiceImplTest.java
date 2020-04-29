@@ -1,6 +1,8 @@
 package com.hexlindia.drool.video.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.common.error.ErrorResult;
@@ -66,7 +68,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_missingParameterType() throws Exception {
-        VideoDto videoDto = new VideoDto("", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(null, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -83,7 +85,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_missingParameterTitle() throws Exception {
-        VideoDto videoDto = new VideoDto("review", "", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(PostType.review, "", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -100,7 +102,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_missingParameterSourceId() throws Exception {
-        VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "",
+        VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -117,7 +119,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_missingParameterProductRef() throws Exception {
-        VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -134,7 +136,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_missingParameterUserRef() throws Exception {
-        VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 null);
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -152,7 +154,7 @@ class VideoRestServiceImplTest {
     @Test
     void save_ParametersArePassedToBusinessLayer() throws Exception {
         when(this.videoMock.save(any())).thenReturn(null);
-        VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         String requestBody = objectMapper.writeValueAsString(videoDto);
@@ -161,7 +163,7 @@ class VideoRestServiceImplTest {
                 .andExpect(status().isOk());
         ArgumentCaptor<VideoDto> videoDtoArgumentCaptor = ArgumentCaptor.forClass(VideoDto.class);
         verify(this.videoMock, times(1)).save(videoDtoArgumentCaptor.capture());
-        assertEquals("review", videoDtoArgumentCaptor.getValue().getType());
+        assertEquals(PostType.review, videoDtoArgumentCaptor.getValue().getType());
         assertEquals("L'oreal Collosal Kajal Review", videoDtoArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDtoArgumentCaptor.getValue().getDescription());
         assertEquals("vQ765gh", videoDtoArgumentCaptor.getValue().getSourceId());
@@ -174,7 +176,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_errorInInsertingVideo() throws Exception {
-        VideoDto videoDto = new VideoDto("review", "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+        VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
         doThrow(new DataIntegrityViolationException("")).when(this.videoMock).save(any());
@@ -363,7 +365,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingPostRefDtoParameterId() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("", "This is dummy post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("", "This is dummy post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -381,7 +383,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingPostRefDtoParameterTitle() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -399,7 +401,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingPostRefDtoParameterType() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is dummy post", "", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is dummy post", null, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -417,7 +419,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingPostRefDtoParameterMedium() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is dummy post", "guide", "", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is dummy post", PostType.guide, null, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -435,7 +437,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingParameterUserRefDto() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getInsertCommentUri())
@@ -452,7 +454,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingUserRefDtoParameterId() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -470,7 +472,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingUserRefDtoParameterUsername() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", ""));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -488,7 +490,7 @@ class VideoRestServiceImplTest {
     @Test
     void insertComment_missingParameterComment() throws Exception {
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(getInsertCommentUri())
@@ -507,7 +509,7 @@ class VideoRestServiceImplTest {
     void insertComment_ParametersArePassedToBusinessLayer() throws Exception {
         when(this.videoMock.insertOrUpdateComment(any())).thenReturn(null);
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto("u123", "username1"));
         videoCommentDto.setComment("This is a dummy test");
         String requestBody = objectMapper.writeValueAsString(videoCommentDto);
@@ -518,8 +520,8 @@ class VideoRestServiceImplTest {
         verify(this.videoMock, times(1)).insertOrUpdateComment(videoCommentDtoArgumentCaptor.capture());
         assertEquals("p123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
         assertEquals("This is a test post", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
-        assertEquals("guide", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
-        assertEquals("video", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getMedium());
+        assertEquals(PostType.guide, videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
+        assertEquals(PostMedium.video, videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getMedium());
         assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
         assertEquals("username1", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getUsername());
         assertEquals("This is a dummy test", videoCommentDtoArgumentCaptor.getValue().getComment());
@@ -625,7 +627,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void saveCommentLike_missingParameterCommentId() throws Exception {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", "guide", "video", null),
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null),
                 new UserRefDto("u123", "username1"), "This is a test comment");
         videoCommentDto.setId("");
         videoCommentDto.setLikes("1");
@@ -661,7 +663,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void saveCommentLike_missingParameterUserRefDto() throws Exception {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", "guide", "video", null),
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null),
                 null, "This is a test comment");
         videoCommentDto.setId("v123");
         videoCommentDto.setLikes("1");
@@ -679,7 +681,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void saveCommentLike_missingParameterComment() throws Exception {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", "guide", "video", null),
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null),
                 new UserRefDto("u123", "username1"), "");
         videoCommentDto.setId("c123");
         videoCommentDto.setLikes("1");
@@ -697,7 +699,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void saveCommentLike_missingParameterLikes() throws Exception {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", "guide", "video", null),
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null),
                 new UserRefDto("u123", "username1"), "This is a test comment");
         videoCommentDto.setId("c123");
         videoCommentDto.setLikes("");
@@ -715,7 +717,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void saveCommentLike_passingParametersToBusinessLayer() throws Exception {
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", "guide", "video", null),
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "This is a test post", PostType.guide, PostMedium.video, null),
                 new UserRefDto("u123", "username1"), "This is a test comment");
         videoCommentDto.setId("c123");
         videoCommentDto.setLikes("5");
@@ -729,8 +731,8 @@ class VideoRestServiceImplTest {
         verify(this.videoMock, times(1)).saveCommentLike(videoCommentDtoArgumentCaptor.capture());
         assertEquals("p123", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getId());
         assertEquals("This is a test post", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
-        assertEquals("guide", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
-        assertEquals("video", videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getMedium());
+        assertEquals(PostType.guide, videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getType());
+        assertEquals(PostMedium.video, videoCommentDtoArgumentCaptor.getValue().getPostRefDto().getMedium());
         assertEquals("u123", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getId());
         assertEquals("username1", videoCommentDtoArgumentCaptor.getValue().getUserRefDto().getUsername());
         assertEquals("This is a test comment", videoCommentDtoArgumentCaptor.getValue().getComment());

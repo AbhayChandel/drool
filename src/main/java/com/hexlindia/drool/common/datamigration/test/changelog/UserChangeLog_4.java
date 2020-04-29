@@ -14,6 +14,24 @@ public class UserChangeLog_4 {
 
     @ChangeSet(order = "006", id = "user", author = "")
     public void insertUsers(MongoTemplate mongoTemplate) {
+
+        UserAccountDoc userAccountDocCommunity = new UserAccountDoc();
+        userAccountDocCommunity.setEmailId("community.drool@gmail.com");
+        userAccountDocCommunity.setPassword(passwordEncoder.encode("community"));
+        userAccountDocCommunity.setUsername("Community");
+        userAccountDocCommunity.setActive(true);
+        mongoTemplate.save(userAccountDocCommunity);
+
+        UserProfileDoc userProfileDocCommunity = new UserProfileDoc();
+        userProfileDocCommunity.setId(userAccountDocCommunity.getId());
+        userProfileDocCommunity.setCity("Cloud");
+        userProfileDocCommunity.setGender("N");
+        userProfileDocCommunity.setMobile("");
+        userProfileDocCommunity.setName("Drool Community");
+        userProfileDocCommunity.setUsername("Community");
+        mongoTemplate.save(userProfileDocCommunity);
+
+
         UserAccountDoc userAccountDocPriyanka = new UserAccountDoc();
         userAccountDocPriyanka.setEmailId("priyanka.singh@gmail.com");
         userAccountDocPriyanka.setPassword(passwordEncoder.encode("priyanka"));

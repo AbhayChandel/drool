@@ -1,5 +1,6 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
 import com.hexlindia.drool.product.business.api.usecase.BrandRating;
@@ -132,7 +133,7 @@ class ProductReviewImplTest {
         VideoDto videoDto = new VideoDto();
         ObjectId videoMockedId = ObjectId.get();
         videoDto.setId(videoMockedId.toHexString());
-        videoDto.setType("review");
+        videoDto.setType(PostType.review);
         videoDto.setActive(true);
         videoDto.setTitle("The is a mocked video review");
         videoDto.setDescription("this is a mocked video review description");
@@ -179,7 +180,7 @@ class ProductReviewImplTest {
 
         verify(this.videoMock, times(1)).save(videoDtoArgumentCaptor.capture());
         assertEquals(videoMockedId.toHexString(), videoDtoArgumentCaptor.getValue().getId());
-        assertEquals("review", videoDtoArgumentCaptor.getValue().getType());
+        assertEquals(PostType.review, videoDtoArgumentCaptor.getValue().getType());
         assertTrue(videoDtoArgumentCaptor.getValue().isActive());
         assertEquals("The is a mocked video review", videoDtoArgumentCaptor.getValue().getTitle());
         assertEquals("this is a mocked video review description", videoDtoArgumentCaptor.getValue().getDescription());

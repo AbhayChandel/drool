@@ -1,11 +1,13 @@
 package com.hexlindia.drool.video.business.impl.usecase;
 
-import com.hexlindia.drool.activity.FeedDocFields;
+import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
-import com.hexlindia.drool.common.data.doc.CommentRef;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -47,7 +49,7 @@ public class VideoImpl implements Video {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
         videoDoc = videoRepository.save(videoDoc);
         if (videoDoc.getId() != null) {
-            userActivity.addVideo(videoDoc);
+            userActivity.add(videoDoc.getUserRef().getId(), ActionType.post, new PostRef(videoDoc.getId(), videoDoc.getTitle(), videoDoc.getType(), PostMedium.video, videoDoc.getDatePosted()));
             activityFeed.addVideo(videoDoc);
             return videoDocDtoMapper.toDto(videoDoc);
         }
@@ -74,16 +76,16 @@ public class VideoImpl implements Video {
     @Override
     public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         String likes = videoRepository.saveVideoLikes(videoLikeUnlikeDto);
-        userActivity.addVideoLike(videoLikeUnlikeDto);
-        activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocFields.likes, likes);
+        userActivity.add(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle(), videoLikeUnlikeDto.getPostType(), videoLikeUnlikeDto.getPostMedium(), null));
+        activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocField.likes, likes);
         return likes;
     }
 
     @Override
     public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         String likes = videoRepository.deleteVideoLikes(videoLikeUnlikeDto);
-        userActivity.deleteVideoLike(videoLikeUnlikeDto);
-        activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocFields.likes, likes);
+        userActivity.delete(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), null, videoLikeUnlikeDto.getPostType(), videoLikeUnlikeDto.getPostMedium(), null));
+        activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocField.likes, likes);
         return likes;
     }
 
@@ -97,7 +99,7 @@ public class VideoImpl implements Video {
 
     private VideoCommentDto updateComment(VideoCommentDto videoCommentDto) {
         videoCommentDto = videoRepository.updateComment(videoCommentDto);
-        userActivity.updateVideoComment(new ObjectId(videoCommentDto.getUserRefDto().getId()), new CommentRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), postRefMapper.toDoc(videoCommentDto.getPostRefDto()), null));
+        userActivity.update(new ObjectId(videoCommentDto.getUserRefDto().getId()), ActionType.post, new PostRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), PostType.comment, PostMedium.text, null));
         return videoCommentDto;
     }
 
@@ -106,8 +108,8 @@ public class VideoImpl implements Video {
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
         videoCommentDto = videoCommentMapper.toDto(videoRepository.insertComment(postRef, videoComment));
         if (videoCommentDto != null) {
-            userActivity.addVideoComment(videoComment.getUserRef().getId(), new CommentRef(videoComment.getId(), videoComment.getComment(), postRef, videoComment.getDatePosted()));
-            activityFeed.incrementDecrementField(postRef.getId(), FeedDocFields.comments, 1);
+            userActivity.add(videoComment.getUserRef().getId(), ActionType.post, new PostRef(videoComment.getId(), videoComment.getComment(), PostType.comment, PostMedium.text, videoComment.getDatePosted(), postRef));
+            activityFeed.incrementDecrementField(postRef.getId(), FeedDocField.comments, 1);
             return videoCommentDto;
         }
         log.warn("Video comment not inserted");
@@ -118,8 +120,8 @@ public class VideoImpl implements Video {
     public boolean deleteComment(VideoCommentDto videoCommentDto) {
         boolean result = videoRepository.deleteComment(videoCommentDto);
         if (result) {
-            userActivity.deleteVideoComment(videoCommentDto);
-            activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getPostRefDto().getId()), FeedDocFields.comments, -1);
+            userActivity.delete(new ObjectId(videoCommentDto.getUserRefDto().getId()), ActionType.post, new PostRef(new ObjectId(videoCommentDto.getId()), null, PostType.comment, PostMedium.text, null, null));
+            activityFeed.incrementDecrementField(new ObjectId(videoCommentDto.getPostRefDto().getId()), FeedDocField.comments, -1);
             return true;
         }
         log.warn("Video comment not deleted");
@@ -130,7 +132,7 @@ public class VideoImpl implements Video {
     public String saveCommentLike(VideoCommentDto videoCommentDto) {
         String likes = videoRepository.saveCommentLike(videoCommentDto);
         if (Integer.valueOf(likes) > Integer.valueOf(videoCommentDto.getLikes())) {
-            userActivity.addCommentLike(videoCommentDto);
+            userActivity.add(new ObjectId(videoCommentDto.getUserRefDto().getId()), ActionType.like, new PostRef(new ObjectId(videoCommentDto.getId()), videoCommentDto.getComment(), PostType.comment, PostMedium.text, null, postRefMapper.toDoc(videoCommentDto.getPostRefDto())));
         } else {
             log.error("Video comment like not saved");
         }
@@ -141,7 +143,7 @@ public class VideoImpl implements Video {
     public String deleteCommentLike(VideoCommentDto videoCommentDto) {
         String likes = videoRepository.deleteCommentLike(videoCommentDto);
         if (Integer.valueOf(likes) < Integer.valueOf(videoCommentDto.getLikes())) {
-            userActivity.deleteCommentLike(videoCommentDto);
+            userActivity.delete(new ObjectId(videoCommentDto.getUserRefDto().getId()), ActionType.like, new PostRef(new ObjectId(videoCommentDto.getId()), null, PostType.comment, PostMedium.text, null, null));
         } else {
             log.error("Video comment like not deleted");
         }

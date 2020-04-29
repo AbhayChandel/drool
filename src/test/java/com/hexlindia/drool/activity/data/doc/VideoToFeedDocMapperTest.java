@@ -1,6 +1,7 @@
 package com.hexlindia.drool.activity.data.doc;
 
 import com.hexlindia.drool.activity.dto.mapper.VideoToFeedDocMapper;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -23,7 +24,7 @@ class VideoToFeedDocMapperTest {
     @Test
     void testToFeedDoc() {
         ObjectId userId = new ObjectId();
-        VideoDoc videoDoc = new VideoDoc("review", "This video is going to activity feed", "This is a description for test video", "aanx323faid",
+        VideoDoc videoDoc = new VideoDoc(PostType.review, "This video is going to activity feed", "This is a description for test video", "aanx323faid",
                 Arrays.asList(new ProductRef("1", "Lakme 9to5", "lipstick"), new ProductRef("2", "Maybelline Collosal Kajal", "kajal")),
                 new UserRef(userId, "shabanastyle"));
         ObjectId id = new ObjectId();
@@ -32,7 +33,7 @@ class VideoToFeedDocMapperTest {
         videoDoc.setDatePosted(datePosted);
 
         FeedDoc feedDoc = videoToFeedDocMapper.toFeedDoc(videoDoc);
-        assertEquals(id, feedDoc.getPostId());
+        assertEquals(id, feedDoc.getId());
         assertEquals("review", feedDoc.getPostType());
         assertEquals("video", feedDoc.getPostMedium());
         assertEquals("This video is going to activity feed", feedDoc.getTitle());

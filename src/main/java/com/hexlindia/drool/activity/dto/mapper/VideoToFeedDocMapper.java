@@ -10,7 +10,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public abstract class VideoToFeedDocMapper {
 
-    @Mapping(source = "id", target = "postId")
     @Mapping(source = "type", target = "postType")
     public abstract FeedDoc toFeedDoc(VideoDoc videoDoc);
 

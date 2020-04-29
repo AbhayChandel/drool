@@ -1,6 +1,6 @@
 package com.hexlindia.drool.activity.data.repository.impl;
 
-import com.hexlindia.drool.activity.FeedDocFields;
+import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
 import com.hexlindia.drool.product.data.doc.ProductRef;
@@ -36,7 +36,7 @@ class ActivityFeedFeedRepositoryImplTest {
     @Test
     void testSave() {
         FeedDoc feedDoc = new FeedDoc();
-        feedDoc.setPostId(ObjectId.get());
+        feedDoc.setId(ObjectId.get());
         feedDoc.setPostType("guide");
         feedDoc.setPostMedium("video");
         feedDoc.setTitle(("Test guide for repository testing"));
@@ -70,29 +70,35 @@ class ActivityFeedFeedRepositoryImplTest {
 
     @Test
     void testSetLikes() {
-        assertEquals(201, activityFeedRepository.setField(insertedPostId, FeedDocFields.likes, "201").getLikes());
+        assertEquals(201, activityFeedRepository.setField(insertedPostId, FeedDocField.likes, "201").getLikes());
     }
 
     @Test
     void testSetViews() {
-        assertEquals(301, activityFeedRepository.setField(insertedPostId, FeedDocFields.views, "301").getViews());
+        assertEquals(301, activityFeedRepository.setField(insertedPostId, FeedDocField.views, "301").getViews());
+    }
+
+    @Test
+    void setUserRef() {
+        ObjectId userId = ObjectId.get();
+        assertEquals(userId, activityFeedRepository.setField(insertedPostId, FeedDocField.userRef, new UserRef(userId, "newuser")).getUserRef().getId());
     }
 
     @Test
     void testIncrementComments() {
-        assertEquals(401, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocFields.comments, 1).getComments());
+        assertEquals(401, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocField.comments, 1).getComments());
     }
 
     @Test
     void testDecrementComments() {
-        assertEquals(399, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocFields.comments, -1).getComments());
+        assertEquals(399, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocField.comments, -1).getComments());
     }
 
 
     @BeforeEach
     void setup() {
         FeedDoc feedDoc = new FeedDoc();
-        feedDoc.setPostId(insertedPostId);
+        feedDoc.setId(insertedPostId);
         feedDoc.setPostType("guide");
         feedDoc.setPostMedium("video");
         feedDoc.setTitle(("Test guide for repository testing setup"));
@@ -106,7 +112,7 @@ class ActivityFeedFeedRepositoryImplTest {
         this.mongoOperations.save(feedDoc);
 
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
-        feedDocLakmeFoundation.setPostId(ObjectId.get());
+        feedDocLakmeFoundation.setId(ObjectId.get());
         feedDocLakmeFoundation.setPostType(POST_TYPE_GUIDE);
         feedDocLakmeFoundation.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
@@ -120,7 +126,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocLakmeFoundation);
 
         FeedDoc feedDocEasyNudeMakeup = new FeedDoc();
-        feedDocEasyNudeMakeup.setPostId(ObjectId.get());
+        feedDocEasyNudeMakeup.setId(ObjectId.get());
         feedDocEasyNudeMakeup.setPostType(POST_TYPE_GUIDE);
         feedDocEasyNudeMakeup.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocEasyNudeMakeup.setTitle(("Easy Nude Makeup look | My Go-to Sunday look | Malvika Sitlani"));
@@ -134,7 +140,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocEasyNudeMakeup);
 
         FeedDoc feedDocHonestReviewOfKay = new FeedDoc();
-        feedDocHonestReviewOfKay.setPostId(ObjectId.get());
+        feedDocHonestReviewOfKay.setId(ObjectId.get());
         feedDocHonestReviewOfKay.setPostType(POST_TYPE_REVIEW);
         feedDocHonestReviewOfKay.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocHonestReviewOfKay.setTitle(("HONEST Review of KAY By Katrina Kaif Beauty! Swatches included"));
@@ -148,7 +154,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocHonestReviewOfKay);
 
         FeedDoc feedDocBeforeBuyKay = new FeedDoc();
-        feedDocBeforeBuyKay.setPostId(ObjectId.get());
+        feedDocBeforeBuyKay.setId(ObjectId.get());
         feedDocBeforeBuyKay.setPostType(POST_TYPE_REVIEW);
         feedDocBeforeBuyKay.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBeforeBuyKay.setTitle(("WATCH THIS BEFORE BUYING KayByKatrina!! | Honest review + swatches of all products | Manasi Mau"));
@@ -162,7 +168,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocBeforeBuyKay);
 
         FeedDoc feedDocBlueHeavenCandy = new FeedDoc();
-        feedDocBlueHeavenCandy.setPostId(ObjectId.get());
+        feedDocBlueHeavenCandy.setId(ObjectId.get());
         feedDocBlueHeavenCandy.setPostType(POST_TYPE_REVIEW);
         feedDocBlueHeavenCandy.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBlueHeavenCandy.setTitle(("Blue Heaven Candy Lip Colour Review "));
@@ -176,7 +182,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocBlueHeavenCandy);
 
         FeedDoc feedDocBlueHeavenMatteLipstick = new FeedDoc();
-        feedDocBlueHeavenMatteLipstick.setPostId(ObjectId.get());
+        feedDocBlueHeavenMatteLipstick.setId(ObjectId.get());
         feedDocBlueHeavenMatteLipstick.setPostType(POST_TYPE_REVIEW);
         feedDocBlueHeavenMatteLipstick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocBlueHeavenMatteLipstick.setTitle(("Blue Heaven Saphire Matte Liquid Lipsticks Review & Swtaches | All 12 Shades | Nidhi Katiyar"));
@@ -190,7 +196,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocBlueHeavenMatteLipstick);
 
         FeedDoc feedDocLakme9to5Mousse = new FeedDoc();
-        feedDocLakme9to5Mousse.setPostId(ObjectId.get());
+        feedDocLakme9to5Mousse.setId(ObjectId.get());
         feedDocLakme9to5Mousse.setPostType(POST_TYPE_GUIDE);
         feedDocLakme9to5Mousse.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakme9to5Mousse.setTitle(("NEW SHADES LAKME 9 TO 5 WEIGHTLESS MATTE MOUSSE LIP AND CHEEK COLOR II ALL SHADES SWATCHED II"));
@@ -204,7 +210,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocLakme9to5Mousse);
 
         FeedDoc feedDocNykaaUltralipstick = new FeedDoc();
-        feedDocNykaaUltralipstick.setPostId(ObjectId.get());
+        feedDocNykaaUltralipstick.setId(ObjectId.get());
         feedDocNykaaUltralipstick.setPostType(POST_TYPE_GUIDE);
         feedDocNykaaUltralipstick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocNykaaUltralipstick.setTitle(("Nykaa Ultra Matte Lipstick Swatches "));
@@ -218,7 +224,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocNykaaUltralipstick);
 
         FeedDoc feedDocMaybellineBoldsLisptick = new FeedDoc();
-        feedDocMaybellineBoldsLisptick.setPostId(ObjectId.get());
+        feedDocMaybellineBoldsLisptick.setId(ObjectId.get());
         feedDocMaybellineBoldsLisptick.setPostType(POST_TYPE_GUIDE);
         feedDocMaybellineBoldsLisptick.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocMaybellineBoldsLisptick.setTitle(("Maybelline Loaded Bolds Lipstick Swatches"));
@@ -232,7 +238,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocMaybellineBoldsLisptick);
 
         FeedDoc feedDocSugarSuedeLipcolor = new FeedDoc();
-        feedDocSugarSuedeLipcolor.setPostId(ObjectId.get());
+        feedDocSugarSuedeLipcolor.setId(ObjectId.get());
         feedDocSugarSuedeLipcolor.setPostType(POST_TYPE_GUIDE);
         feedDocSugarSuedeLipcolor.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocSugarSuedeLipcolor.setTitle(("SUGAR Suede Secret Matte Lipcolor SWATCHES"));
@@ -246,7 +252,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocSugarSuedeLipcolor);
 
         FeedDoc feedDocLakmeInstalliner = new FeedDoc();
-        feedDocLakmeInstalliner.setPostId(ObjectId.get());
+        feedDocLakmeInstalliner.setId(ObjectId.get());
         feedDocLakmeInstalliner.setPostType(POST_TYPE_REVIEW);
         feedDocLakmeInstalliner.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeInstalliner.setTitle(("Lakme INSTA LINER BLACK DEMO & REVIEW"));
@@ -260,7 +266,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocLakmeInstalliner);
 
         FeedDoc feedDocLakmeArgainOilSerum = new FeedDoc();
-        feedDocLakmeArgainOilSerum.setPostId(ObjectId.get());
+        feedDocLakmeArgainOilSerum.setId(ObjectId.get());
         feedDocLakmeArgainOilSerum.setPostType(POST_TYPE_REVIEW);
         feedDocLakmeArgainOilSerum.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeArgainOilSerum.setTitle(("lakme absolute argan oil serum foundation SPF 45 review & demo"));
@@ -274,7 +280,7 @@ class ActivityFeedFeedRepositoryImplTest {
         mongoOperations.save(feedDocLakmeArgainOilSerum);
 
         FeedDoc feedDocLakmeAbsoluteFoundation = new FeedDoc();
-        feedDocLakmeAbsoluteFoundation.setPostId(ObjectId.get());
+        feedDocLakmeAbsoluteFoundation.setId(ObjectId.get());
         feedDocLakmeAbsoluteFoundation.setPostType(POST_TYPE_REVIEW);
         feedDocLakmeAbsoluteFoundation.setPostMedium(POST_MEDIUM_VIDEO);
         feedDocLakmeAbsoluteFoundation.setTitle(("Lakme absolute mousse hydrating foundation for summers"));
@@ -291,4 +297,6 @@ class ActivityFeedFeedRepositoryImplTest {
     private UserRef getUserShabana() {
         return new UserRef(ObjectId.get(), "shabanastyle");
     }
+
+
 }

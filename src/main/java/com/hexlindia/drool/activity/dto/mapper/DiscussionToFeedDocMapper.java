@@ -10,7 +10,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public abstract class DiscussionToFeedDocMapper {
 
-    @Mapping(source = "id", target = "postId")
     @Mapping(source = "repliesCount", target = "comments")
     public abstract FeedDoc toFeedDoc(DiscussionTopicDoc discussionTopicDoc);
 

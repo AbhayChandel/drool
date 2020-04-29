@@ -1,6 +1,6 @@
 package com.hexlindia.drool.activity.business.impl.usecase;
 
-import com.hexlindia.drool.activity.FeedDocFields;
+import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
@@ -47,13 +47,13 @@ public class ActivityFeedImpl implements ActivityFeed {
     }
 
     @Override
-    public void setField(ObjectId postId, FeedDocFields feedDocFields, String value) {
-        activityFeedRepository.setField(postId, feedDocFields, value);
+    public void setField(ObjectId postId, FeedDocField feedDocField, Object value) {
+        activityFeedRepository.setField(postId, feedDocField, value);
     }
 
     @Override
-    public void incrementDecrementField(ObjectId postId, FeedDocFields feedDocFields, int value) {
-        activityFeedRepository.incrementDecrementField(postId, feedDocFields, value);
+    public void incrementDecrementField(ObjectId postId, FeedDocField feedDocField, int value) {
+        activityFeedRepository.incrementDecrementField(postId, feedDocField, value);
     }
 
 

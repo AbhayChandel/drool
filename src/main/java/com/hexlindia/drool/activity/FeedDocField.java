@@ -1,8 +1,10 @@
 package com.hexlindia.drool.activity;
 
-public enum FeedDocFields {
+public enum FeedDocField {
 
     likes,
     views,
-    comments
+    comments,
+    title,
+    userRef
 }

@@ -1,6 +1,7 @@
 package com.hexlindia.drool.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
@@ -48,7 +49,7 @@ public class VideoViewsIT {
 
     @BeforeEach
     public void setUp() {
-        VideoDoc videoDoc = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDoc = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor"), new ProductRef("pqr", "Chambor", "kajal"), new ProductRef("xyz", "Tom Ford Vetiver", "fragrance")),
                 new UserRef(userId, "shabana"));
         videoDoc.setActive(true);
@@ -65,7 +66,7 @@ public class VideoViewsIT {
         VideoDto videoDto = responseEntity.getBody();
         assertNotNull(videoDto);
         assertNotNull(videoDto.getId());
-        assertEquals("guide", videoDto.getType());
+        assertEquals(PostType.guide, videoDto.getType());
         assertEquals("This video will be prepoulated for testing", videoDto.getTitle());
         assertEquals("This video is inserted as part of testing with MongoDB", videoDto.getDescription());
         assertEquals("vQ765gh", videoDto.getSourceId());

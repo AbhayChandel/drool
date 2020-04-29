@@ -1,5 +1,7 @@
 package com.hexlindia.drool.discussion.dto.mapper;
 
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
@@ -24,14 +26,14 @@ class ReplyDtoToRefMapperTest {
         String reply = "This is going to be a great reply";
         discussionReplyDto.setReply(reply);
         ObjectId postId = ObjectId.get();
-        discussionReplyDto.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", "discussion", "text", null));
+        discussionReplyDto.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
 
         ReplyRef replyRef = replyDtoToRefMapper.toReplyRef(discussionReplyDto);
         assertEquals(replyId, replyRef.getId());
         assertEquals(reply, replyRef.getReply());
         assertEquals(postId, replyRef.getPostRef().getId());
         assertEquals("This is a test discussion", replyRef.getPostRef().getTitle());
-        assertEquals("discussion", replyRef.getPostRef().getType());
-        assertEquals("text", replyRef.getPostRef().getMedium());
+        assertEquals(PostType.discussion, replyRef.getPostRef().getType());
+        assertEquals(PostMedium.text, replyRef.getPostRef().getMedium());
     }
 }

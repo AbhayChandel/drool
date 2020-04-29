@@ -105,38 +105,38 @@ class DiscussionTopicRestServiceImplTest {
 
     @Test
     public void incrementLikes_ParametersPassedToBusinessLayer() throws Exception {
-        ObjectId id = new ObjectId();
-        ObjectId userId = new ObjectId();
+        ObjectId discussionId = ObjectId.get();
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(discussionId.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
-        String requestBody = "{\"id\": \"" + id.toHexString() + "\", \"userId\": \"" + userId.toHexString() + "\"}";
         this.mockMvc.perform(MockMvcRequestBuilders.put(getLikesIncrementUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .content(objectMapper.writeValueAsBytes(discussionTopicDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.discussionTopicMocked, times(1)).incrementLikes(idArgumentCaptor.capture(), userIdArgumentCaptor.capture());
-        assertEquals(id.toHexString(), idArgumentCaptor.getValue());
-        assertEquals(userId.toHexString(), userIdArgumentCaptor.getValue());
+        ArgumentCaptor<DiscussionTopicDto> discussiontTopicDtoArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicDto.class);
+        verify(this.discussionTopicMocked, times(1)).incrementLikes(discussiontTopicDtoArgumentCaptor.capture());
+        assertEquals(discussionId.toHexString(), discussiontTopicDtoArgumentCaptor.getValue().getId());
+        assertEquals(userId.toHexString(), discussiontTopicDtoArgumentCaptor.getValue().getUserRefDto().getId());
     }
 
     @Test
     public void decrementLikes_ParametersPassedToBusinessLayer() throws Exception {
-        ObjectId id = new ObjectId();
-        ObjectId userId = new ObjectId();
+        ObjectId discussionId = ObjectId.get();
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(discussionId.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
-        String temp = objectMapper.writeValueAsString(new UserRefDto("abc", "shababa"));
-
-        String requestBody = "{\"id\": \"" + id.toHexString() + "\", \"userId\": \"" + userId.toHexString() + "\"}";
         this.mockMvc.perform(MockMvcRequestBuilders.put(getLikesDecrementUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .content(objectMapper.writeValueAsBytes(discussionTopicDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.discussionTopicMocked, times(1)).decrementLikes(idArgumentCaptor.capture(), userIdArgumentCaptor.capture());
-        assertEquals(id.toHexString(), idArgumentCaptor.getValue());
-        assertEquals(userId.toHexString(), userIdArgumentCaptor.getValue());
+        ArgumentCaptor<DiscussionTopicDto> discussiontTopicDtoArgumentCaptor = ArgumentCaptor.forClass(DiscussionTopicDto.class);
+        verify(this.discussionTopicMocked, times(1)).decrementLikes(discussiontTopicDtoArgumentCaptor.capture());
+        assertEquals(discussionId.toHexString(), discussiontTopicDtoArgumentCaptor.getValue().getId());
+        assertEquals(userId.toHexString(), discussiontTopicDtoArgumentCaptor.getValue().getUserRefDto().getId());
     }
 
 

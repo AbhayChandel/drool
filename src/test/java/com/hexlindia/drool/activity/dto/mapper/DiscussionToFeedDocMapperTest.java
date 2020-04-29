@@ -33,7 +33,7 @@ class DiscussionToFeedDocMapperTest {
         discussionTopicDoc.setDatePosted(datePosted);
 
         FeedDoc feedDoc = discussionToFeedDocMapper.toFeedDoc(discussionTopicDoc);
-        assertEquals(discussiionId, feedDoc.getPostId());
+        assertEquals(discussiionId, feedDoc.getId());
         assertEquals("discussion", feedDoc.getPostType());
         assertEquals("text", feedDoc.getPostMedium());
         assertEquals("This is a DiscussionToFeedDocMapperTest title", feedDoc.getTitle());
