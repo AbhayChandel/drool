@@ -15,14 +15,14 @@ import java.util.List;
 @Document(collection = "activity_feed")
 public class FeedDoc {
 
-    private ObjectId postId;
+    private ObjectId id;
     private String postType;
     private String postMedium;
     private String title;
     private String sourceId;
     private LocalDateTime datePosted;
-    private String likes;
-    private String views;
+    private int likes;
+    private int views;
     private int comments;
     private List<ProductRef> productRefList;
     private UserRef userRef;

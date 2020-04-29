@@ -4,13 +4,11 @@ import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 
 public interface DiscussionReply {
 
-    DiscussionReplyDto saveReply(DiscussionReplyDto discussionReplyDto);
+    DiscussionReplyDto saveOrUpdate(DiscussionReplyDto discussionReplyDto);
 
-    boolean updateReply(String reply, String replyId, String discussionId);
-
-    String incrementLikes(String replyId, String discussionId, String userId);
+    String incrementLikes(DiscussionReplyDto discussionReplyDto);
 
     String decrementLikes(String replyId, String discussionId, String userId);
 
-    boolean setStatus(Boolean status, String replyId, String discussionId);
+    boolean delete(String replyId, String discussionId, String userId);
 }

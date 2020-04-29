@@ -2,6 +2,7 @@ package com.hexlindia.drool.common.datamigration.test.changelog;
 
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
@@ -14,11 +15,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @ChangeLog
-public class VideoCollectionChangeLog {
+public class VideoCollectionChangeLog_1 {
 
     @ChangeSet(order = "001", id = "video", author = "")
     public void importantWorkToDo(MongoTemplate mongoTemplate) {
-        VideoDoc videoDoc1 = new VideoDoc("review", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty Hey guys! so katrina kaif launched her makeup line with nykaa & you guys requested me to review the products. I hope this video is helpful. xx\n" +
+        VideoDoc videoDoc1 = new VideoDoc(PostType.review, "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty Hey guys! so katrina kaif launched her makeup line with nykaa & you guys requested me to review the products. I hope this video is helpful. xx\n" +
                 "\n" +
                 "LINKS-\n" +
                 "KAY BEAUTY- https://nyk0.page.link/jisk\n" +
@@ -51,7 +52,7 @@ public class VideoCollectionChangeLog {
         videoDoc1.setCommentList(videoCommentList1);
 
 
-        VideoDoc videoDoc2 = new VideoDoc("guide", "How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage", "Product Links\n" +
+        VideoDoc videoDoc2 = new VideoDoc(PostType.guide, "How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage", "Product Links\n" +
                 "\n" +
                 "Stay Quirky Makeup Primer (27 g)\n" +
                 "https://mlpl.link/3ut3A\n" +

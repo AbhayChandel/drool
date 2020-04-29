@@ -21,18 +21,23 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
 
     @Override
     public ResponseEntity<DiscussionReplyDto> saveReply(DiscussionReplyDto discussionReplyDto) {
-        return ResponseEntity.ok(this.discussionReply.saveReply(discussionReplyDto));
+        return ResponseEntity.ok(this.discussionReply.saveOrUpdate(discussionReplyDto));
     }
 
+    /*
+    Currently udpate reply is implemented from @saveReply service.
+     */
     @Override
     public ResponseEntity<Boolean> updateReply(Map<String, String> parameters) {
-        return ResponseEntity.ok(this.discussionReply.updateReply(parameters.get("reply"), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+        //return ResponseEntity.ok(this.discussionReply.updateReply(parameters.get("reply"), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+        return null;
     }
 
     @Override
-    public ResponseEntity<String> incrementLikes(Map<String, String> parameters) {
-        return ResponseEntity.ok(discussionReply.incrementLikes(parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID), parameters.get(PARAM_USER_ID)));
+    public ResponseEntity<String> incrementLikes(DiscussionReplyDto discussionReplyDto) {
+        return ResponseEntity.ok(this.discussionReply.incrementLikes(discussionReplyDto));
     }
+
 
     @Override
     public ResponseEntity<String> decrementLikes(Map<String, String> parameters) {
@@ -40,7 +45,7 @@ public class DiscussionReplyRestServiceImpl implements DiscussionReplyRestServic
     }
 
     @Override
-    public ResponseEntity<Boolean> setStatus(Map<String, String> parameters) {
-        return ResponseEntity.ok(this.discussionReply.setStatus(Boolean.valueOf(parameters.get("status")), parameters.get(PARAM_REPLY_ID), parameters.get(PARAM_DISCUSSION_ID)));
+    public ResponseEntity<Boolean> delete(String replyId, String discussionId, String userId) {
+        return ResponseEntity.ok(this.discussionReply.delete(replyId, discussionId, userId));
     }
 }

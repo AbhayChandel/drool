@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.dto.mapper;
 
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.product.dto.ProductRefDto;
@@ -29,11 +30,11 @@ class VideoDocDtoMapperTest {
     void toDoc() {
         ObjectId userId = new ObjectId();
         UserRefDto userRefDto = new UserRefDto(userId.toHexString(), "User123");
-        VideoDto videoDto = new VideoDto("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRefDto("p123", "Carolina Herrera 212", "fragrance")), userRefDto);
+        VideoDto videoDto = new VideoDto(PostType.review, "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRefDto("p123", "Carolina Herrera 212", "fragrance")), userRefDto);
         videoDto.setActive(true);
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
 
-        assertEquals("review", videoDoc.getType());
+        assertEquals(PostType.review, videoDoc.getType());
         assertTrue(videoDoc.isActive());
         assertEquals("Review of Carolina Herrera 212", videoDoc.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDoc.getDescription());
@@ -49,7 +50,7 @@ class VideoDocDtoMapperTest {
     void toDto() {
         ObjectId userId = new ObjectId();
         UserRef userRef = new UserRef(userId, "User123");
-        VideoDoc videoDoc = new VideoDoc("review", "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRef("p123", "Carolina Herrera 212", "fragrance")), userRef);
+        VideoDoc videoDoc = new VideoDoc(PostType.review, "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRef("p123", "Carolina Herrera 212", "fragrance")), userRef);
         videoDoc.setActive(false);
         videoDoc.setId(ObjectId.get());
         videoDoc.setViews(94587656);
@@ -65,7 +66,7 @@ class VideoDocDtoMapperTest {
         videoDoc.setCommentList(videoCommentList1);
         VideoDto videoDto = videoDocDtoMapper.toDto(videoDoc);
 
-        assertEquals("review", videoDto.getType());
+        assertEquals(PostType.review, videoDto.getType());
         assertFalse(videoDto.isActive());
         assertEquals("Review of Carolina Herrera 212", videoDto.getTitle());
         assertEquals("This is an honest review of Carolina Herrera 212", videoDto.getDescription());

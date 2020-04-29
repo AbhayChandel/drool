@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
+import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.data.doc.DiscussionReplyDoc;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
@@ -47,6 +48,7 @@ public class DiscussionTopicIT {
 
     private String authToken;
     private ObjectId insertDiscussionTopic;
+    private ObjectId insertDiscussionTopicUserId;
 
     @Autowired
     MongoOperations mongoOperations;
@@ -76,8 +78,8 @@ public class DiscussionTopicIT {
     private void insertDiscussionTopicDocs() {
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
         discussionTopicDoc.setTitle("This a dummy discussion topic");
-        ObjectId userId = ObjectId.get();
-        discussionTopicDoc.setUserRef(new UserRef(userId, "shabana"));
+        insertDiscussionTopicUserId = ObjectId.get();
+        discussionTopicDoc.setUserRef(new UserRef(insertDiscussionTopicUserId, "shabana"));
         discussionTopicDoc.setActive(true);
         discussionTopicDoc.setViews(1190);
         discussionTopicDoc.setLikes(500);
@@ -86,8 +88,7 @@ public class DiscussionTopicIT {
         discussionTopicDoc.setDateLastActive(datePosted);
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
-        discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
-        discussionReplyDoc.setActive(true);
+        discussionReplyDoc.setUserRef(new UserRef(insertDiscussionTopicUserId, "shabana"));
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
 
@@ -135,11 +136,12 @@ public class DiscussionTopicIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
-        JSONObject discussion = new JSONObject();
-        discussion.put("id", insertDiscussionTopic);
-        discussion.put("title", "This topic needs to be updated");
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(insertDiscussionTopic.toHexString());
+        discussionTopicDto.setTitle("This topic needs to be updated");
+        discussionTopicDto.setUserRefDto(new UserRefDto(insertDiscussionTopicUserId.toHexString(), "shabana"));
 
-        HttpEntity<String> request = new HttpEntity<>(discussion.toString(), headers);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionTopicDto), headers);
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(getUpdateUri(), HttpMethod.PUT, request, Boolean.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
         assertTrue(responseEntity.getBody());
@@ -181,32 +183,34 @@ public class DiscussionTopicIT {
     }
 
     @Test
-    void testIncrementLikes() throws JSONException {
+    void testIncrementLikes() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
 
-        JSONObject parameters = new JSONObject();
-        parameters.put("id", insertDiscussionTopic.toHexString());
-        parameters.put("userId", "123");
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(insertDiscussionTopic.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
-        HttpEntity<String> request = new HttpEntity<>(parameters.toString(), headers);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionTopicDto), headers);
         ResponseEntity<String> response = restTemplate.exchange(getLikesIncrementUri(), HttpMethod.PUT, request, String.class);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("501", response.getBody());
     }
 
     @Test
-    void testDecrementLikes() throws JSONException {
+    void testDecrementLikes() throws JSONException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.authToken);
 
-        JSONObject parameters = new JSONObject();
-        parameters.put("id", insertDiscussionTopic.toHexString());
-        parameters.put("userId", "123");
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(insertDiscussionTopic.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
 
-        HttpEntity<String> request = new HttpEntity<>(parameters.toString(), headers);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionTopicDto), headers);
         ResponseEntity<String> response = restTemplate.exchange(getLikesDecrementUri(), HttpMethod.PUT, request, String.class);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("499", response.getBody());

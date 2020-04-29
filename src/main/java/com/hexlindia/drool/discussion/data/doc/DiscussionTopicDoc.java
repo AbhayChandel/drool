@@ -1,7 +1,6 @@
 package com.hexlindia.drool.discussion.data.doc;
 
 import com.hexlindia.drool.user.data.doc.UserRef;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
@@ -18,7 +17,6 @@ import java.util.List;
 public class DiscussionTopicDoc {
 
     @Id
-    @Setter(AccessLevel.PROTECTED)
     private ObjectId id;
 
     private String title;
@@ -27,9 +25,13 @@ public class DiscussionTopicDoc {
     private LocalDateTime dateLastActive;
     private int views;
     private int likes;
+
+
     private int repliesCount;
     private boolean active;
 
     @Field(value = "replies")
     private List<DiscussionReplyDoc> discussionReplyDocList;
+
+    private UserRef oldUserRef;
 }

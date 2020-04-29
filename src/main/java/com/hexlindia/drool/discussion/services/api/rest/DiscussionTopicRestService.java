@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
-
 @RequestMapping("/${rest.uri.version}/discussion")
 public interface DiscussionTopicRestService {
 
@@ -16,15 +14,18 @@ public interface DiscussionTopicRestService {
     ResponseEntity<DiscussionTopicDto> post(@RequestBody DiscussionTopicDto discussionTopicDto);
 
     @PutMapping(value = "/update")
-    ResponseEntity<Boolean> updateTitle(@RequestBody Map<String, String> parameters);
+    ResponseEntity<Boolean> updateTitle(@RequestBody DiscussionTopicDto discussionTopicDto);
 
     @PutMapping(value = "/views/increment")
     ResponseEntity<String> incrementViews(@RequestBody String id);
 
     @PutMapping(value = "/likes/increment")
-    ResponseEntity<String> incrementLikes(@RequestBody Map<String, String> parameters);
+    ResponseEntity<String> incrementLikes(@RequestBody DiscussionTopicDto discussionTopicDto);
 
     @PutMapping(value = "/likes/decrement")
-    ResponseEntity<String> decrementLikes(@RequestBody Map<String, String> parameters);
+    ResponseEntity<String> decrementLikes(@RequestBody DiscussionTopicDto discussionTopicDto);
+
+    @PutMapping(value = "/changeownership")
+    ResponseEntity<DiscussionTopicDto> changeOwnership(@RequestBody DiscussionTopicDto discussionTopicDto);
 
 }

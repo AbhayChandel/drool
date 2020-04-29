@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.dto;
 
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.dto.ProductRefDto;
 import com.hexlindia.drool.video.dto.validation.VideoInsertValidation;
@@ -18,8 +19,8 @@ public class VideoDto {
 
     private String id;
 
-    @NotEmpty(message = "Video type is missing", groups = {VideoInsertValidation.class})
-    private String type;
+    @NotNull(message = "Video type is missing", groups = {VideoInsertValidation.class})
+    private PostType type;
 
     private String reviewId;
 
@@ -42,7 +43,7 @@ public class VideoDto {
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
 
-    public VideoDto(String type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
+    public VideoDto(PostType type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
         this.description = description;

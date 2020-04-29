@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {ObjectIdMapper.class, UserRefMapper.class})
 public abstract class DiscussionReplyDtoDocMapper {
 
-
+    @Mapping(source = "id", target = "id", ignore = true)
     @Mapping(source = "userRefDto", target = "userRef")
     public abstract DiscussionReplyDoc toDoc(DiscussionReplyDto discussionReplyDto);
 

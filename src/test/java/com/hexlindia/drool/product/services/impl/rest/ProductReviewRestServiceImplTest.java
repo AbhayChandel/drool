@@ -1,6 +1,7 @@
 package com.hexlindia.drool.product.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
@@ -127,7 +128,7 @@ class ProductReviewRestServiceImplTest {
 
         VideoDto videoDto = new VideoDto();
         videoDto.setId("abc");
-        videoDto.setType("review");
+        videoDto.setType(PostType.review);
         videoDto.setActive(true);
         videoDto.setTitle("The is a mocked video review");
         videoDto.setDescription("this is a mocked video review description");
@@ -167,7 +168,7 @@ class ProductReviewRestServiceImplTest {
         assertEquals("This is text review summary", reviewDtoPaased.getTextReviewDto().getReviewSummary());
 
         assertEquals("abc", reviewDtoPaased.getVideoDto().getId());
-        assertEquals("review", reviewDtoPaased.getVideoDto().getType());
+        assertEquals(PostType.review, reviewDtoPaased.getVideoDto().getType());
         assertTrue(reviewDtoPaased.getVideoDto().isActive());
         assertEquals("The is a mocked video review", reviewDtoPaased.getVideoDto().getTitle());
         assertEquals("this is a mocked video review description", reviewDtoPaased.getVideoDto().getDescription());

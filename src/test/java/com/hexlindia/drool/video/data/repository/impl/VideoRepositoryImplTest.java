@@ -1,5 +1,7 @@
 package com.hexlindia.drool.video.data.repository.impl;
 
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -51,25 +53,25 @@ public class VideoRepositoryImplTest {
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
-        VideoDoc videoDocActive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDocActive = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDocActive.setActive(true);
         videoDocActive.setDatePosted(LocalDateTime.parse("16-08-2016 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
         videoDocActive = this.mongoTemplate.insert(videoDocActive);
-        VideoDoc videoDocActive2 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDocActive2 = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDocActive2.setActive(true);
         videoDocActive2.setDatePosted(LocalDateTime.parse("10-08-2017 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
         videoDocActive = this.mongoTemplate.insert(videoDocActive2);
-        VideoDoc videoDocActive3 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDocActive3 = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDocActive3.setActive(true);
         videoDocActive3.setDatePosted(LocalDateTime.parse("10-08-2018 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
         videoDocActive = this.mongoTemplate.insert(videoDocActive3);
-        VideoDoc videoDocActive4 = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDocActive4 = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDocActive4.setActive(true);
@@ -80,7 +82,7 @@ public class VideoRepositoryImplTest {
         activeVideoLikeUnlikeDto.setVideoTitle(videoDocActive.getTitle());
         activeVideoLikeUnlikeDto.setUserId(videoDocActive.getUserRef().getId().toHexString());
 
-        VideoDoc videoDocInactive = new VideoDoc("guide", "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDocInactive = new VideoDoc(PostType.guide, "This video will be prepoulated for testing", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDocInactive.setActive(false);
@@ -92,11 +94,11 @@ public class VideoRepositoryImplTest {
         inactiveVideoLikeUnlikeDto.setUserId(videoDocInactive.getUserRef().getId().toHexString());
 
         VideoComment videoComment = new VideoComment(new UserRef(userId, "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(videoDocActive.getId(), "Title for dummy test post", "guide", "video", null);
+        PostRef postRef = new PostRef(videoDocActive.getId(), "Title for dummy test post", PostType.guide, PostMedium.video, null);
         videoComment = videoRepository.insertComment(postRef, videoComment);
         insertedVideoCommentId = videoComment.getId();
 
-        PostRefDto postRefDto = new PostRefDto(videoDocActive.getId().toHexString(), "Title for dummy test post", "guide", "video", null);
+        PostRefDto postRefDto = new PostRefDto(videoDocActive.getId().toHexString(), "Title for dummy test post", PostType.guide, PostMedium.video, null);
         VideoCommentDto videoCommentDto = new VideoCommentDto(postRefDto, new UserRefDto("123", "username1"), "Test comment");
         videoCommentDto.setId(insertedVideoCommentId.toHexString());
         videoCommentDto.setLikes("0");
@@ -109,7 +111,7 @@ public class VideoRepositoryImplTest {
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
-        VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDoc = new VideoDoc(PostType.guide, "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDoc = videoRepository.save(videoDoc);
@@ -122,7 +124,7 @@ public class VideoRepositoryImplTest {
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
-        VideoDoc videoDoc = new VideoDoc("guide", "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDoc = new VideoDoc(PostType.guide, "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
         videoDoc = videoRepository.save(videoDoc);
@@ -162,7 +164,7 @@ public class VideoRepositoryImplTest {
     @Test
     public void test_insertComment() {
         VideoComment videoComment = new VideoComment(new UserRef(ObjectId.get(), "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), "Title for dummy test post", "guide", "video", null);
+        PostRef postRef = new PostRef(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), "Title for dummy test post", PostType.guide, PostMedium.video, null);
         assertNotNull(videoRepository.insertComment(postRef, videoComment));
     }
 
@@ -186,7 +188,7 @@ public class VideoRepositoryImplTest {
     public void test_removeComment() {
         ObjectId userId = new ObjectId();
         VideoComment videoComment = new VideoComment(new UserRef(userId, "priyanka11"), null, "This is a dummy comment to test insertion");
-        PostRef postRef = new PostRef(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), "Title for dummy test post", "review", "video", null);
+        PostRef postRef = new PostRef(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()), "Title for dummy test post", PostType.review, PostMedium.video, null);
         videoRepository.insertComment(postRef, videoComment);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();

@@ -1,10 +1,20 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
+import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
+import com.hexlindia.drool.common.data.doc.PostRef;
+import com.hexlindia.drool.common.dto.UserRefDto;
+import com.hexlindia.drool.common.dto.mapper.UserRefMapper;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
 import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicRepository;
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.business.api.usecase.UserProfile;
+import com.hexlindia.drool.user.data.doc.ActionType;
+import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +44,21 @@ class DiscussionTopicImplTest {
     @Autowired
     private DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
 
-    //START FIXING TEST FOR DISCUSSION TOPIC AND REPLY : REPOSITORY AND BUSINESS
+    @Mock
+    private UserActivity userActivityMock;
+
+    @Mock
+    private ActivityFeed activityFeedMock;
+
+    @Mock
+    private UserProfile userProfileMock;
+
+    @Mock
+    private UserRefMapper userRefMapperMock;
 
     @BeforeEach
     void setUp() {
-        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked));
+        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock, userProfileMock, userRefMapperMock));
     }
 
     @Test
@@ -57,6 +77,41 @@ class DiscussionTopicImplTest {
         assertEquals(0, discussionTopicDocArgumentCaptor.getValue().getLikes());
         assertEquals(0, discussionTopicDocArgumentCaptor.getValue().getViews());
         assertTrue(discussionTopicDocArgumentCaptor.getValue().isActive());
+    }
+
+    @Test
+    void post_PassingObjectToUserActivityAndActivityComponent() {
+        DiscussionTopicDoc discussionTopicDocMocked = new DiscussionTopicDoc();
+        discussionTopicDocMocked.setTitle("THis is a test discusion title");
+        discussionTopicDocMocked.setLikes(0);
+        discussionTopicDocMocked.setViews(0);
+        discussionTopicDocMocked.setActive(true);
+        ObjectId userId = ObjectId.get();
+        discussionTopicDocMocked.setUserRef(new UserRef(userId, ""));
+        ObjectId discussionId = ObjectId.get();
+        discussionTopicDocMocked.setId(discussionId);
+        when(this.discussionTopicDtoDocMapperMocked.toDoc(any())).thenReturn(discussionTopicDocMocked);
+        when(this.discussionTopicRepository.save(any())).thenReturn(discussionTopicDocMocked);
+        this.discussionTopicImplSpy.post(null);
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).add(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(discussionId, postRefArgumentCaptor.getValue().getId());
+        assertEquals("THis is a test discusion title", postRefArgumentCaptor.getValue().getTitle());
+        assertEquals(PostType.discussion, postRefArgumentCaptor.getValue().getType());
+        assertEquals(PostMedium.text, postRefArgumentCaptor.getValue().getMedium());
+
+        ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptorActivityFeed = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
+        verify(this.activityFeedMock, times(1)).addDiscussion(discussionTopicDocArgumentCaptorActivityFeed.capture());
+        assertEquals("THis is a test discusion title", discussionTopicDocArgumentCaptorActivityFeed.getValue().getTitle());
+        assertEquals(0, discussionTopicDocArgumentCaptorActivityFeed.getValue().getLikes());
+        assertEquals(0, discussionTopicDocArgumentCaptorActivityFeed.getValue().getViews());
+        assertTrue(discussionTopicDocArgumentCaptorActivityFeed.getValue().isActive());
+        assertEquals(discussionId, discussionTopicDocArgumentCaptorActivityFeed.getValue().getId());
     }
 
     @Test
@@ -96,10 +151,14 @@ class DiscussionTopicImplTest {
 
     @Test
     void updateTopicTitle_testPassingEntityToRepository() {
-        ObjectId id = new ObjectId();
+        ObjectId id = ObjectId.get();
         String title = "This is a test title";
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), ""));
+        discussionTopicDto.setId(id.toHexString());
+        discussionTopicDto.setTitle(title);
         when(this.discussionTopicRepository.updateTopicTitle(title, id)).thenReturn(true);
-        discussionTopicImplSpy.updateTopicTitle(title, id.toHexString());
+        discussionTopicImplSpy.updateTopicTitle(discussionTopicDto);
         ArgumentCaptor<String> titleArgumentCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(discussionTopicRepository, times(1)).updateTopicTitle(titleArgumentCaptor.capture(), idArgumentCaptor.capture());
@@ -121,28 +180,56 @@ class DiscussionTopicImplTest {
 
     @Test
     void incrementLikes_passedToRepository() {
-        ObjectId id = new ObjectId();
-        ObjectId userId = new ObjectId();
+        ObjectId discussionId = ObjectId.get();
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(discussionId.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
+        discussionTopicDoc.setId(discussionId);
         discussionTopicDoc.setLikes(12344);
-        when(this.discussionTopicRepository.incrementLikes(id)).thenReturn(discussionTopicDoc);
-        discussionTopicImplSpy.incrementLikes(id.toHexString(), userId.toHexString());
+
+        when(this.discussionTopicRepository.incrementLikes(any())).thenReturn(discussionTopicDoc);
+        discussionTopicImplSpy.incrementLikes(discussionTopicDto);
+
         ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(this.discussionTopicRepository, times(1)).incrementLikes(idArgumentCaptor.capture());
-        assertEquals(id, idArgumentCaptor.getValue());
+        assertEquals(discussionId, idArgumentCaptor.getValue());
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).add(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.like, actionTypeArgumentCaptor.getValue());
+        assertEquals(discussionId, postRefArgumentCaptor.getValue().getId());
     }
 
     @Test
     void decrementLikes_passedToRepository() {
-        ObjectId id = new ObjectId();
-        ObjectId userId = new ObjectId();
+        ObjectId discussionId = ObjectId.get();
+        DiscussionTopicDto discussionTopicDto = new DiscussionTopicDto();
+        discussionTopicDto.setId(discussionId.toHexString());
+        ObjectId userId = ObjectId.get();
+        discussionTopicDto.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
         DiscussionTopicDoc discussionTopicDoc = new DiscussionTopicDoc();
+        discussionTopicDoc.setId(discussionId);
         discussionTopicDoc.setLikes(12344);
-        when(this.discussionTopicRepository.decrementLikes(id)).thenReturn(discussionTopicDoc);
-        discussionTopicImplSpy.decrementLikes(id.toHexString(), userId.toHexString());
+
+        when(this.discussionTopicRepository.decrementLikes(any())).thenReturn(discussionTopicDoc);
+        discussionTopicImplSpy.decrementLikes(discussionTopicDto);
+
         ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         verify(this.discussionTopicRepository, times(1)).decrementLikes(idArgumentCaptor.capture());
-        assertEquals(id, idArgumentCaptor.getValue());
+        assertEquals(discussionId, idArgumentCaptor.getValue());
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).delete(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.like, actionTypeArgumentCaptor.getValue());
+        assertEquals(discussionId, postRefArgumentCaptor.getValue().getId());
     }
 
 }

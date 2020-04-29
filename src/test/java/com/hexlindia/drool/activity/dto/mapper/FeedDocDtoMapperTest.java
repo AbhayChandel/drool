@@ -26,28 +26,28 @@ class FeedDocDtoMapperTest {
 
         FeedDoc feedDocLakmeFoundation = new FeedDoc();
         ObjectId postId = ObjectId.get();
-        feedDocLakmeFoundation.setPostId(postId);
+        feedDocLakmeFoundation.setId(postId);
         feedDocLakmeFoundation.setPostType("guide");
         feedDocLakmeFoundation.setPostMedium("video");
         feedDocLakmeFoundation.setTitle(("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage"));
         feedDocLakmeFoundation.setSourceId("QW46ldTDiBY");
         LocalDateTime datePosted = LocalDateTime.now().minusHours(2);
         feedDocLakmeFoundation.setDatePosted(datePosted);
-        feedDocLakmeFoundation.setLikes("34k");
-        feedDocLakmeFoundation.setViews("4.3M");
+        feedDocLakmeFoundation.setLikes(34978);
+        feedDocLakmeFoundation.setViews(4385654);
         feedDocLakmeFoundation.setComments(580);
         feedDocLakmeFoundation.setProductRefList(Arrays.asList(new ProductRef("1", "Lakme Foundation", "foundation")));
         ObjectId userId = ObjectId.get();
         feedDocLakmeFoundation.setUserRef(new UserRef(userId, "shabanastyle"));
         FeedDto feedDto = feedDocDtoMapper.toDto(feedDocLakmeFoundation);
 
-        assertEquals(postId.toHexString(), feedDto.getPostId());
+        assertEquals(postId.toHexString(), feedDto.getId());
         assertEquals("guide", feedDto.getPostType());
         assertEquals("video", feedDto.getPostMedium());
         assertEquals("How To Apply Lakme Perfecting Liquid Foundation || How I Make It Full Coverage", feedDto.getTitle());
         assertEquals("QW46ldTDiBY", feedDto.getSourceId());
         assertEquals(MetaFieldValueFormatter.getDateInDayMonCommaYear(datePosted), feedDto.getDatePosted());
-        assertEquals("34k", feedDto.getLikes());
+        assertEquals("34.9k", feedDto.getLikes());
         assertEquals("4.3M", feedDto.getViews());
         assertEquals("580", feedDto.getComments());
         assertEquals("1", feedDto.getProductRefDtoList().get(0).getId());

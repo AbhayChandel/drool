@@ -1,5 +1,8 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
+import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
 import com.hexlindia.drool.product.business.api.usecase.BrandRating;
 import com.hexlindia.drool.product.business.api.usecase.ProductReview;
@@ -10,6 +13,7 @@ import com.hexlindia.drool.product.dto.*;
 import com.hexlindia.drool.product.dto.mapper.AspectTemplateMapper;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.video.business.api.usecase.Video;
 import com.hexlindia.drool.video.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +57,7 @@ public class ProductReviewImpl implements ProductReview {
         reviewDto.setId(reviewDoc.getId().toHexString());
 
         if (ReviewType.text.equals(reviewDto.getReviewType())) {
-            userActivity.addTextReview(reviewDoc);
+            userActivity.add(reviewDoc.getUserRef().getId(), ActionType.post, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), PostType.review, PostMedium.text, null));
         }
 
         ObjectId videoId = saveVideoReview(reviewDto, reviewDoc);

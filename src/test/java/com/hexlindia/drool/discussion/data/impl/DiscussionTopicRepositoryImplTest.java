@@ -24,7 +24,7 @@ class DiscussionTopicRepositoryImplTest {
     @Autowired
     private DiscussionTopicRepository discussionTopicRepository;
 
-    private ObjectId insertDiscussionTopic;
+    private DiscussionTopicDoc insertDiscussionTopic;
 
     @Autowired
     private MongoOperations mongoOperations;
@@ -43,7 +43,6 @@ class DiscussionTopicRepositoryImplTest {
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
         discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
-        discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
 
@@ -54,7 +53,7 @@ class DiscussionTopicRepositoryImplTest {
 
     @Test
     void findById_ValidId() {
-        assertTrue(discussionTopicRepository.findById(insertDiscussionTopic).isPresent());
+        assertTrue(discussionTopicRepository.findById(insertDiscussionTopic.getId()).isPresent());
     }
 
     @Test
@@ -64,25 +63,25 @@ class DiscussionTopicRepositoryImplTest {
 
     @Test
     void updateTopicTitle() {
-        assertTrue(discussionTopicRepository.updateTopicTitle("This title was updated", insertDiscussionTopic));
+        assertTrue(discussionTopicRepository.updateTopicTitle("This title was updated", insertDiscussionTopic.getId()));
     }
 
     @Test
     void incrementViews() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementViews(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementViews(insertDiscussionTopic.getId());
         assertEquals(1191, discussionTopicDoc.getViews());
     }
 
     @Test
     void incrementLikes() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementLikes(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.incrementLikes(insertDiscussionTopic.getId());
         assertEquals(501, discussionTopicDoc.getLikes());
 
     }
 
     @Test
     void decrementLikes() {
-        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.decrementLikes(insertDiscussionTopic);
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.decrementLikes(insertDiscussionTopic.getId());
         assertEquals(499, discussionTopicDoc.getLikes());
     }
 
@@ -97,11 +96,23 @@ class DiscussionTopicRepositoryImplTest {
         DiscussionReplyDoc discussionReplyDoc = new DiscussionReplyDoc();
         discussionReplyDoc.setReply("As I told it is a great reply");
         discussionReplyDoc.setUserRef(new UserRef(userId, "shabana"));
-        discussionReplyDoc.setActive(true);
         discussionReplyDoc.setLikes(190);
         discussionTopicDoc.setDiscussionReplyDocList(Arrays.asList(discussionReplyDoc, new DiscussionReplyDoc(), new DiscussionReplyDoc()));
 
         mongoOperations.save(discussionTopicDoc);
-        insertDiscussionTopic = discussionTopicDoc.getId();
+        insertDiscussionTopic = discussionTopicDoc;
+    }
+
+    @Test
+    void updateUser() {
+        ObjectId userId = ObjectId.get();
+        UserRef userRef = new UserRef(userId, "new");
+        DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.updateUser(insertDiscussionTopic.getId(), userRef, insertDiscussionTopic.getUserRef());
+
+        assertEquals(userId, discussionTopicDoc.getUserRef().getId());
+        assertEquals("new", discussionTopicDoc.getUserRef().getUsername());
+
+        assertEquals(insertDiscussionTopic.getUserRef().getId(), discussionTopicDoc.getOldUserRef().getId());
+        assertEquals(insertDiscussionTopic.getUserRef().getUsername(), discussionTopicDoc.getOldUserRef().getUsername());
     }
 }

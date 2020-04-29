@@ -1,30 +1,20 @@
 package com.hexlindia.drool.user.data.repository.api;
 
-import com.hexlindia.drool.common.data.doc.CommentRef;
-import com.hexlindia.drool.product.data.doc.ReviewDoc;
-import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.common.data.doc.PostRef;
+import com.hexlindia.drool.user.data.doc.ActionType;
+import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 
 public interface UserActivityRepository {
 
-    UpdateResult addVideo(VideoDoc videoDoc);
+    UpdateResult add(ObjectId userId, ActionType actionType, PostRef postRef);
 
-    UpdateResult addVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    UpdateResult delete(ObjectId userId, ActionType actionType, PostRef postRef);
 
-    UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto);
+    UpdateResult update(ObjectId userId, ActionType actionType, PostRef postRef);
 
-    UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef);
+    UpdateResult addViolation(ObjectId userId, ViolationReportRef violationReportRef);
 
-    UpdateResult updateVideoComment(ObjectId userId, CommentRef commentRef);
-
-    UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto);
-
-    UpdateResult addCommentLike(VideoCommentDto videoCommentDto);
-
-    UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto);
-
-    UpdateResult addTextReview(ReviewDoc reviewDoc);
+    UpdateResult addReportedViolation(ObjectId userId, ViolationReportRef violationReportRef);
 }

@@ -3,6 +3,8 @@ package com.hexlindia.drool.video;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -108,7 +110,7 @@ public class VideoIT {
         assertEquals(200, responseEntity.getStatusCodeValue());
         VideoDto videoDto = responseEntity.getBody();
         assertNotNull(videoDto.getId());
-        assertEquals("review", videoDto.getType());
+        assertEquals(PostType.review, videoDto.getType());
         assertEquals("Review for Tom Ford Vetiver", videoDto.getTitle());
         assertEquals("This is an honest review of Tom Ford Vetiver", videoDto.getDescription());
         assertEquals("s123", videoDto.getSourceId());
@@ -153,7 +155,7 @@ public class VideoIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
@@ -172,7 +174,7 @@ public class VideoIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is an update for the comment");
         videoCommentDto.setId(insertedVideoDoc.getCommentList().get(0).getId().toHexString());
@@ -200,7 +202,7 @@ public class VideoIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(videoCommentDto), headers);
@@ -225,7 +227,7 @@ public class VideoIT {
         headers.add("Authorization", "Bearer " + this.authToken);
 
         VideoCommentDto videoCommentDto = new VideoCommentDto();
-        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", "guide", "video", null));
+        videoCommentDto.setPostRefDto(new PostRefDto(insertedVideoDoc.getId().toHexString(), "This is a test post", PostType.guide, PostMedium.video, null));
         videoCommentDto.setUserRefDto(new UserRefDto(ObjectId.get().toHexString(), "username1"));
         videoCommentDto.setComment("This is a dummy test");
         videoCommentDto.setLikes("9");
@@ -292,6 +294,8 @@ public class VideoIT {
         videoLikeUnlikeDto.setVideoId(videoDto.getId());
         videoLikeUnlikeDto.setVideoTitle(videoDto.getTitle());
         videoLikeUnlikeDto.setUserId(videoDto.getUserRefDto().getId());
+        videoLikeUnlikeDto.setPostType(PostType.review);
+        videoLikeUnlikeDto.setPostMedium(PostMedium.video);
         try {
             return new ObjectMapper().writeValueAsString(videoLikeUnlikeDto);
         } catch (JsonProcessingException e) {

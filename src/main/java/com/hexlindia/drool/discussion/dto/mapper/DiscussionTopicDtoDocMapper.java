@@ -2,6 +2,7 @@ package com.hexlindia.drool.discussion.dto.mapper;
 
 import com.hexlindia.drool.common.dto.mapper.ObjectIdMapper;
 import com.hexlindia.drool.common.dto.mapper.ObjectIdToStringMapping;
+import com.hexlindia.drool.common.dto.mapper.StringToObjectIdMapping;
 import com.hexlindia.drool.common.dto.mapper.UserRefMapper;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.discussion.data.doc.DiscussionTopicDoc;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 @Mapper(componentModel = "spring", uses = {ObjectIdMapper.class, DiscussionReplyDtoDocMapper.class, UserRefMapper.class})
 public abstract class DiscussionTopicDtoDocMapper {
 
+    @Mapping(source = "id", target = "id", qualifiedBy = StringToObjectIdMapping.class)
     @Mapping(source = "userRefDto", target = "userRef")
     @Mapping(source = "discussionReplyDtoList", target = "discussionReplyDocList")
     public abstract DiscussionTopicDoc toDoc(DiscussionTopicDto discussionTopicDto);

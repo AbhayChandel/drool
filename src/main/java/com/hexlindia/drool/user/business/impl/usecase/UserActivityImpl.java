@@ -1,15 +1,15 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
-import com.hexlindia.drool.common.data.doc.CommentRef;
-import com.hexlindia.drool.product.data.doc.ReviewDoc;
+import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
+import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
-import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
+import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class UserActivityImpl implements UserActivity {
@@ -22,47 +22,27 @@ public class UserActivityImpl implements UserActivity {
     }
 
     @Override
-    public UpdateResult addVideo(VideoDoc videoDoc) {
-        return this.userActivityRepository.addVideo(videoDoc);
+    public UpdateResult add(ObjectId userId, ActionType actionType, PostRef postRef) {
+        postRef.setDateTime(LocalDateTime.now());
+        return this.userActivityRepository.add(userId, actionType, postRef);
     }
 
     @Override
-    public UpdateResult addVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return this.userActivityRepository.addVideoLike(videoLikeUnlikeDto);
+    public UpdateResult delete(ObjectId userId, ActionType actionType, PostRef postRef) {
+        return this.userActivityRepository.delete(userId, actionType, postRef);
     }
 
     @Override
-    public UpdateResult deleteVideoLike(VideoLikeUnlikeDto videoLikeUnlikeDto) {
-        return this.userActivityRepository.deleteVideoLike(videoLikeUnlikeDto);
+    public UpdateResult update(ObjectId userId, ActionType actionType, PostRef postRef) {
+        return this.userActivityRepository.update(userId, actionType, postRef);
     }
 
     @Override
-    public UpdateResult addVideoComment(ObjectId userId, CommentRef commentRef) {
-        return this.userActivityRepository.addVideoComment(userId, commentRef);
-    }
-
-    @Override
-    public UpdateResult updateVideoComment(ObjectId userId, CommentRef commentRef) {
-        return this.userActivityRepository.updateVideoComment(userId, commentRef);
-    }
-
-    @Override
-    public UpdateResult deleteVideoComment(VideoCommentDto videoCommentDto) {
-        return this.userActivityRepository.deleteVideoComment(videoCommentDto);
-    }
-
-    @Override
-    public UpdateResult addCommentLike(VideoCommentDto videoCommentDto) {
-        return this.userActivityRepository.addCommentLike(videoCommentDto);
-    }
-
-    @Override
-    public UpdateResult deleteCommentLike(VideoCommentDto videoCommentDto) {
-        return this.userActivityRepository.deleteCommentLike(videoCommentDto);
-    }
-
-    @Override
-    public UpdateResult addTextReview(ReviewDoc reviewDoc) {
-        return this.userActivityRepository.addTextReview(reviewDoc);
+    public boolean addViolation(ObjectId postOwnerId, ObjectId reportingUserId, ViolationReportRef violationReportRef) {
+        UpdateResult resultAddViolation = this.userActivityRepository.addViolation(postOwnerId, violationReportRef);
+        if (resultAddViolation.getModifiedCount() > 0 || resultAddViolation.getUpsertedId() != null) {
+            return this.userActivityRepository.addReportedViolation(reportingUserId, violationReportRef).getModifiedCount() > 0;
+        }
+        return false;
     }
 }

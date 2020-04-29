@@ -1,12 +1,14 @@
 package com.hexlindia.drool.discussion.services.iml.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostType;
+import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.discussion.business.api.usecase.DiscussionReply;
 import com.hexlindia.drool.discussion.dto.DiscussionReplyDto;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import org.bson.types.ObjectId;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,10 +61,13 @@ class DiscussionReplyRestServiceImplTest {
 
     @Test
     void saveReply_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.discussionReplyMocked.saveReply(any())).thenReturn(null);
+        when(this.discussionReplyMocked.saveOrUpdate(any())).thenReturn(null);
         DiscussionReplyDto discussionReplyDtoMocked = new DiscussionReplyDto();
         ObjectId discussionId = new ObjectId();
-        discussionReplyDtoMocked.setDiscussionId(discussionId.toHexString());
+        PostRefDto postRefDto = new PostRefDto();
+        postRefDto.setId(discussionId.toHexString());
+        postRefDto.setTitle("This is a test discussion topic");
+        discussionReplyDtoMocked.setPostRefDto(postRefDto);
         discussionReplyDtoMocked.setReply(("this is a new reply"));
         ObjectId userId = new ObjectId();
         discussionReplyDtoMocked.setUserRefDto(new UserRefDto(userId.toHexString(), "shabana"));
@@ -72,9 +76,10 @@ class DiscussionReplyRestServiceImplTest {
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         ArgumentCaptor<DiscussionReplyDto> discussionReplyDtoArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyDto.class);
-        verify(this.discussionReplyMocked, times(1)).saveReply(discussionReplyDtoArgumentCaptor.capture());
+        verify(this.discussionReplyMocked, times(1)).saveOrUpdate(discussionReplyDtoArgumentCaptor.capture());
         assertEquals("this is a new reply", discussionReplyDtoArgumentCaptor.getValue().getReply());
-        assertEquals(discussionId.toHexString(), discussionReplyDtoArgumentCaptor.getValue().getDiscussionId());
+        assertEquals(discussionId.toHexString(), discussionReplyDtoArgumentCaptor.getValue().getPostRefDto().getId());
+        assertEquals("This is a test discussion topic", discussionReplyDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
         assertEquals(userId.toHexString(), discussionReplyDtoArgumentCaptor.getValue().getUserRefDto().getId());
         assertEquals("shabana", discussionReplyDtoArgumentCaptor.getValue().getUserRefDto().getUsername());
     }
@@ -92,7 +97,7 @@ class DiscussionReplyRestServiceImplTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
+    /*@Test
     void update_ParametersArePassedToBusinessLayer() throws Exception {
         String reply = "THis is a usual reply";
         ObjectId replyId = new ObjectId();
@@ -113,26 +118,28 @@ class DiscussionReplyRestServiceImplTest {
         assertEquals("THis is a usual reply", replyArgumentCaptor.getValue());
         assertEquals(replyId.toHexString(), replyIdArgumentCaptor.getValue());
         assertEquals(discussionId.toHexString(), discussionIdArgumentCaptor.getValue());
-    }
+    }*/
 
     @Test
     public void incrementLikes_ParametersPassedToBusinessLayer() throws Exception {
         Integer likes = 300;
-        ObjectId replyId = new ObjectId();
-        ObjectId discussionId = new ObjectId();
-        ObjectId userId = new ObjectId();
-        when(this.discussionReplyMocked.incrementLikes(replyId.toHexString(), discussionId.toHexString(), userId.toHexString())).thenReturn(null);
-        String requestBody = "{\"replyId\": \"" + replyId.toHexString() + "\", \"discussionId\": \"" + discussionId.toHexString() + "\", \"userId\": \"" + userId.toHexString() + "\"}";
+        DiscussionReplyDto discussionReplyDtoMocked = new DiscussionReplyDto();
+        ObjectId replyId = ObjectId.get();
+        discussionReplyDtoMocked.setId(replyId.toHexString());
+        String reply = "This is going to be a great reply";
+        discussionReplyDtoMocked.setReply(reply);
+        ObjectId postId = ObjectId.get();
+        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
+        when(this.discussionReplyMocked.incrementLikes(discussionReplyDtoMocked)).thenReturn(null);
         this.mockMvc.perform(MockMvcRequestBuilders.put(getLikesIncrementUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .content(objectMapper.writeValueAsString(discussionReplyDtoMocked)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        ArgumentCaptor<String> replyIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> discussionIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.discussionReplyMocked, times(1)).incrementLikes(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture(), userIdArgumentCaptor.capture());
-        assertEquals(replyId.toHexString(), replyIdArgumentCaptor.getValue());
-        assertEquals(discussionId.toHexString(), discussionIdArgumentCaptor.getValue());
-        assertEquals(userId.toHexString(), userIdArgumentCaptor.getValue());
+        ArgumentCaptor<DiscussionReplyDto> discussionReplyDtoArgumentCaptor = ArgumentCaptor.forClass(DiscussionReplyDto.class);
+        verify(this.discussionReplyMocked, times(1)).incrementLikes(discussionReplyDtoArgumentCaptor.capture());
+        assertEquals(replyId.toHexString(), discussionReplyDtoArgumentCaptor.getValue().getId());
+        assertEquals(reply, discussionReplyDtoArgumentCaptor.getValue().getReply());
+        assertEquals(postId.toHexString(), discussionReplyDtoArgumentCaptor.getValue().getPostRefDto().getId());
+        assertEquals("This is a test discussion", discussionReplyDtoArgumentCaptor.getValue().getPostRefDto().getTitle());
     }
 
     @Test
@@ -155,35 +162,33 @@ class DiscussionReplyRestServiceImplTest {
     }
 
     @Test
-    void setStatus_HttpMethodNotAllowed() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(getSetStatusUri()))
+    void delete_HttpMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put(getDeleteUri() + "/" + ObjectId.get().toHexString() + "/" + ObjectId.get().toHexString() + "/" + ObjectId.get().toHexString()))
                 .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
-    void setStatus_missingRequestObject() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getSetStatusUri()))
-                .andExpect(status().isBadRequest());
+    void delete_missingRequestObject() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(getDeleteUri() + "/" + ObjectId.get().toHexString()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    public void setStatus_ParametersPassedToBusinessLayer() throws Exception {
-        ObjectId replyId = new ObjectId();
-        ObjectId discussionId = new ObjectId();
-        Boolean status = true;
-        when(this.discussionReplyMocked.setStatus(status, replyId.toHexString(), discussionId.toHexString())).thenReturn(true);
-        String requestBody = "{\"status\":\"" + status + "\", \"replyId\": \"" + replyId.toHexString() + "\", \"discussionId\": \"" + discussionId.toHexString() + "\"}";
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getSetStatusUri())
-                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+    public void delete_ParametersPassedToBusinessLayer() throws Exception {
+        ObjectId replyId = ObjectId.get();
+        ObjectId discussionId = ObjectId.get();
+        ObjectId userId = ObjectId.get();
+        when(this.discussionReplyMocked.delete(replyId.toHexString(), discussionId.toHexString(), userId.toHexString())).thenReturn(true);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(getDeleteUri() + "/" + discussionId.toHexString() + "/" + replyId.toHexString() + "/" + userId.toHexString()))
                 .andExpect(status().isOk());
 
-        ArgumentCaptor<Boolean> statusArgumentCaptor = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<String> replyIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> discussionIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.discussionReplyMocked, times(1)).setStatus(statusArgumentCaptor.capture(), replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture());
-        assertTrue(statusArgumentCaptor.getValue());
+        ArgumentCaptor<String> userIdArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(this.discussionReplyMocked, times(1)).delete(replyIdArgumentCaptor.capture(), discussionIdArgumentCaptor.capture(), userIdArgumentCaptor.capture());
         assertEquals(replyId.toHexString(), replyIdArgumentCaptor.getValue());
         assertEquals(discussionId.toHexString(), discussionIdArgumentCaptor.getValue());
+        assertEquals(userId.toHexString(), userIdArgumentCaptor.getValue());
     }
 
 
@@ -195,8 +200,8 @@ class DiscussionReplyRestServiceImplTest {
         return "/" + restUriVersion + "/discussion/reply/update";
     }
 
-    private String getSetStatusUri() {
-        return "/" + restUriVersion + "/discussion/reply/set";
+    private String getDeleteUri() {
+        return "/" + restUriVersion + "/discussion/reply/delete";
     }
 
     private String getLikesIncrementUri() {
