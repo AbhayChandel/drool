@@ -77,7 +77,7 @@ public class ProductReviewImpl implements ProductReview {
             videoDto.setReviewId(reviewDoc.getId().toHexString());
             videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
             videoDto.setUserRefDto(reviewDto.getUserRefDto());
-            videoDto = video.save(videoDto);
+            videoDto = video.saveOrUpdate(videoDto);
             reviewDto.setVideoDto(videoDto);
             return new ObjectId(videoDto.getId());
         }

@@ -13,17 +13,22 @@ import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -76,6 +81,11 @@ public class VideoRepositoryImplTest {
                 new UserRef(userId, "shabana"));
         videoDocActive4.setActive(true);
         videoDocActive4.setDatePosted(LocalDateTime.parse("10-08-2019 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+        List<VideoComment> commentList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            commentList.add(new VideoComment());
+        }
+        videoDocActive4.setCommentList(commentList);
         videoDocActive = this.mongoTemplate.insert(videoDocActive4);
         activeVideoLikeUnlikeDto = new VideoLikeUnlikeDto();
         activeVideoLikeUnlikeDto.setVideoId(videoDocActive.getId().toHexString());
@@ -119,23 +129,34 @@ public class VideoRepositoryImplTest {
     }
 
     @Test
-    public void test_SaveSave() {
-        ObjectId userId = new ObjectId();
+    void updateVideo() {
         ProductRef productRef1 = new ProductRef("abc", "Lakme 9to5 Lipcolor", "lipcolor");
         ProductRef productRef2 = new ProductRef("pqr", "Chambor eyeliner", "eyeliner");
         List<ProductRef> productRefList = Arrays.asList(productRef1, productRef2);
-        VideoDoc videoDoc = new VideoDoc(PostType.guide, "This is a test video entry", "This video is inserted as part of testing with MongoDB", "vQ765gh",
+        VideoDoc videoDoc = new VideoDoc(PostType.guide, "Title Updated", "Description Updated", "vQ765gh",
                 productRefList,
                 new UserRef(userId, "shabana"));
-        videoDoc = videoRepository.save(videoDoc);
-        videoDoc.setSourceId("vQ76");
-        videoDoc = videoRepository.save(videoDoc);
-        assertEquals("vQ76", videoDoc.getSourceId());
+        videoDoc.setId(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()));
+        boolean result = videoRepository.updateVideo(videoDoc);
+        assertTrue(result);
+
+        VideoDoc videoDocFromDB = mongoTemplate.findOne(Query.query(new Criteria("_id").is(new ObjectId(activeVideoLikeUnlikeDto.getVideoId())).andOperator(new Criteria("active").is(true))), VideoDoc.class);
+        assertEquals("Title Updated", videoDocFromDB.getTitle());
+        assertEquals("Description Updated", videoDocFromDB.getDescription());
+        assertEquals("abc", videoDocFromDB.getProductRefList().get(0).getId());
+        assertEquals("Lakme 9to5 Lipcolor", videoDocFromDB.getProductRefList().get(0).getName());
+        assertEquals("lipcolor", videoDocFromDB.getProductRefList().get(0).getType());
+        assertEquals("pqr", videoDocFromDB.getProductRefList().get(1).getId());
+        assertEquals("Chambor eyeliner", videoDocFromDB.getProductRefList().get(1).getName());
+        assertEquals("eyeliner", videoDocFromDB.getProductRefList().get(1).getType());
     }
 
     @Test
     public void test_findByIdActiveTrue() {
-        assertNotNull(videoRepository.findByIdAndActiveTrue(new ObjectId(activeVideoLikeUnlikeDto.getVideoId())));
+        Optional<VideoDoc> videoDocOptional = videoRepository.findByIdAndActiveTrue(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()));
+        assertTrue(videoDocOptional.isPresent());
+        VideoDoc videoDoc = videoDocOptional.get();
+        assertEquals(101, videoDoc.getTotalComments());
     }
 
     @Test
@@ -218,5 +239,9 @@ public class VideoRepositoryImplTest {
         assertEquals("0", videoRepository.deleteCommentLike(videoCommentDto));
     }
 
-
+    @Test
+    void deleteVideo() {
+        DeleteResult result = videoRepository.deleteVideo(new ObjectId(activeVideoLikeUnlikeDto.getVideoId()));
+        assertEquals(1, result.getDeletedCount());
+    }
 }

@@ -42,6 +42,15 @@ public class ActivityFeedImpl implements ActivityFeed {
         addToFeed(discussionToFeedDocMapper.toFeedDoc(discussionTopicDoc));
     }
 
+    @Override
+    public boolean delete(ObjectId id) {
+        long deleteCount = activityFeedRepository.delete(id).getDeletedCount();
+        if (deleteCount > 1) {
+            log.warn("Delete in ActivityFeed is > 1: " + deleteCount);
+        }
+        return deleteCount > 0;
+    }
+
     private void addToFeed(FeedDoc feedDoc) {
         activityFeedRepository.save(feedDoc);
     }

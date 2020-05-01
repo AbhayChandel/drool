@@ -3,6 +3,7 @@ package com.hexlindia.drool.activity.data.repository.impl;
 import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
 import com.hexlindia.drool.activity.data.repository.api.ActivityFeedRepository;
+import com.mongodb.client.result.DeleteResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,11 @@ public class ActivityFeedRepositoryImpl implements ActivityFeedRepository {
     }
 
     @Override
+    public DeleteResult delete(ObjectId id) {
+        return mongoOperations.remove(Query.query(new Criteria(FIELD_ID).is(id)), FeedDoc.class);
+    }
+
+    @Override
     public FeedDoc save(FeedDoc feedDoc) {
         return this.mongoOperations.save(feedDoc);
     }
@@ -48,4 +55,6 @@ public class ActivityFeedRepositoryImpl implements ActivityFeedRepository {
     public FeedDoc incrementDecrementField(ObjectId id, FeedDocField feedDocField, int value) {
         return mongoOperations.findAndModify(new Query(where(FIELD_ID).is(id)), new Update().inc(feedDocField.toString(), value), FindAndModifyOptions.options().returnNew(true), FeedDoc.class);
     }
+
+
 }

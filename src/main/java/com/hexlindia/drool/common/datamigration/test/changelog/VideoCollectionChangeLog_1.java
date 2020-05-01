@@ -1,7 +1,6 @@
 package com.hexlindia.drool.common.datamigration.test.changelog;
 
 import com.github.mongobee.changeset.ChangeLog;
-import com.github.mongobee.changeset.ChangeSet;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.product.data.doc.ProductRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
@@ -17,7 +16,7 @@ import java.util.List;
 @ChangeLog
 public class VideoCollectionChangeLog_1 {
 
-    @ChangeSet(order = "001", id = "video", author = "")
+    //@ChangeSet(order = "001", id = "video", author = "")
     public void importantWorkToDo(MongoTemplate mongoTemplate) {
         VideoDoc videoDoc1 = new VideoDoc(PostType.review, "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty", "KAY BEAUTY by Katrina Kaif Unbaised/Honest REVIEW | Anindita Chakravarty Hey guys! so katrina kaif launched her makeup line with nykaa & you guys requested me to review the products. I hope this video is helpful. xx\n" +
                 "\n" +

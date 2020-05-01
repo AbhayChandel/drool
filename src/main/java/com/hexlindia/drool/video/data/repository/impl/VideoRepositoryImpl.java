@@ -8,6 +8,7 @@ import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @Slf4j
@@ -44,12 +45,34 @@ public class VideoRepositoryImpl implements VideoRepository {
     public VideoDoc save(VideoDoc videoDoc) {
         videoDoc.setDatePosted(LocalDateTime.now());
         videoDoc.setActive(true);
-        return this.mongoOperations.save(videoDoc);
+        return this.mongoOperations.insert(videoDoc);
+    }
+
+    @Override
+    public boolean updateVideo(VideoDoc videoDoc) {
+        Update update = new Update().set("productRefList", videoDoc.getProductRefList()).set("title", videoDoc.getTitle()).set("description", videoDoc.getDescription());
+        return mongoOperations.updateFirst(new Query(where("id").is(videoDoc.getId())), update, VideoDoc.class).getModifiedCount() > 0;
+    }
+
+    @Override
+    public DeleteResult deleteVideo(ObjectId id) {
+        return mongoOperations.remove(Query.query(new Criteria("_id").is(id)), VideoDoc.class);
     }
 
     @Override
     public Optional<VideoDoc> findByIdAndActiveTrue(ObjectId id) {
-        VideoDoc videoDoc = mongoOperations.findOne(query(where("_id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+        /*VideoDoc videoDoc = mongoOperations.findOne(query(where("_id").is(id).andOperator(where("active").is(true))), VideoDoc.class);
+        return videoDoc == null ? Optional.empty() : Optional.of(videoDoc);*/
+        MatchOperation match = match(new Criteria("_id").is(id).andOperator(new Criteria("active").is(true)));
+        ProjectionOperation project = Aggregation.project("type", "reviewId", "title", "description", "sourceId", "datePosted", "likes", "views", "productRefList", "userRef", COMMENT_LIST).
+                and(ArrayOperators.arrayOf(ConditionalOperators.ifNull(COMMENT_LIST).then(Collections.emptyList())).length()).as("totalComments");
+
+
+        AggregationResults<VideoDoc> results = this.mongoOperations.aggregate(Aggregation.newAggregation(
+                match,
+                project
+        ), "videos", VideoDoc.class);
+        VideoDoc videoDoc = results.getUniqueMappedResult();
         return videoDoc == null ? Optional.empty() : Optional.of(videoDoc);
     }
 
@@ -69,6 +92,7 @@ public class VideoRepositoryImpl implements VideoRepository {
 
         return results.getUniqueMappedResult();
     }
+
 
     @Override
     public String saveVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {

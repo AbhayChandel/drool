@@ -42,6 +42,7 @@ public class VideoDto {
     @NotNull(message = "User info is missing", groups = {VideoInsertValidation.class})
     private UserRefDto userRefDto;
     private List<VideoCommentDto> videoCommentDtoList;
+    private int totalComments;
 
     public VideoDto(PostType type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
         this.type = type;

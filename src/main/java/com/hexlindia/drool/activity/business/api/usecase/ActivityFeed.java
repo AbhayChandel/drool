@@ -19,4 +19,6 @@ public interface ActivityFeed {
     List<FeedDto> getFeed(int page);
 
     void addDiscussion(DiscussionTopicDoc discussionTopicDoc);
+
+    boolean delete(ObjectId id);
 }

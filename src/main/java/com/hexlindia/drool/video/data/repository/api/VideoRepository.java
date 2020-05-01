@@ -6,6 +6,7 @@ import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.types.ObjectId;
 
 import java.util.Optional;
@@ -30,4 +31,8 @@ public interface VideoRepository {
     String deleteCommentLike(VideoCommentDto videoCommentDto);
 
     VideoThumbnailDataAggregation getLatestThreeVideosByUser(ObjectId userId);
+
+    boolean updateVideo(VideoDoc videoDoc);
+
+    DeleteResult deleteVideo(ObjectId id);
 }

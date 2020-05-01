@@ -2,6 +2,7 @@ package com.hexlindia.drool.activity.data.repository.api;
 
 import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.data.doc.FeedDoc;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface ActivityFeedRepository {
     FeedDoc incrementDecrementField(ObjectId postId, FeedDocField feedDocField, int value);
 
     List<FeedDoc> getFeed(int page);
+
+    DeleteResult delete(ObjectId id);
 }
