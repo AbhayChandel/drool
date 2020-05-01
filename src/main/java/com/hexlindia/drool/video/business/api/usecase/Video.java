@@ -7,7 +7,9 @@ import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
 
 public interface Video {
 
-    VideoDto save(VideoDto videoDto);
+    VideoDto saveOrUpdate(VideoDto videoDto);
+
+    boolean delete(VideoDto videoDto);
 
     VideoDto findById(String id);
 

@@ -33,6 +33,7 @@ public class VideoDoc {
     private List<ProductRef> productRefList;
     private UserRef userRef;
     private List<VideoComment> commentList;
+    private int totalComments;
 
     public VideoDoc(PostType type, String title, String description, String sourceId, List<ProductRef> productRefList, UserRef userRef) {
         this.type = type;

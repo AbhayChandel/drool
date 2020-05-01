@@ -153,7 +153,7 @@ class VideoRestServiceImplTest {
 
     @Test
     void save_ParametersArePassedToBusinessLayer() throws Exception {
-        when(this.videoMock.save(any())).thenReturn(null);
+        when(this.videoMock.saveOrUpdate(any())).thenReturn(null);
         VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
@@ -162,7 +162,7 @@ class VideoRestServiceImplTest {
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         ArgumentCaptor<VideoDto> videoDtoArgumentCaptor = ArgumentCaptor.forClass(VideoDto.class);
-        verify(this.videoMock, times(1)).save(videoDtoArgumentCaptor.capture());
+        verify(this.videoMock, times(1)).saveOrUpdate(videoDtoArgumentCaptor.capture());
         assertEquals(PostType.review, videoDtoArgumentCaptor.getValue().getType());
         assertEquals("L'oreal Collosal Kajal Review", videoDtoArgumentCaptor.getValue().getTitle());
         assertEquals("This is a fake video review for L'oreal kajal", videoDtoArgumentCaptor.getValue().getDescription());
@@ -179,7 +179,7 @@ class VideoRestServiceImplTest {
         VideoDto videoDto = new VideoDto(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRefDto("abc", "Loreal Kajal", "kajal")),
                 new UserRefDto("123", "shabana"));
-        doThrow(new DataIntegrityViolationException("")).when(this.videoMock).save(any());
+        doThrow(new DataIntegrityViolationException("")).when(this.videoMock).saveOrUpdate(any());
         String requestBody = objectMapper.writeValueAsString(videoDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getInsertUri())
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))

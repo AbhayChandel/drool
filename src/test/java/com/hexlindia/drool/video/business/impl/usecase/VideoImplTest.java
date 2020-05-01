@@ -1,5 +1,6 @@
 package com.hexlindia.drool.video.business.impl.usecase;
 
+import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.common.data.constant.PostMedium;
 import com.hexlindia.drool.common.data.constant.PostType;
@@ -15,11 +16,13 @@ import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
 import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
+import com.hexlindia.drool.video.dto.VideoDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoThumbnailDataMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +32,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -75,9 +77,14 @@ class VideoImplTest {
         VideoDoc videoDocMock = new VideoDoc(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
                 Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
                 new UserRef(userId, "shabana"));
+        ObjectId videoId = ObjectId.get();
+        videoDocMock.setId(videoId);
+
         when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
         when(this.videoRepositoryMock.save(any())).thenReturn(videoDocMock);
-        this.videoImplSpy.save(null);
+        VideoDto videoDto = new VideoDto();
+        this.videoImplSpy.saveOrUpdate(videoDto);
+
         ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
         verify(this.videoRepositoryMock, times(1)).save(videoDocArgumentCaptor.capture());
         assertEquals(PostType.review, videoDocArgumentCaptor.getValue().getType());
@@ -90,20 +97,7 @@ class VideoImplTest {
         assertEquals("kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getType());
         assertEquals(userId, videoDocArgumentCaptor.getValue().getUserRef().getId());
         assertEquals("shabana", videoDocArgumentCaptor.getValue().getUserRef().getUsername());
-    }
 
-    @Test
-    void save_PassingObjectToUserActivity() {
-        ObjectId userId = new ObjectId();
-        VideoDoc videoDocMock = new VideoDoc(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
-                Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
-                new UserRef(userId, "shabana"));
-        ObjectId videoId = new ObjectId();
-        videoDocMock.setId(videoId);
-        videoDocMock.setDatePosted(LocalDateTime.now());
-        when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
-        when(this.videoRepositoryMock.save(any())).thenReturn(videoDocMock);
-        this.videoImplSpy.save(null);
         ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
         ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
         ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
@@ -113,6 +107,101 @@ class VideoImplTest {
         assertEquals(videoId, postRefArgumentCaptor.getValue().getId());
         assertEquals(PostType.review, postRefArgumentCaptor.getValue().getType());
         assertEquals(PostMedium.video, postRefArgumentCaptor.getValue().getMedium());
+
+        ArgumentCaptor<VideoDoc> videoDocArgumentCaptorActivityFeed = ArgumentCaptor.forClass(VideoDoc.class);
+        verify(this.activityFeedMock, times(1)).addVideo(videoDocArgumentCaptorActivityFeed.capture());
+        VideoDoc videoDocActivityFeed = videoDocArgumentCaptorActivityFeed.getValue();
+        assertEquals(videoId, videoDocActivityFeed.getId());
+        assertEquals(PostType.review, videoDocActivityFeed.getType());
+        assertEquals("L'oreal Collosal Kajal Review", videoDocActivityFeed.getTitle());
+        assertEquals("This is a fake video review for L'oreal kajal", videoDocActivityFeed.getDescription());
+        assertEquals("vQ765gh", videoDocActivityFeed.getSourceId());
+        assertEquals(2, videoDocActivityFeed.getProductRefList().size());
+        assertEquals("abc", videoDocActivityFeed.getProductRefList().get(0).getId());
+        assertEquals("Loreal Kajal", videoDocActivityFeed.getProductRefList().get(0).getName());
+        assertEquals("kajal", videoDocActivityFeed.getProductRefList().get(0).getType());
+        assertEquals(userId, videoDocActivityFeed.getUserRef().getId());
+        assertEquals("shabana", videoDocActivityFeed.getUserRef().getUsername());
+
+    }
+
+    @Test
+    void update_PassingObjectToUserActivity() {
+        ObjectId userId = new ObjectId();
+        VideoDoc videoDocMock = new VideoDoc(PostType.review, "L'oreal Collosal Kajal Review", "This is a fake video review for L'oreal kajal", "vQ765gh",
+                Arrays.asList(new ProductRef("abc", "Loreal Kajal", "kajal"), new ProductRef("xyz", "Nykaa Kajal", "kajal")),
+                new UserRef(userId, "shabana"));
+        ObjectId videoId = ObjectId.get();
+        videoDocMock.setId(videoId);
+
+        when(this.videoDocDtoMapperMock.toDoc(any())).thenReturn(videoDocMock);
+        when(this.videoRepositoryMock.updateVideo(any())).thenReturn(true);
+        VideoDto videoDto = new VideoDto();
+        videoDto.setId("ad");
+        this.videoImplSpy.saveOrUpdate(videoDto);
+
+        ArgumentCaptor<VideoDoc> videoDocArgumentCaptor = ArgumentCaptor.forClass(VideoDoc.class);
+        verify(this.videoRepositoryMock, times(1)).updateVideo(videoDocArgumentCaptor.capture());
+        assertEquals(PostType.review, videoDocArgumentCaptor.getValue().getType());
+        assertEquals("L'oreal Collosal Kajal Review", videoDocArgumentCaptor.getValue().getTitle());
+        assertEquals("This is a fake video review for L'oreal kajal", videoDocArgumentCaptor.getValue().getDescription());
+        assertEquals("vQ765gh", videoDocArgumentCaptor.getValue().getSourceId());
+        assertEquals(2, videoDocArgumentCaptor.getValue().getProductRefList().size());
+        assertEquals("abc", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getId());
+        assertEquals("Loreal Kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getName());
+        assertEquals("kajal", videoDocArgumentCaptor.getValue().getProductRefList().get(0).getType());
+        assertEquals(userId, videoDocArgumentCaptor.getValue().getUserRef().getId());
+        assertEquals("shabana", videoDocArgumentCaptor.getValue().getUserRef().getUsername());
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).update(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(videoId, postRefArgumentCaptor.getValue().getId());
+        assertEquals(PostType.review, postRefArgumentCaptor.getValue().getType());
+        assertEquals(PostMedium.video, postRefArgumentCaptor.getValue().getMedium());
+
+        ArgumentCaptor<ObjectId> postIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<FeedDocField> feedDocFieldArgumentCaptor = ArgumentCaptor.forClass(FeedDocField.class);
+        ArgumentCaptor<String> valueArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(this.activityFeedMock, times(1)).setField(postIdArgumentCaptor.capture(), feedDocFieldArgumentCaptor.capture(), valueArgumentCaptor.capture());
+        assertEquals(videoDocMock.getId(), postIdArgumentCaptor.getValue());
+        assertEquals(FeedDocField.title, feedDocFieldArgumentCaptor.getValue());
+        assertEquals("L'oreal Collosal Kajal Review", valueArgumentCaptor.getValue());
+    }
+
+    @Test
+    void deleteVideo() {
+        ObjectId videoId = ObjectId.get();
+        VideoDto videoDtoMocked = new VideoDto();
+        videoDtoMocked.setId(videoId.toHexString());
+        ObjectId userId = new ObjectId();
+        videoDtoMocked.setUserRefDto(new UserRefDto(userId.toHexString(), "priyanka"));
+        videoDtoMocked.setType(PostType.guide);
+
+        DeleteResult deleteResultMocked = DeleteResult.acknowledged(1);
+        when(this.videoRepositoryMock.deleteVideo(any())).thenReturn(deleteResultMocked);
+        this.videoImplSpy.delete(videoDtoMocked);
+
+        ArgumentCaptor<ObjectId> idArgumentCaptorRepo = ArgumentCaptor.forClass(ObjectId.class);
+        verify(this.videoRepositoryMock, times(1)).deleteVideo(idArgumentCaptorRepo.capture());
+        assertEquals(videoId, idArgumentCaptorRepo.getValue());
+
+        ArgumentCaptor<ObjectId> userIdArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        ArgumentCaptor<ActionType> actionTypeArgumentCaptor = ArgumentCaptor.forClass(ActionType.class);
+        ArgumentCaptor<PostRef> postRefArgumentCaptor = ArgumentCaptor.forClass(PostRef.class);
+        verify(this.userActivityMock, times(1)).delete(userIdArgumentCaptor.capture(), actionTypeArgumentCaptor.capture(), postRefArgumentCaptor.capture());
+        assertEquals(userId, userIdArgumentCaptor.getValue());
+        assertEquals(ActionType.post, actionTypeArgumentCaptor.getValue());
+        assertEquals(videoId, postRefArgumentCaptor.getValue().getId());
+        assertEquals(PostType.guide, postRefArgumentCaptor.getValue().getType());
+        assertEquals(PostMedium.video, postRefArgumentCaptor.getValue().getMedium());
+
+        ArgumentCaptor<ObjectId> idArgumentCaptorActivityFeed = ArgumentCaptor.forClass(ObjectId.class);
+        verify(this.activityFeedMock, times(1)).delete(idArgumentCaptorActivityFeed.capture());
+        assertEquals(videoId, idArgumentCaptorActivityFeed.getValue());
     }
 
     @Test

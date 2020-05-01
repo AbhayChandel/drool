@@ -15,6 +15,9 @@ public interface VideoRestService {
     @PostMapping("/save")
     ResponseEntity<VideoDto> save(@RequestBody VideoDto videoDto);
 
+    @PostMapping("/delete")
+    ResponseEntity<Boolean> delete(@RequestBody VideoDto videoDto);
+
     @PutMapping(value = "/likes/increment")
     ResponseEntity<String> incrementVideoLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);
 

@@ -17,6 +17,7 @@ import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoDocDtoMapper;
 import com.hexlindia.drool.video.dto.mapper.VideoThumbnailDataMapper;
 import com.hexlindia.drool.video.exception.VideoNotFoundException;
+import com.mongodb.client.result.DeleteResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -45,7 +46,14 @@ public class VideoImpl implements Video {
 
 
     @Override
-    public VideoDto save(VideoDto videoDto) {
+    public VideoDto saveOrUpdate(VideoDto videoDto) {
+        if (videoDto.getId() != null) {
+            return updateVideo(videoDto);
+        }
+        return saveVideo(videoDto);
+    }
+
+    private VideoDto saveVideo(VideoDto videoDto) {
         VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
         videoDoc = videoRepository.save(videoDoc);
         if (videoDoc.getId() != null) {
@@ -53,8 +61,31 @@ public class VideoImpl implements Video {
             activityFeed.addVideo(videoDoc);
             return videoDocDtoMapper.toDto(videoDoc);
         }
-        log.error("Video not saved");
+        log.warn("Video not saved");
         return null;
+    }
+
+    private VideoDto updateVideo(VideoDto videoDto) {
+        VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
+        boolean result = videoRepository.updateVideo(videoDoc);
+        if (result) {
+            userActivity.update(videoDoc.getUserRef().getId(), ActionType.post, new PostRef(videoDoc.getId(), videoDoc.getTitle(), videoDoc.getType(), PostMedium.video, videoDoc.getDatePosted()));
+            activityFeed.setField(videoDoc.getId(), FeedDocField.title, videoDoc.getTitle());
+            return videoDto;
+        }
+        log.warn("Video not updated");
+        return null;
+    }
+
+    @Override
+    public boolean delete(VideoDto videoDto) {
+        ObjectId videoId = new ObjectId(videoDto.getId());
+        DeleteResult result = videoRepository.deleteVideo(videoId);
+        if (result.getDeletedCount() > 0) {
+            userActivity.delete(new ObjectId(videoDto.getUserRefDto().getId()), ActionType.post, new PostRef(videoId, null, videoDto.getType(), PostMedium.video, null));
+            activityFeed.delete(videoId);
+        }
+        return false;
     }
 
     @Override
@@ -76,7 +107,7 @@ public class VideoImpl implements Video {
     @Override
     public String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         String likes = videoRepository.saveVideoLikes(videoLikeUnlikeDto);
-        userActivity.add(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle(), videoLikeUnlikeDto.getPostType(), videoLikeUnlikeDto.getPostMedium(), null));
+        userActivity.add(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), videoLikeUnlikeDto.getVideoTitle(), videoLikeUnlikeDto.getPostType(), PostMedium.video, null));
         activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocField.likes, likes);
         return likes;
     }
@@ -84,7 +115,7 @@ public class VideoImpl implements Video {
     @Override
     public String decrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto) {
         String likes = videoRepository.deleteVideoLikes(videoLikeUnlikeDto);
-        userActivity.delete(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), null, videoLikeUnlikeDto.getPostType(), videoLikeUnlikeDto.getPostMedium(), null));
+        userActivity.delete(new ObjectId(videoLikeUnlikeDto.getUserId()), ActionType.like, new PostRef(new ObjectId(videoLikeUnlikeDto.getVideoId()), null, videoLikeUnlikeDto.getPostType(), PostMedium.video, null));
         activityFeed.setField(new ObjectId(videoLikeUnlikeDto.getVideoId()), FeedDocField.likes, likes);
         return likes;
     }

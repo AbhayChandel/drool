@@ -94,6 +94,11 @@ class ActivityFeedFeedRepositoryImplTest {
         assertEquals(399, activityFeedRepository.incrementDecrementField(insertedPostId, FeedDocField.comments, -1).getComments());
     }
 
+    @Test
+    void delete() {
+        assertEquals(1, activityFeedRepository.delete(insertedPostId).getDeletedCount());
+    }
+
 
     @BeforeEach
     void setup() {

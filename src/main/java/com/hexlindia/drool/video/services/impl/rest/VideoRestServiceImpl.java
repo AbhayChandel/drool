@@ -27,7 +27,12 @@ public class VideoRestServiceImpl implements VideoRestService {
 
     @Override
     public ResponseEntity<VideoDto> save(@Validated(VideoInsertValidation.class) VideoDto videoDto) {
-        return ResponseEntity.ok(video.save(videoDto));
+        return ResponseEntity.ok(video.saveOrUpdate(videoDto));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> delete(VideoDto videoDto) {
+        return ResponseEntity.ok(video.delete(videoDto));
     }
 
     @Override

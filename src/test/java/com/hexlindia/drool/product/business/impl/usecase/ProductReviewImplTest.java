@@ -173,12 +173,12 @@ class ProductReviewImplTest {
         ObjectId mockedBrandRatingId = new ObjectId();
         when(this.brandRatingsDetails.saveRatings(brandRatingsDetailsDto)).thenReturn(mockedBrandRatingId);
         when(this.productReviewRepositoryMock.save(any(), any(), anyList())).thenReturn(reviewDocMocked);
-        when(this.videoMock.save(videoDto)).thenReturn(videoDto);
+        when(this.videoMock.saveOrUpdate(videoDto)).thenReturn(videoDto);
         Mockito.doNothing().when(this.productReviewSpy).saveBrandRatings(any());
         this.productReviewSpy.save(reviewDto);
         ArgumentCaptor<VideoDto> videoDtoArgumentCaptor = ArgumentCaptor.forClass(VideoDto.class);
 
-        verify(this.videoMock, times(1)).save(videoDtoArgumentCaptor.capture());
+        verify(this.videoMock, times(1)).saveOrUpdate(videoDtoArgumentCaptor.capture());
         assertEquals(videoMockedId.toHexString(), videoDtoArgumentCaptor.getValue().getId());
         assertEquals(PostType.review, videoDtoArgumentCaptor.getValue().getType());
         assertTrue(videoDtoArgumentCaptor.getValue().isActive());
