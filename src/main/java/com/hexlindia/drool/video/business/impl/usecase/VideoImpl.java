@@ -84,6 +84,7 @@ public class VideoImpl implements Video {
         if (result.getDeletedCount() > 0) {
             userActivity.delete(new ObjectId(videoDto.getUserRefDto().getId()), ActionType.post, new PostRef(videoId, null, videoDto.getType(), PostMedium.video, null));
             activityFeed.delete(videoId);
+            return true;
         }
         return false;
     }
