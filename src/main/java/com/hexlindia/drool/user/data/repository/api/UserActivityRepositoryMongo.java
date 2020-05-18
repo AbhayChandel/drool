@@ -6,7 +6,7 @@ import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 
-public interface UserActivityRepository {
+public interface UserActivityRepositoryMongo {
 
     UpdateResult add(ObjectId userId, ActionType actionType, PostRef postRef);
 

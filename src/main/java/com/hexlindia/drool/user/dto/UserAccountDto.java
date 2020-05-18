@@ -1,15 +1,15 @@
 package com.hexlindia.drool.user.dto;
 
 import com.hexlindia.drool.user.dto.validation.NewAccount;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Getter
-@Setter
+@Data
 public class UserAccountDto {
+
+    String id;
 
     @NotEmpty(message = "Email Id cannot be empty", groups = {NewAccount.class})
     @Email(message = "Email Id is not correct", groups = {NewAccount.class})
@@ -19,4 +19,6 @@ public class UserAccountDto {
     String password;
 
     String username;
+
+    String mobile;
 }

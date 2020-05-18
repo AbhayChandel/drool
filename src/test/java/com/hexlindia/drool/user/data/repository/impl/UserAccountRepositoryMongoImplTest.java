@@ -2,7 +2,7 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.user.data.doc.UserAccountDoc;
-import com.hexlindia.drool.user.data.repository.api.UserAccountRepository;
+import com.hexlindia.drool.user.data.repository.api.UserAccountRepositoryMongo;
 import com.hexlindia.drool.user.exception.EmailExistException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(MongoDBTestConfig.class)
-class UserAccountRepositoryImplTest {
+class UserAccountRepositoryMongoImplTest {
 
     @Autowired
-    UserAccountRepository userAccountRepository;
+    UserAccountRepositoryMongo userAccountRepository;
 
     @Autowired
     MongoOperations mongoOperations;

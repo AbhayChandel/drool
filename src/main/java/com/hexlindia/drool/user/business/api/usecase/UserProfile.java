@@ -9,8 +9,6 @@ public interface UserProfile {
 
     UserProfileDto findById(String id);
 
-    UserProfileDto findByUsername(String username);
-
     UserProfileDto update(UserProfileDto userProfileDto);
 
     ContributionSummaryDto getContributionSummary(String userId);

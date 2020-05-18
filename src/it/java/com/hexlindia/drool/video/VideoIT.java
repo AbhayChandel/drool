@@ -66,7 +66,7 @@ public class VideoIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
+        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();

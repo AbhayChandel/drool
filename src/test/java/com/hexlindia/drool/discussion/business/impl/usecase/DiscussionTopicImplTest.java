@@ -11,8 +11,8 @@ import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicReposit
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserAccount;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
-import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
@@ -51,14 +51,14 @@ class DiscussionTopicImplTest {
     private ActivityFeed activityFeedMock;
 
     @Mock
-    private UserProfile userProfileMock;
+    private UserAccount userAccountMock;
 
     @Mock
     private UserRefMapper userRefMapperMock;
 
     @BeforeEach
     void setUp() {
-        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock, userProfileMock, userRefMapperMock));
+        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock, userAccountMock, userRefMapperMock));
     }
 
     @Test

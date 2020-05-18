@@ -2,7 +2,7 @@ package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.common.config.MongoDBTestConfig;
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
-import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
+import com.hexlindia.drool.user.data.repository.api.UserProfileRepositoryMongo;
 import com.hexlindia.drool.user.exception.UsernameExistException;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(MongoDBTestConfig.class)
-class UserProfileRepositoryImplTest {
+class UserProfileRepositoryMongoImplTest {
 
     @Autowired
-    UserProfileRepository userProfileRepository;
+    UserProfileRepositoryMongo userProfileRepository;
 
     @Autowired
     MongoOperations mongoOperations;

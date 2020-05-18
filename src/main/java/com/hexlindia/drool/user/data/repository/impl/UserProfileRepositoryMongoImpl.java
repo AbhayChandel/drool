@@ -1,7 +1,7 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.user.data.doc.UserProfileDoc;
-import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
+import com.hexlindia.drool.user.data.repository.api.UserProfileRepositoryMongo;
 import com.hexlindia.drool.user.exception.UsernameExistException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -15,7 +15,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @RequiredArgsConstructor
-public class UserProfileRepositoryImpl implements UserProfileRepository {
+public class UserProfileRepositoryMongoImpl implements UserProfileRepositoryMongo {
 
     private final MongoOperations mongoOperations;
 

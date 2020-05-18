@@ -6,7 +6,7 @@ import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
 import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
-import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
+import com.hexlindia.drool.user.data.repository.api.UserActivityRepositoryMongo;
 import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
@@ -20,12 +20,12 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
-public class UserActivityRepositoryImpl implements UserActivityRepository {
+public class UserActivityRepositoryMongoImpl implements UserActivityRepositoryMongo {
 
     private MongoOperations mongoOperations;
     private PostRefMapper postRefMapper;
 
-    public UserActivityRepositoryImpl(MongoOperations mongoOperations, PostRefMapper postRefMapper) {
+    public UserActivityRepositoryMongoImpl(MongoOperations mongoOperations, PostRefMapper postRefMapper) {
         this.mongoOperations = mongoOperations;
         this.postRefMapper = postRefMapper;
     }

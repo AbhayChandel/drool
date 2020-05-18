@@ -1,7 +1,7 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
 import com.hexlindia.drool.user.data.doc.UserAccountDoc;
-import com.hexlindia.drool.user.data.repository.api.UserAccountRepository;
+import com.hexlindia.drool.user.data.repository.api.UserAccountRepositoryMongo;
 import com.hexlindia.drool.user.exception.EmailExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -14,7 +14,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @RequiredArgsConstructor
-public class UserAccountRepositoryImpl implements UserAccountRepository {
+public class UserAccountRepositoryMongoImpl implements UserAccountRepositoryMongo {
 
     private final MongoOperations mongoOperations;
 

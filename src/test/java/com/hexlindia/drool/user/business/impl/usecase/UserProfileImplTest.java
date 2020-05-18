@@ -1,12 +1,12 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
 
-import com.hexlindia.drool.user.data.doc.UserProfileDoc;
+import com.hexlindia.drool.user.data.entity.UserProfileEntity;
 import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
+import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.dto.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
 import com.hexlindia.drool.video.business.api.usecase.Video;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,93 +43,62 @@ class UserProfileImplTest {
 
     @Test
     void create_PassingObjectToRepositoryLayer() {
-        UserProfileDoc userProfileDocMocked = new UserProfileDoc();
-        ObjectId accountId = new ObjectId();
-        userProfileDocMocked.setId(accountId);
-        userProfileDocMocked.setCity("Chandigarh");
-        userProfileDocMocked.setGender("M");
-        userProfileDocMocked.setMobile("9876543210");
-        userProfileDocMocked.setName("Ajay Singh");
-        userProfileDocMocked.setUsername("Ajayboss");
-        when(this.userProfileMapperMocked.toDoc(any())).thenReturn(userProfileDocMocked);
+        UserProfileEntity userProfileEntityMocked = new UserProfileEntity();
+        userProfileEntityMocked.setCity("Indore");
+        userProfileEntityMocked.setGender("F");
+        when(this.userProfileMapperMocked.toEntity(any())).thenReturn(userProfileEntityMocked);
         when(this.userProfileRepository.save(any())).thenReturn(null);
+
         this.userProfileImpl.create(null);
-        ArgumentCaptor<UserProfileDoc> userProfileDocArgumentCaptor = ArgumentCaptor.forClass(UserProfileDoc.class);
-        verify(this.userProfileRepository, times(1)).save(userProfileDocArgumentCaptor.capture());
-        assertEquals(accountId, userProfileDocArgumentCaptor.getValue().getId());
-        assertEquals("Chandigarh", userProfileDocArgumentCaptor.getValue().getCity());
-        assertEquals("M", userProfileDocArgumentCaptor.getValue().getGender());
-        assertEquals("9876543210", userProfileDocArgumentCaptor.getValue().getMobile());
-        assertEquals("Ajay Singh", userProfileDocArgumentCaptor.getValue().getName());
-        assertEquals("Ajayboss", userProfileDocArgumentCaptor.getValue().getUsername());
+
+        ArgumentCaptor<UserProfileEntity> userProfileEntityArgumentCaptor = ArgumentCaptor.forClass(UserProfileEntity.class);
+        verify(this.userProfileRepository, times(1)).save(userProfileEntityArgumentCaptor.capture());
+        assertEquals("Indore", userProfileEntityArgumentCaptor.getValue().getCity());
+        assertEquals("F", userProfileEntityArgumentCaptor.getValue().getGender());
     }
 
     @Test
     void create_testRepositoryLayerThrowsError() {
         doThrow(new DataIntegrityViolationException("")).when(this.userProfileRepository).save(any());
-        when(this.userProfileMapperMocked.toDoc(any())).thenReturn(null);
+        when(this.userProfileMapperMocked.toEntity(any())).thenReturn(null);
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> userProfileImpl.create(null));
     }
 
     @Test
     void findById_testPassingArgumentsToRepository() {
-        ObjectId accountIdMocked = new ObjectId();
-        when(this.userProfileRepository.findById(accountIdMocked)).thenReturn(Optional.of(new UserProfileDoc()));
-        userProfileImpl.findById(accountIdMocked.toHexString());
-        ArgumentCaptor<ObjectId> idArgumentCaptor = ArgumentCaptor.forClass(ObjectId.class);
+        when(this.userProfileRepository.findById(1L)).thenReturn(Optional.of(new UserProfileEntity()));
+        userProfileImpl.findById("1");
+        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
         verify(userProfileRepository, times(1)).findById(idArgumentCaptor.capture());
-        assertEquals(accountIdMocked, idArgumentCaptor.getValue());
+        assertEquals(1L, idArgumentCaptor.getValue().longValue());
     }
 
     @Test
     void findById_noProfileFound() {
-        when(this.userProfileRepository.findById(any())).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserProfileNotFoundException.class, () -> userProfileImpl.findById(ObjectId.get().toHexString()));
-    }
-
-    @Test
-    void findByUsername_testPassingArugumentsToRepository() {
-        when(this.userProfileRepository.findByUsername("priya21")).thenReturn(Optional.of(new UserProfileDoc()));
-        userProfileImpl.findByUsername("priya21");
-        ArgumentCaptor<String> usernameArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userProfileRepository, times(1)).findByUsername(usernameArgumentCaptor.capture());
-        assertEquals("priya21", usernameArgumentCaptor.getValue());
-    }
-
-
-    @Test
-    void findByUsername_testNoProfileFound() {
-        when(this.userProfileRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserProfileNotFoundException.class, () -> userProfileImpl.findByUsername("gg21"));
+        when(this.userProfileRepository.findById(7L)).thenReturn(Optional.empty());
+        Assertions.assertThrows(UserProfileNotFoundException.class, () -> userProfileImpl.findById("7"));
     }
 
     @Test
     void update_PassingObjectToRepositoryLayer() {
-        UserProfileDoc userProfileDocMocked = new UserProfileDoc();
-        ObjectId accountId = new ObjectId();
-        userProfileDocMocked.setId(accountId);
-        userProfileDocMocked.setCity("Chandigarh");
-        userProfileDocMocked.setGender("M");
-        userProfileDocMocked.setMobile("9876543210");
-        userProfileDocMocked.setName("Ajay Singh");
-        userProfileDocMocked.setUsername("Ajayboss");
-        when(this.userProfileMapperMocked.toDoc(any())).thenReturn(userProfileDocMocked);
+        UserProfileEntity userProfileEntityMocked = new UserProfileEntity();
+        userProfileEntityMocked.setCity("Indore");
+        userProfileEntityMocked.setGender("F");
+        userProfileEntityMocked.setId(2L);
+        when(this.userProfileMapperMocked.toEntity(any())).thenReturn(userProfileEntityMocked);
         when(this.userProfileRepository.save(any())).thenReturn(null);
-        this.userProfileImpl.update(null);
-        ArgumentCaptor<UserProfileDoc> userProfileDocArgumentCaptor = ArgumentCaptor.forClass(UserProfileDoc.class);
-        verify(this.userProfileRepository, times(1)).save(userProfileDocArgumentCaptor.capture());
-        assertEquals(accountId, userProfileDocArgumentCaptor.getValue().getId());
-        assertEquals("Chandigarh", userProfileDocArgumentCaptor.getValue().getCity());
-        assertEquals("M", userProfileDocArgumentCaptor.getValue().getGender());
-        assertEquals("9876543210", userProfileDocArgumentCaptor.getValue().getMobile());
-        assertEquals("Ajay Singh", userProfileDocArgumentCaptor.getValue().getName());
-        assertEquals("Ajayboss", userProfileDocArgumentCaptor.getValue().getUsername());
+        this.userProfileImpl.update(new UserProfileDto());
+        ArgumentCaptor<UserProfileEntity> userProfileEntityArgumentCaptor = ArgumentCaptor.forClass(UserProfileEntity.class);
+        verify(this.userProfileRepository, times(1)).save(userProfileEntityArgumentCaptor.capture());
+        assertEquals(2L, userProfileEntityArgumentCaptor.getValue().getId());
+        assertEquals("Indore", userProfileEntityArgumentCaptor.getValue().getCity());
+        assertEquals("F", userProfileEntityArgumentCaptor.getValue().getGender());
     }
 
     @Test
     void update_testRepositoryLayerThrowsError() {
         doThrow(new DataIntegrityViolationException("")).when(this.userProfileRepository).save(any());
-        when(this.userProfileMapperMocked.toDoc(any())).thenReturn(null);
+        when(this.userProfileMapperMocked.toEntity(any())).thenReturn(null);
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> userProfileImpl.update(null));
     }
 

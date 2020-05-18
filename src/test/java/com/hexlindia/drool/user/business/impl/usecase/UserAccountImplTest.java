@@ -2,14 +2,13 @@ package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.user.business.JwtUtil;
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
-import com.hexlindia.drool.user.data.doc.UserAccountDoc;
+import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.data.repository.api.UserAccountRepository;
-import com.hexlindia.drool.user.dto.UserAccountDto;
+import com.hexlindia.drool.user.data.repository.api.UserVerificationRepository;
 import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.dto.UserRegistrationDto;
 import com.hexlindia.drool.user.dto.mapper.UserAccountMapper;
 import com.hexlindia.drool.user.exception.UserAccountNotFoundException;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,13 +34,16 @@ class UserAccountImplTest {
     private UserAccountRepository userAccountRepositoryMocked;
 
     @Mock
+    private UserVerificationRepository userVerificationRepositoryMock;
+
+    @Mock
     private JwtUtil jwtUtil;
 
     @Mock
     private UserProfile userProfileMocked;
 
     @Mock
-    private UserAccountMapper userAccountMapperMocked;
+    private UserAccountMapper userAccountMapperMock;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -49,63 +52,64 @@ class UserAccountImplTest {
 
     @BeforeEach
     void setUp() {
-        this.userAccountImpl = Mockito.spy(new UserAccountImpl(userAccountRepositoryMocked, jwtUtil, userProfileMocked, passwordEncoder, userAccountMapperMocked));
+        this.userAccountImpl = Mockito.spy(new UserAccountImpl(userAccountRepositoryMocked, userVerificationRepositoryMock, jwtUtil, userProfileMocked, passwordEncoder, userAccountMapperMock));
     }
 
     @Test
-    void register_testPassingDocToUserAccountRepository() {
-
-        UserAccountDoc userAccountDoc = new UserAccountDoc();
-        userAccountDoc.setEmailId("kriti99@gmail.com");
-        userAccountDoc.setPassword(passwordEncoder.encode("kriti"));
-        userAccountDoc.setId(ObjectId.get());
-        when(this.userAccountMapperMocked.toDoc(any())).thenReturn(userAccountDoc);
-        when(this.userAccountRepositoryMocked.save(any())).thenReturn(userAccountDoc);
+    void register_testPassingEntityToUserAccountRepository() {
+        UserAccountEntity userAuthenticationEntity = new UserAccountEntity();
+        userAuthenticationEntity.setEmail("kriti99@gmail.com");
+        userAuthenticationEntity.setPassword(passwordEncoder.encode("kriti"));
+        userAuthenticationEntity.setId(2L);
+        when(this.userAccountMapperMock.toEntity(any())).thenReturn(userAuthenticationEntity);
+        when(this.userAccountRepositoryMocked.saveAndFlush(any())).thenReturn(userAuthenticationEntity);
         when(this.jwtUtil.generateToken(anyString())).thenReturn(null);
+        when(this.userProfileMocked.create(any())).thenReturn(null);
 
-        when(this.userProfileMocked.create(any())).thenReturn(new UserProfileDto());
-
+        Mockito.doNothing().when(this.userAccountImpl).setEncodedPasswordInEntity(any());
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
-        userRegistrationDto.setUserAccountDto(new UserAccountDto());
         userRegistrationDto.setUserProfileDto(new UserProfileDto());
-        userAccountImpl.register(userRegistrationDto);
-        ArgumentCaptor<UserAccountDoc> userAccountDocArgumentCaptor = ArgumentCaptor.forClass(UserAccountDoc.class);
-        verify(userAccountRepositoryMocked, times(1)).save(userAccountDocArgumentCaptor.capture());
-        assertEquals("kriti99@gmail.com", userAccountDocArgumentCaptor.getValue().getEmailId());
+        this.userAccountImpl.register(userRegistrationDto);
+        ArgumentCaptor<UserAccountEntity> userAuthenticationEntityArgumentCaptor = ArgumentCaptor.forClass(UserAccountEntity.class);
+        verify(userAccountRepositoryMocked, times(1)).saveAndFlush(userAuthenticationEntityArgumentCaptor.capture());
+        assertEquals("kriti99@gmail.com", userAuthenticationEntityArgumentCaptor.getValue().getEmail());
     }
 
     @Test
     void register_testPassingArgumentToUserProfile() {
-        UserAccountDoc userAccountDoc = new UserAccountDoc();
-        userAccountDoc.setEmailId("kriti99@gmail.com");
-        userAccountDoc.setPassword(passwordEncoder.encode("kriti"));
-        ObjectId accountId = new ObjectId();
+        UserAccountEntity userAuthenticationEntity = new UserAccountEntity();
+        userAuthenticationEntity.setEmail("kriti99@gmail.com");
+        userAuthenticationEntity.setPassword(passwordEncoder.encode("kriti"));
+        userAuthenticationEntity.setId(2L);
+        when(this.userAccountMapperMock.toEntity(any())).thenReturn(userAuthenticationEntity);
 
-        userAccountDoc.setId(accountId);
-        when(this.userAccountMapperMocked.toDoc(any())).thenReturn(userAccountDoc);
-        when(this.userAccountRepositoryMocked.save(any())).thenReturn(userAccountDoc);
+        when(this.userAccountRepositoryMocked.saveAndFlush(any())).thenReturn(userAuthenticationEntity);
         when(this.jwtUtil.generateToken(anyString())).thenReturn(null);
+        when(this.userProfileMocked.create(any())).thenReturn(null);
 
-        UserProfileDto userProfileDtoMocked = new UserProfileDto();
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setName("Priya Singh");
+        userProfileDto.setCity("Chandigarh");
+        userProfileDto.setGender("F");
 
-        userProfileDtoMocked.setCity("Chandigarh");
-        userProfileDtoMocked.setGender("M");
-        userProfileDtoMocked.setMobile("9876543210");
-        userProfileDtoMocked.setName("Ajay Singh");
-        userProfileDtoMocked.setUsername("Ajayboss");
-        when(this.userProfileMocked.create(any())).thenReturn(userProfileDtoMocked);
-        UserRegistrationDto userRegistrationDtoMocked = new UserRegistrationDto();
-        userRegistrationDtoMocked.setUserProfileDto(userProfileDtoMocked);
-        userRegistrationDtoMocked.setUserAccountDto(new UserAccountDto());
-        userAccountImpl.register(userRegistrationDtoMocked);
+        UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
+        userRegistrationDto.setUserProfileDto(userProfileDto);
+        this.userAccountImpl.register(userRegistrationDto);
+
         ArgumentCaptor<UserProfileDto> userProfileDtoArgumentCaptor = ArgumentCaptor.forClass(UserProfileDto.class);
         verify(userProfileMocked, times(1)).create(userProfileDtoArgumentCaptor.capture());
-        assertEquals(accountId.toHexString(), userProfileDtoArgumentCaptor.getValue().getId());
+        assertEquals(userAuthenticationEntity.getId().toString(), userProfileDtoArgumentCaptor.getValue().getId());
+        assertEquals("Priya Singh", userProfileDtoArgumentCaptor.getValue().getName());
         assertEquals("Chandigarh", userProfileDtoArgumentCaptor.getValue().getCity());
-        assertEquals("M", userProfileDtoArgumentCaptor.getValue().getGender());
-        assertEquals("9876543210", userProfileDtoArgumentCaptor.getValue().getMobile());
-        assertEquals("Ajay Singh", userProfileDtoArgumentCaptor.getValue().getName());
-        assertEquals("Ajayboss", userProfileDtoArgumentCaptor.getValue().getUsername());
+        assertEquals("F", userProfileDtoArgumentCaptor.getValue().getGender());
+    }
+
+    @Test
+    void register_testRepositoryThrowsError() {
+        doThrow(new DataIntegrityViolationException("")).when(this.userAccountRepositoryMocked).saveAndFlush(any());
+        when(this.userAccountMapperMock.toEntity(any())).thenReturn(null);
+        Mockito.doNothing().when(this.userAccountImpl).setEncodedPasswordInEntity(any());
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> userAccountImpl.register(new UserRegistrationDto()));
     }
 
     @Test
@@ -117,17 +121,17 @@ class UserAccountImplTest {
     }
 
     @Test
-    void findByEmail_testPassingDocToRepository() {
-        when(this.userAccountRepositoryMocked.findByEmail("kriti99@gmail.com")).thenReturn(Optional.of(new UserAccountDoc()));
-        userAccountImpl.findByEmail("kriti99@gmail.com");
+    void findByEmail_testPassingEntityToRepository() {
+        when(this.userAccountRepositoryMocked.findUser("kriti99@gmail.com")).thenReturn(Optional.of(new UserAccountEntity()));
+        userAccountImpl.findUser("kriti99@gmail.com");
         ArgumentCaptor<String> findByEmailArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userAccountRepositoryMocked, times(1)).findByEmail(findByEmailArgumentCaptor.capture());
+        verify(userAccountRepositoryMocked, times(1)).findUser(findByEmailArgumentCaptor.capture());
         assertEquals("kriti99@gmail.com", findByEmailArgumentCaptor.getValue());
     }
 
     @Test
     void findByEmail_testNoAccountFound() {
-        when(this.userAccountRepositoryMocked.findByEmail(anyString())).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserAccountNotFoundException.class, () -> userAccountImpl.findByEmail("kriti99@gmail.com"));
+        when(this.userAccountRepositoryMocked.findUser(anyString())).thenReturn(Optional.empty());
+        Assertions.assertThrows(UserAccountNotFoundException.class, () -> userAccountImpl.findUser("kriti99@gmail.com"));
     }
 }

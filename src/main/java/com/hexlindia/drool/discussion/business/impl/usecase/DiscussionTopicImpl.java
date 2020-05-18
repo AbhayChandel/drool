@@ -13,11 +13,11 @@ import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicReposit
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserAccount;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
-import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserRef;
-import com.hexlindia.drool.user.dto.UserProfileDto;
+import com.hexlindia.drool.user.dto.UserAccountDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -35,7 +35,7 @@ public class DiscussionTopicImpl implements DiscussionTopic {
     private final DiscussionTopicDtoDocMapper discussionTopicDtoDocMapper;
     private final UserActivity userActivity;
     private final ActivityFeed activityFeed;
-    private final UserProfile userProfile;
+    private final UserAccount userAccount;
     private final UserRefMapper userRefMapper;
 
     @Override
@@ -109,8 +109,8 @@ public class DiscussionTopicImpl implements DiscussionTopic {
 
     @Override
     public DiscussionTopicDto changeOwnership(DiscussionTopicDto discussionTopicDto) {
-        UserProfileDto userProfileDto = userProfile.findByUsername("Community");
-        UserRef communityUser = new UserRef(new ObjectId(userProfileDto.getId()), userProfileDto.getUsername());
+        UserAccountDto userAccountDto = userAccount.findUser("Community");
+        UserRef communityUser = new UserRef(new ObjectId(userAccountDto.getId()), userAccountDto.getUsername());
         DiscussionTopicDoc discussionTopicDoc = discussionTopicRepository.updateUser(new ObjectId(discussionTopicDto.getId()), communityUser, userRefMapper.toDoc(discussionTopicDto.getUserRefDto()));
         if (communityUser.getId().equals(discussionTopicDoc.getUserRef().getId())) {
             userActivity.delete(new ObjectId(discussionTopicDto.getUserRefDto().getId()), ActionType.post, new PostRef(discussionTopicDoc.getId(), null, PostType.discussion, PostMedium.text, null));

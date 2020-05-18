@@ -6,7 +6,7 @@ import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserActivityDoc;
-import com.hexlindia.drool.user.data.repository.api.UserActivityRepository;
+import com.hexlindia.drool.user.data.repository.api.UserActivityRepositoryMongo;
 import com.hexlindia.drool.violation.data.doc.ViolationReportRef;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
@@ -28,15 +28,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Import(MongoDBTestConfig.class)
-class UserActivityRepositoryImplTest {
+class UserActivityRepositoryMongoImplTest {
 
-    private final UserActivityRepository userActivityRepository;
+    private final UserActivityRepositoryMongo userActivityRepositoryMongo;
     private final MongoOperations mongoOperations;
 
 
     @Autowired
-    public UserActivityRepositoryImplTest(UserActivityRepository userActivityRepository, MongoTemplate mongoOperations) {
-        this.userActivityRepository = userActivityRepository;
+    public UserActivityRepositoryMongoImplTest(UserActivityRepositoryMongo userActivityRepositoryMongo, MongoTemplate mongoOperations) {
+        this.userActivityRepositoryMongo = userActivityRepositoryMongo;
         this.mongoOperations = mongoOperations;
     }
 
@@ -90,107 +90,107 @@ class UserActivityRepositoryImplTest {
     void add() {
 
         videoGuide = new PostRef(ObjectId.get(), "This is a test video guide", PostType.guide, PostMedium.video, null);
-        UpdateResult result = userActivityRepository.add(userId, ActionType.post, videoGuide);
+        UpdateResult result = userActivityRepositoryMongo.add(userId, ActionType.post, videoGuide);
         assertTrue(result.getModifiedCount() > 0);
 
         videoReview = new PostRef(ObjectId.get(), "This is a test video review", PostType.review, PostMedium.video, null);
-        assertTrue(userActivityRepository.add(userId, ActionType.post, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.post, videoReview).getModifiedCount() > 0);
 
         textReview = new PostRef(ObjectId.get(), "This is a test text review", PostType.review, PostMedium.text, null);
-        assertTrue(userActivityRepository.add(userId, ActionType.post, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.post, textReview).getModifiedCount() > 0);
 
         discussion = new PostRef(ObjectId.get(), "This is a test discussion topic", PostType.discussion, PostMedium.text, null);
-        assertTrue(userActivityRepository.add(userId, ActionType.post, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.post, discussion).getModifiedCount() > 0);
 
         discussionReply = new PostRef(ObjectId.get(), "This is a test discussion reply", PostType.reply, PostMedium.text, null);
-        assertTrue(userActivityRepository.add(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
 
         videoComment = new PostRef(ObjectId.get(), "This is a test video comment", PostType.comment, PostMedium.text, null);
-        assertTrue(userActivityRepository.add(userId, ActionType.post, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.post, videoComment).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, videoReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, textReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, discussion).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.add(userId, ActionType.like, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.add(userId, ActionType.like, videoComment).getModifiedCount() > 0);
     }
 
     @Test
     void delete() {
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, videoGuide).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, videoGuide).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, videoReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, textReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, discussion).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.post, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.post, videoComment).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, videoReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, textReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, discussion).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.delete(userId, ActionType.like, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.delete(userId, ActionType.like, videoComment).getModifiedCount() > 0);
     }
 
     @Test
     void update() {
         videoGuide.setTitle("updated");
-        UpdateResult result = userActivityRepository.update(userId, ActionType.post, videoGuide);
+        UpdateResult result = userActivityRepositoryMongo.update(userId, ActionType.post, videoGuide);
         assertTrue(result.getModifiedCount() > 0);
 
         videoReview.setTitle("updated");
-        assertTrue(userActivityRepository.update(userId, ActionType.post, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.post, videoReview).getModifiedCount() > 0);
 
         textReview.setTitle("updated");
-        assertTrue(userActivityRepository.update(userId, ActionType.post, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.post, textReview).getModifiedCount() > 0);
 
         discussion.setTitle("updated");
-        assertTrue(userActivityRepository.update(userId, ActionType.post, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.post, discussion).getModifiedCount() > 0);
 
         discussionReply.setTitle("updated");
-        assertTrue(userActivityRepository.update(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.post, discussionReply).getModifiedCount() > 0);
 
         videoComment.setTitle("updated");
-        assertTrue(userActivityRepository.update(userId, ActionType.post, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.post, videoComment).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, videoGuide).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, videoReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, videoReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, textReview).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, textReview).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, discussion).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, discussion).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, discussionReply).getModifiedCount() > 0);
 
-        assertTrue(userActivityRepository.update(userId, ActionType.like, videoComment).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.update(userId, ActionType.like, videoComment).getModifiedCount() > 0);
     }
 
     ViolationReportRef violationReportRef = null;
 
     @Test
     void addViolation() {
-        assertTrue(userActivityRepository.addViolation(userId, violationReportRef).getModifiedCount() > 0);
+        assertTrue(userActivityRepositoryMongo.addViolation(userId, violationReportRef).getModifiedCount() > 0);
     }
 
     @Test
     void addReportedViolation() {
-        assertTrue(userActivityRepository.addReportedViolation(ObjectId.get(), violationReportRef).getUpsertedId() != null);
+        assertTrue(userActivityRepositoryMongo.addReportedViolation(ObjectId.get(), violationReportRef).getUpsertedId() != null);
     }
 }
