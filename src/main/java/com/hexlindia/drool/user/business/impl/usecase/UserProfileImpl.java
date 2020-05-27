@@ -7,7 +7,7 @@ import com.hexlindia.drool.user.dto.ContributionSummaryDto;
 import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.dto.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
-import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.business.api.Video;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

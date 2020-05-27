@@ -1,17 +1,14 @@
-package com.hexlindia.drool.video.business.api.usecase;
+package com.hexlindia.drool.video.business.api;
 
-import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoDto;
-import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
-import com.hexlindia.drool.video.dto.VideoThumbnailDataDto;
+import com.hexlindia.drool.video.dto.*;
 
 public interface Video {
 
-    VideoDto saveOrUpdate(VideoDto videoDto);
+    VideoDtoMOngo saveOrUpdate(VideoDto videoDto);
 
     boolean delete(VideoDto videoDto);
 
-    VideoDto findById(String id);
+    VideoDtoMOngo findById(String id);
 
     String incrementVideoLikes(VideoLikeUnlikeDto videoLikeUnlikeDto);
 

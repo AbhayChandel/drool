@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class VideoDto {
+public class VideoDtoMOngo {
 
     private String id;
 
@@ -44,7 +44,7 @@ public class VideoDto {
     private List<VideoCommentDto> videoCommentDtoList;
     private int totalComments;
 
-    public VideoDto(PostType type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
+    public VideoDtoMOngo(PostType type, String title, String description, String sourceId, List<ProductRefDto> productRefDtoList, UserRefDto userRefDto) {
         this.type = type;
         this.title = title;
         this.description = description;

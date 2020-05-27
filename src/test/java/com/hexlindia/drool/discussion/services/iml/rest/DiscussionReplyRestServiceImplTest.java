@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.services.iml.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -129,7 +129,7 @@ class DiscussionReplyRestServiceImplTest {
         String reply = "This is going to be a great reply";
         discussionReplyDtoMocked.setReply(reply);
         ObjectId postId = ObjectId.get();
-        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
+        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostFormat.article, null));
         when(this.discussionReplyMocked.incrementLikes(discussionReplyDtoMocked)).thenReturn(null);
         this.mockMvc.perform(MockMvcRequestBuilders.put(getLikesIncrementUri())
                 .content(objectMapper.writeValueAsString(discussionReplyDtoMocked)).contentType(MediaType.APPLICATION_JSON))

@@ -1,6 +1,6 @@
 package com.hexlindia.drool.product.business.impl.usecase;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.product.business.api.usecase.AspectVotingDetails;
@@ -14,8 +14,8 @@ import com.hexlindia.drool.product.dto.mapper.AspectTemplateMapper;
 import com.hexlindia.drool.product.dto.mapper.ReviewMapper;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.user.data.doc.ActionType;
-import com.hexlindia.drool.video.business.api.usecase.Video;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.business.api.Video;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
@@ -57,7 +57,7 @@ public class ProductReviewImpl implements ProductReview {
         reviewDto.setId(reviewDoc.getId().toHexString());
 
         if (ReviewType.text.equals(reviewDto.getReviewType())) {
-            userActivity.add(reviewDoc.getUserRef().getId(), ActionType.post, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), PostType.review, PostMedium.text, null));
+            userActivity.add(reviewDoc.getUserRef().getId(), ActionType.post, new PostRef(reviewDoc.getId(), reviewDoc.getReviewSummary(), PostType.review, PostFormat.article, null));
         }
 
         ObjectId videoId = saveVideoReview(reviewDto, reviewDoc);
@@ -73,13 +73,14 @@ public class ProductReviewImpl implements ProductReview {
 
     private ObjectId saveVideoReview(ReviewDto reviewDto, ReviewDoc reviewDoc) {
         if (ReviewType.video.equals(reviewDto.getReviewType())) {
-            VideoDto videoDto = reviewDto.getVideoDto();
-            videoDto.setReviewId(reviewDoc.getId().toHexString());
-            videoDto.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
-            videoDto.setUserRefDto(reviewDto.getUserRefDto());
-            videoDto = video.saveOrUpdate(videoDto);
-            reviewDto.setVideoDto(videoDto);
-            return new ObjectId(videoDto.getId());
+            VideoDtoMOngo videoDtoMOngo = reviewDto.getVideoDtoMOngo();
+            videoDtoMOngo.setReviewId(reviewDoc.getId().toHexString());
+            videoDtoMOngo.setProductRefDtoList(Arrays.asList(reviewDto.getProductRefDto()));
+            videoDtoMOngo.setUserRefDto(reviewDto.getUserRefDto());
+            //FIXME
+            //videoDtoMOngo = video.saveOrUpdate(videoDtoMOngo);
+            reviewDto.setVideoDtoMOngo(videoDtoMOngo);
+            return new ObjectId(videoDtoMOngo.getId());
         }
         return null;
     }

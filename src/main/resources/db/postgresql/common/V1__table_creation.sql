@@ -58,6 +58,8 @@ CREATE TABLE user_account_status
     CONSTRAINT user_account_status_fk FOREIGN KEY (status) REFERENCES account_status (code)
 );
 
+
+
 CREATE SEQUENCE discussion_topic_id_seq;
 ALTER SEQUENCE discussion_topic_id_seq RESTART WITH 20000001;
 CREATE TABLE discussion_topic

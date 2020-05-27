@@ -1,6 +1,6 @@
 package com.hexlindia.drool.common.dto.mapper;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
@@ -24,21 +24,21 @@ class PostRefMapperTest {
     @Test
     void toDoc() {
         ObjectId postId = new ObjectId();
-        PostRef postRef = postRefMapper.toDoc(new PostRefDto(postId.toHexString(), "THis is a test guide video title", PostType.guide, PostMedium.video, null));
+        PostRef postRef = postRefMapper.toDoc(new PostRefDto(postId.toHexString(), "THis is a test guide video title", PostType.guide, PostFormat.video, null));
         assertEquals(postId, postRef.getId());
         assertEquals("THis is a test guide video title", postRef.getTitle());
         assertEquals(PostType.guide, postRef.getType());
-        assertEquals(PostMedium.video, postRef.getMedium());
+        assertEquals(PostFormat.video, postRef.getMedium());
     }
 
     @Test
     void toDto() {
         ObjectId postId = new ObjectId();
-        PostRefDto postRefDto = postRefMapper.toDto(new PostRef(postId, "THis is a test guide video title", PostType.guide, PostMedium.video, LocalDateTime.parse("16-08-2016 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))));
+        PostRefDto postRefDto = postRefMapper.toDto(new PostRef(postId, "THis is a test guide video title", PostType.guide, PostFormat.video, LocalDateTime.parse("16-08-2016 14:22", DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))));
         assertEquals(postId.toHexString(), postRefDto.getId());
         assertEquals("THis is a test guide video title", postRefDto.getTitle());
         assertEquals(PostType.guide, postRefDto.getType());
-        assertEquals(PostMedium.video, postRefDto.getMedium());
+        assertEquals(PostFormat.video, postRefDto.getMedium());
         assertNotNull(postRefDto.getDateTime());
     }
 }

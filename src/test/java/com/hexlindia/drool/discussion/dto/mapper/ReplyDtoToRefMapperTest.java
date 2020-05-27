@@ -1,6 +1,6 @@
 package com.hexlindia.drool.discussion.dto.mapper;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.ReplyRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
@@ -26,7 +26,7 @@ class ReplyDtoToRefMapperTest {
         String reply = "This is going to be a great reply";
         discussionReplyDto.setReply(reply);
         ObjectId postId = ObjectId.get();
-        discussionReplyDto.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
+        discussionReplyDto.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostFormat.article, null));
 
         ReplyRef replyRef = replyDtoToRefMapper.toReplyRef(discussionReplyDto);
         assertEquals(replyId, replyRef.getId());
@@ -34,6 +34,6 @@ class ReplyDtoToRefMapperTest {
         assertEquals(postId, replyRef.getPostRef().getId());
         assertEquals("This is a test discussion", replyRef.getPostRef().getTitle());
         assertEquals(PostType.discussion, replyRef.getPostRef().getType());
-        assertEquals(PostMedium.text, replyRef.getPostRef().getMedium());
+        assertEquals(PostFormat.article, replyRef.getPostRef().getMedium());
     }
 }

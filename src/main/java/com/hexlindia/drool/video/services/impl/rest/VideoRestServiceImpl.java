@@ -4,9 +4,9 @@ import com.hexlindia.drool.common.dto.validation.PostRefDeleteValidation;
 import com.hexlindia.drool.common.dto.validation.PostRefValidation;
 import com.hexlindia.drool.common.dto.validation.UserRefDeleteValidation;
 import com.hexlindia.drool.common.dto.validation.UserRefValidation;
-import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.business.api.Video;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.validation.*;
 import com.hexlindia.drool.video.services.api.rest.VideoRestService;
@@ -26,13 +26,17 @@ public class VideoRestServiceImpl implements VideoRestService {
     }
 
     @Override
-    public ResponseEntity<VideoDto> save(@Validated(VideoInsertValidation.class) VideoDto videoDto) {
-        return ResponseEntity.ok(video.saveOrUpdate(videoDto));
+    public ResponseEntity<VideoDtoMOngo> save(@Validated(VideoInsertValidation.class) VideoDtoMOngo videoDtoMOngo) {
+        //FIXME
+        //return ResponseEntity.ok(video.saveOrUpdate(videoDtoMOngo));
+        return null;
     }
 
     @Override
-    public ResponseEntity<Boolean> delete(VideoDto videoDto) {
-        return ResponseEntity.ok(video.delete(videoDto));
+    public ResponseEntity<Boolean> delete(VideoDtoMOngo videoDtoMOngo) {
+        //FIXME
+        //return ResponseEntity.ok(video.delete(videoDtoMOngo));
+        return null;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.data.repository.api.VideoRepository;
+import com.hexlindia.drool.video.data.repository.api.VideoRepositoryMongo;
 import com.hexlindia.drool.video.dto.VideoCommentDto;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import com.hexlindia.drool.video.dto.VideoThumbnailDataAggregation;
@@ -32,7 +32,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class VideoRepositoryImpl implements VideoRepository {
+public class VideoRepositoryMongoImpl implements VideoRepositoryMongo {
 
     private static final String VIDEO_COLLECTION_NAME = "videos";
 

@@ -1,6 +1,6 @@
 package com.hexlindia.drool.user.data.repository.impl;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
@@ -81,20 +81,20 @@ public class UserActivityRepositoryMongoImpl implements UserActivityRepositoryMo
         }
     }
 
-    private String getFieldName(PostType postType, PostMedium postMedium) {
+    private String getFieldName(PostType postType, PostFormat postFormat) {
         switch (postType) {
             case guide:
-                switch (postMedium) {
+                switch (postFormat) {
                     case video:
                         return FIELD_GUIDES + DOT + FIELD_VIDEOS;
                     default:
                         return "";
                 }
             case review:
-                switch (postMedium) {
+                switch (postFormat) {
                     case video:
                         return FIELD_REVIEWS + DOT + FIELD_VIDEOS;
-                    case text:
+                    case article:
                         return FIELD_REVIEWS + DOT + FIELD_TEXT;
                     default:
                         return "";

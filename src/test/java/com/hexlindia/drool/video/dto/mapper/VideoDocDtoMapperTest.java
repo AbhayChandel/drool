@@ -7,7 +7,7 @@ import com.hexlindia.drool.product.dto.ProductRefDto;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import com.hexlindia.drool.video.data.doc.VideoComment;
 import com.hexlindia.drool.video.data.doc.VideoDoc;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ class VideoDocDtoMapperTest {
     void toDoc() {
         ObjectId userId = new ObjectId();
         UserRefDto userRefDto = new UserRefDto(userId.toHexString(), "User123");
-        VideoDto videoDto = new VideoDto(PostType.review, "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRefDto("p123", "Carolina Herrera 212", "fragrance")), userRefDto);
-        videoDto.setActive(true);
-        VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDto);
+        VideoDtoMOngo videoDtoMOngo = new VideoDtoMOngo(PostType.review, "Review of Carolina Herrera 212", "This is an honest review of Carolina Herrera 212", "ch212", Arrays.asList(new ProductRefDto("p123", "Carolina Herrera 212", "fragrance")), userRefDto);
+        videoDtoMOngo.setActive(true);
+        VideoDoc videoDoc = videoDocDtoMapper.toDoc(videoDtoMOngo);
 
         assertEquals(PostType.review, videoDoc.getType());
         assertTrue(videoDoc.isActive());
@@ -64,25 +64,25 @@ class VideoDocDtoMapperTest {
         videoComment14.setLikes(760000);
         List<VideoComment> videoCommentList1 = Arrays.asList(videoComment13, videoComment14);
         videoDoc.setCommentList(videoCommentList1);
-        VideoDto videoDto = videoDocDtoMapper.toDto(videoDoc);
+        VideoDtoMOngo videoDtoMOngo = videoDocDtoMapper.toDto(videoDoc);
 
-        assertEquals(PostType.review, videoDto.getType());
-        assertFalse(videoDto.isActive());
-        assertEquals("Review of Carolina Herrera 212", videoDto.getTitle());
-        assertEquals("This is an honest review of Carolina Herrera 212", videoDto.getDescription());
-        assertEquals("ch212", videoDto.getSourceId());
-        assertEquals("4 Feb, 2020", videoDto.getDatePosted());
-        assertEquals("94.5M", videoDto.getViews());
-        assertEquals("1.5k", videoDto.getLikes());
-        assertEquals("p123", videoDto.getProductRefDtoList().get(0).getId());
-        assertEquals("Carolina Herrera 212", videoDto.getProductRefDtoList().get(0).getName());
-        assertEquals("fragrance", videoDto.getProductRefDtoList().get(0).getType());
-        assertEquals(userId.toHexString(), videoDto.getUserRefDto().getId());
-        assertEquals("User123", videoDto.getUserRefDto().getUsername());
-        assertEquals(2, videoDto.getVideoCommentDtoList().size());
-        assertEquals("13.3k", videoDto.getVideoCommentDtoList().get(0).getLikes());
-        assertEquals("5 Feb, 2020 9:00 AM", videoDto.getVideoCommentDtoList().get(0).getDatePosted());
-        assertEquals("760k", videoDto.getVideoCommentDtoList().get(1).getLikes());
-        assertEquals("15 Feb, 2020 9:30 PM", videoDto.getVideoCommentDtoList().get(1).getDatePosted());
+        assertEquals(PostType.review, videoDtoMOngo.getType());
+        assertFalse(videoDtoMOngo.isActive());
+        assertEquals("Review of Carolina Herrera 212", videoDtoMOngo.getTitle());
+        assertEquals("This is an honest review of Carolina Herrera 212", videoDtoMOngo.getDescription());
+        assertEquals("ch212", videoDtoMOngo.getSourceId());
+        assertEquals("4 Feb, 2020", videoDtoMOngo.getDatePosted());
+        assertEquals("94.5M", videoDtoMOngo.getViews());
+        assertEquals("1.5k", videoDtoMOngo.getLikes());
+        assertEquals("p123", videoDtoMOngo.getProductRefDtoList().get(0).getId());
+        assertEquals("Carolina Herrera 212", videoDtoMOngo.getProductRefDtoList().get(0).getName());
+        assertEquals("fragrance", videoDtoMOngo.getProductRefDtoList().get(0).getType());
+        assertEquals(userId.toHexString(), videoDtoMOngo.getUserRefDto().getId());
+        assertEquals("User123", videoDtoMOngo.getUserRefDto().getUsername());
+        assertEquals(2, videoDtoMOngo.getVideoCommentDtoList().size());
+        assertEquals("13.3k", videoDtoMOngo.getVideoCommentDtoList().get(0).getLikes());
+        assertEquals("5 Feb, 2020 9:00 AM", videoDtoMOngo.getVideoCommentDtoList().get(0).getDatePosted());
+        assertEquals("760k", videoDtoMOngo.getVideoCommentDtoList().get(1).getLikes());
+        assertEquals("15 Feb, 2020 9:30 PM", videoDtoMOngo.getVideoCommentDtoList().get(1).getDatePosted());
     }
 }

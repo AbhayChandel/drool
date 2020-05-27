@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 
 import java.util.Optional;
 
-public interface VideoRepository {
+public interface VideoRepositoryMongo {
     VideoDoc save(VideoDoc videoDoc);
 
     Optional<VideoDoc> findByIdAndActiveTrue(ObjectId id);

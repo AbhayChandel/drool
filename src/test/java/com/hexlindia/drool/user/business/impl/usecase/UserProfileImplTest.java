@@ -6,7 +6,7 @@ import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
 import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.dto.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
-import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.business.api.Video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

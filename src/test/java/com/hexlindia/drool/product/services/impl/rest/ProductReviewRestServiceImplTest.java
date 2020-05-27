@@ -7,7 +7,7 @@ import com.hexlindia.drool.product.business.api.usecase.ProductReview;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
 import com.hexlindia.drool.product.dto.*;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -126,14 +126,14 @@ class ProductReviewRestServiceImplTest {
         textReviewDto.setReviewSummary("This is text review summary");
         reviewDto.setTextReviewDto(textReviewDto);
 
-        VideoDto videoDto = new VideoDto();
-        videoDto.setId("abc");
-        videoDto.setType(PostType.review);
-        videoDto.setActive(true);
-        videoDto.setTitle("The is a mocked video review");
-        videoDto.setDescription("this is a mocked video review description");
-        videoDto.setSourceId("werlkj");
-        reviewDto.setVideoDto(videoDto);
+        VideoDtoMOngo videoDtoMOngo = new VideoDtoMOngo();
+        videoDtoMOngo.setId("abc");
+        videoDtoMOngo.setType(PostType.review);
+        videoDtoMOngo.setActive(true);
+        videoDtoMOngo.setTitle("The is a mocked video review");
+        videoDtoMOngo.setDescription("this is a mocked video review description");
+        videoDtoMOngo.setSourceId("werlkj");
+        reviewDto.setVideoDtoMOngo(videoDtoMOngo);
 
         reviewDto.setUserRefDto(new UserRefDto("1", "shabana"));
 
@@ -167,12 +167,12 @@ class ProductReviewRestServiceImplTest {
         assertEquals("THis is a details text review", reviewDtoPaased.getTextReviewDto().getDetailedReview());
         assertEquals("This is text review summary", reviewDtoPaased.getTextReviewDto().getReviewSummary());
 
-        assertEquals("abc", reviewDtoPaased.getVideoDto().getId());
-        assertEquals(PostType.review, reviewDtoPaased.getVideoDto().getType());
-        assertTrue(reviewDtoPaased.getVideoDto().isActive());
-        assertEquals("The is a mocked video review", reviewDtoPaased.getVideoDto().getTitle());
-        assertEquals("this is a mocked video review description", reviewDtoPaased.getVideoDto().getDescription());
-        assertEquals("werlkj", reviewDtoPaased.getVideoDto().getSourceId());
+        assertEquals("abc", reviewDtoPaased.getVideoDtoMOngo().getId());
+        assertEquals(PostType.review, reviewDtoPaased.getVideoDtoMOngo().getType());
+        assertTrue(reviewDtoPaased.getVideoDtoMOngo().isActive());
+        assertEquals("The is a mocked video review", reviewDtoPaased.getVideoDtoMOngo().getTitle());
+        assertEquals("this is a mocked video review description", reviewDtoPaased.getVideoDtoMOngo().getDescription());
+        assertEquals("werlkj", reviewDtoPaased.getVideoDtoMOngo().getSourceId());
 
         assertEquals("1", reviewDtoPaased.getUserRefDto().getId());
         assertEquals("shabana", reviewDtoPaased.getUserRefDto().getUsername());

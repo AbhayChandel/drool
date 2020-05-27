@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -103,7 +103,7 @@ class DiscussionTopicImplTest {
         assertEquals(discussionId, postRefArgumentCaptor.getValue().getId());
         assertEquals("THis is a test discusion title", postRefArgumentCaptor.getValue().getTitle());
         assertEquals(PostType.discussion, postRefArgumentCaptor.getValue().getType());
-        assertEquals(PostMedium.text, postRefArgumentCaptor.getValue().getMedium());
+        assertEquals(PostFormat.article, postRefArgumentCaptor.getValue().getMedium());
 
         ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptorActivityFeed = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
         verify(this.activityFeedMock, times(1)).addDiscussion(discussionTopicDocArgumentCaptorActivityFeed.capture());

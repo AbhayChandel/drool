@@ -1,8 +1,8 @@
 package com.hexlindia.drool.common.data.constant;
 
-public enum PostMedium {
+public enum PostFormat {
 
-    text,
+    article,
     audio,
     video
 }

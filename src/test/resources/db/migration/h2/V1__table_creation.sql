@@ -17,9 +17,9 @@ CREATE TABLE user_account
 CREATE TABLE user_profile
 (
     id        BIGINT NOT NULL,
-    name      varchar(100),
-    city      varchar(75),
-    gender    varchar(5),
+    name      varchar,
+    city      varchar,
+    gender    varchar,
     join_date timestamp DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT user_profile_pk PRIMARY KEY (id),
     CONSTRAINT user_profile_fk FOREIGN KEY (id) REFERENCES user_account (id)
@@ -58,20 +58,77 @@ CREATE TABLE user_account_status
 );
 
 
-
-CREATE SEQUENCE discussion_topic_id_seq;
-CREATE TABLE discussion_topic
+CREATE SEQUENCE post_id_seq;
+CREATE TABLE post
 (
-    id               BIGINT  default discussion_topic_id_seq.nextval NOT NULL,
-    topic            varchar(250)                                    NOT NULL,
-    user_id          BIGINT                                          NOT NULL,
-    date_posted      TIMESTAMP,
-    date_last_active TIMESTAMP,
-    views            INT     default 0,
-    likes            INT     default 0,
-    replies          INT     default 0,
-    active           boolean DEFAULT TRUE                            NOT NULL,
-    CONSTRAINT discussion_topic_pk PRIMARY KEY (id)
+    id              BIGINT  default post_id_seq.nextval NOT NULL,
+    active          BOOLEAN default true                NOT NULL,
+    post_type       INT                                 NOT NULL,
+    title           VARCHAR                             NOT NULL,
+    date_posted     TIMESTAMP,
+    likes           INT     default 0,
+    views           INT     default 0,
+    owner           BIGINT                              NOT NULL,
+    d_type          VARCHAR                             NOT NULL,
+    source_video_id varchar,
+    text            varchar,
+    cover_picture   varchar,
+    CONSTRAINT post_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE POST_TYPE
+(
+    id          INT,
+    type        VARCHAR(10),
+    description VARCHAR(50)
+);
+
+CREATE TABLE post_format
+(
+    id     INT         NOT NULL,
+    format VARCHAR(50) NOT NULL,
+    CONSTRAINT post_format_pk PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE article_comment_id_seq;
+CREATE TABLE article_comment
+(
+    id          BIGINT  default article_comment_id_seq.nextval NOT NULL,
+    comment     varchar                                        NOT NULL,
+    article_id  INT                                            NOT NULL,
+    date_posted TIMESTAMP,
+    likes       INT     default 0,
+    user_id     BIGINT                                         NOT NULL,
+    active      BOOLEAN default true                           NOT NULL,
+    CONSTRAINT article_comment_pk PRIMARY KEY (id),
+    CONSTRAINT article_comment_article_fk FOREIGN KEY (article_id) REFERENCES post (id)
+);
+
+CREATE SEQUENCE collection_id_seq;
+CREATE TABLE collection
+(
+    id         BIGINT default collection_id_seq.nextval NOT NULL,
+    name       VARCHAR                                  NOT NULL,
+    about      VARCHAR                                  NOT NULL,
+    visibility INT                                      NOT NULL,
+    owner      BIGINT                                   NOT NULL,
+    CONSTRAINT collection_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE visibility
+(
+    id         INT         NOT NULL,
+    visibility VARCHAR(50) NOT NULL,
+    CONSTRAINT visibility_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE POST_COLLECTION
+(
+    collection_id BIGINT,
+    post_id       BIGINT,
+    CONSTRAINT collection_post_pk PRIMARY KEY (collection_id, post_id),
+    CONSTRAINT collection_fk FOREIGN KEY (collection_id) references collection (id),
+    CONSTRAINT post_fk FOREIGN KEY (post_id) references post (id)
 );
 
 CREATE TABLE discussion_topic_user_like
@@ -86,7 +143,7 @@ CREATE TABLE discussion_reply
     id                  BIGINT  default discussion_reply_id_seq.nextval NOT NULL,
     discussion_topic_id BIGINT,
     reply               varchar(500)                                    NOT NULL,
-    user_id             BIGINT                                          NOT NULL,
+    user_id             INT                                             NOT NULL,
     active              BOOLEAN default true                            NOT NULL,
     date_posted         TIMESTAMP,
     likes               INT     default 0,
@@ -99,19 +156,14 @@ CREATE TABLE discussion_reply_user_like
     reply_id BIGINT NOT NULL
 );
 
-CREATE TABLE POST_TYPE
-(
-    post_type_id INT,
-    post_type    VARCHAR(10),
-    descritpion  VARCHAR(50)
-);
+
 
 CREATE OR REPLACE VIEW user_profile_card_view AS
 SELECT ua.id       AS userId,
        ua.username AS username
 FROM user_account ua;
 
-CREATE OR REPLACE VIEW discussion_topic_card_view AS
+/*CREATE OR REPLACE VIEW discussion_topic_card_view AS
 SELECT topic.id               AS topicId,
        topic.topic            AS topic,
        topic.user_id          AS userId,
@@ -135,7 +187,7 @@ SELECT reply.id                  AS replyId,
        upcard.username           AS username
 FROM discussion_reply reply
          INNER JOIN user_profile_card_view upcard ON reply.user_id = upcard.userId
-where reply.active = true;
+where reply.active = true;*/
 
 
 

@@ -1,6 +1,6 @@
 package com.hexlindia.drool.common.data.doc;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +19,11 @@ public class PostRef {
     private ObjectId id;
     private String title;
     private PostType type;
-    private PostMedium medium;
+    private PostFormat medium;
     private LocalDateTime dateTime;
     private PostRef parentPost;
 
-    public PostRef(ObjectId id, String title, PostType type, PostMedium medium, LocalDateTime dateTime) {
+    public PostRef(ObjectId id, String title, PostType type, PostFormat medium, LocalDateTime dateTime) {
         this.id = id;
         this.title = title;
         this.type = type;

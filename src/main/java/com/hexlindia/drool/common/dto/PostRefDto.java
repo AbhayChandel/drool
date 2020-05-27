@@ -1,6 +1,6 @@
 package com.hexlindia.drool.common.dto;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.validation.PostRefDeleteValidation;
 import com.hexlindia.drool.common.dto.validation.PostRefValidation;
@@ -28,7 +28,7 @@ public class PostRefDto {
     private PostType type;
 
     @NotNull(message = "Post medium is missing", groups = {PostRefValidation.class})
-    private PostMedium medium;
+    private PostFormat medium;
     private String dateTime;
 
 }
