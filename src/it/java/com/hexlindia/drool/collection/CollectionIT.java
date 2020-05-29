@@ -52,13 +52,13 @@ public class CollectionIT {
     }
 
     @Test
-    void add_post_and_new_collection() throws JsonProcessingException {
+    void add_post_and_add_new_collection() throws JsonProcessingException {
         CollectionPostDto collectionPostDto = new CollectionPostDto();
         collectionPostDto.setName("Street Style");
         collectionPostDto.setAbout("All about street fashion");
         collectionPostDto.setVisibility(Visibility.PUBLIC);
         collectionPostDto.setOwnerId("1");
-        collectionPostDto.setPostId("1");
+        collectionPostDto.setPostId("101");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -73,8 +73,8 @@ public class CollectionIT {
     @Test
     void add_post_to_existing_collection() throws JsonProcessingException {
         CollectionPostDto collectionPostDto = new CollectionPostDto();
-        collectionPostDto.setCollectionId("1");
-        collectionPostDto.setPostId("1");
+        collectionPostDto.setCollectionId("1001");
+        collectionPostDto.setPostId("101");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

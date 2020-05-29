@@ -4,5 +4,5 @@ import com.hexlindia.drool.post.dto.PostDto;
 
 public interface Post {
 
-    PostDto saveOrUpdate(PostDto postDto);
+    PostDto insertOrUpdate(PostDto postDto);
 }

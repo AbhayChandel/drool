@@ -65,13 +65,13 @@ public abstract class CollectionPostMapper {
 
     void setVisibilityInEntity(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity collectionEntity) {
         if (collectionPostDto.getVisibility() != null) {
-            Optional<VisibilityEntity> visibility = visibilityRepository.findByVisibility(collectionPostDto.getVisibility().visibility);
+            Optional<VisibilityEntity> visibility = visibilityRepository.findByVisibility(collectionPostDto.getVisibility().toString().toLowerCase());
             if (visibility.isPresent()) {
                 collectionEntity.setVisibility(visibility.get());
                 return;
             }
-            log.error("Visibility '" + collectionPostDto.getVisibility().visibility + "' not found");
-            throw new VisibilityNotFoundException("Visibility '" + collectionPostDto.getVisibility().visibility + "' not found");
+            log.error("Visibility '" + collectionPostDto.getVisibility().toString() + "' not found");
+            throw new VisibilityNotFoundException("Visibility '" + collectionPostDto.getVisibility().toString() + "' not found");
         }
     }
 

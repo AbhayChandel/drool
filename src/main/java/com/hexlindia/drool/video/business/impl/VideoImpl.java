@@ -2,9 +2,9 @@ package com.hexlindia.drool.video.business.impl;
 
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
+import com.hexlindia.drool.post.data.entity.VideoEntity;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
 import com.hexlindia.drool.video.business.api.Video;
-import com.hexlindia.drool.video.data.entity.VideoEntity;
 import com.hexlindia.drool.video.data.repository.api.VideoRepository;
 import com.hexlindia.drool.video.dto.*;
 import com.hexlindia.drool.video.dto.mapper.VideoCommentMapper;

@@ -1,7 +1,7 @@
 package com.hexlindia.drool.video.dto.mapper;
 
 import com.hexlindia.drool.common.data.constant.PostType;
-import com.hexlindia.drool.video.data.entity.VideoEntity;
+import com.hexlindia.drool.post.data.entity.VideoEntity;
 import com.hexlindia.drool.video.dto.VideoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

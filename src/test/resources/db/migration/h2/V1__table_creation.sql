@@ -61,33 +61,26 @@ CREATE TABLE user_account_status
 CREATE SEQUENCE post_id_seq;
 CREATE TABLE post
 (
-    id              BIGINT  default post_id_seq.nextval NOT NULL,
-    active          BOOLEAN default true                NOT NULL,
-    post_type       INT                                 NOT NULL,
-    title           VARCHAR                             NOT NULL,
-    date_posted     TIMESTAMP,
-    likes           INT     default 0,
-    views           INT     default 0,
-    owner           BIGINT                              NOT NULL,
-    d_type          VARCHAR                             NOT NULL,
+    id              BIGINT    default post_id_seq.nextval NOT NULL,
+    active          BOOLEAN   default true                NOT NULL,
+    type            INT                                   NOT NULL,
+    title           VARCHAR                               NOT NULL,
+    date_posted     TIMESTAMP default current_timestamp,
+    likes           INT       default 0,
+    views           INT       default 0,
+    owner           BIGINT                                NOT NULL,
+    d_type          VARCHAR                               NOT NULL,
     source_video_id varchar,
     text            varchar,
     cover_picture   varchar,
     CONSTRAINT post_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE POST_TYPE
+CREATE TABLE post_type
 (
-    id          INT,
-    type        VARCHAR(10),
-    description VARCHAR(50)
-);
-
-CREATE TABLE post_format
-(
-    id     INT         NOT NULL,
-    format VARCHAR(50) NOT NULL,
-    CONSTRAINT post_format_pk PRIMARY KEY (id)
+    id   INT,
+    type VARCHAR(15),
+    CONSTRAINT post_type_pk PRIMARY KEY (id)
 );
 
 CREATE SEQUENCE article_comment_id_seq;
@@ -130,64 +123,6 @@ CREATE TABLE POST_COLLECTION
     CONSTRAINT collection_fk FOREIGN KEY (collection_id) references collection (id),
     CONSTRAINT post_fk FOREIGN KEY (post_id) references post (id)
 );
-
-CREATE TABLE discussion_topic_user_like
-(
-    user_id  BIGINT NOT NULL,
-    topic_id BIGINT NOT NULL
-);
-
-CREATE SEQUENCE discussion_reply_id_seq;
-CREATE TABLE discussion_reply
-(
-    id                  BIGINT  default discussion_reply_id_seq.nextval NOT NULL,
-    discussion_topic_id BIGINT,
-    reply               varchar(500)                                    NOT NULL,
-    user_id             INT                                             NOT NULL,
-    active              BOOLEAN default true                            NOT NULL,
-    date_posted         TIMESTAMP,
-    likes               INT     default 0,
-    CONSTRAINT discussion_reply_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE discussion_reply_user_like
-(
-    user_id  BIGINT NOT NULL,
-    reply_id BIGINT NOT NULL
-);
-
-
-
-CREATE OR REPLACE VIEW user_profile_card_view AS
-SELECT ua.id       AS userId,
-       ua.username AS username
-FROM user_account ua;
-
-/*CREATE OR REPLACE VIEW discussion_topic_card_view AS
-SELECT topic.id               AS topicId,
-       topic.topic            AS topic,
-       topic.user_id          AS userId,
-       topic.date_posted      AS datePosted,
-       topic.date_last_active AS dateLastActive,
-       topic.views            AS views,
-       topic.likes            AS likes,
-       topic.replies          AS replies,
-       upcard.username        AS username
-FROM discussion_topic topic
-         INNER JOIN user_profile_card_view upcard ON topic.user_id = upcard.userId
-where topic.active = true;
-
-CREATE OR REPLACE VIEW discussion_reply_card_view AS
-SELECT reply.id                  AS replyId,
-       reply.discussion_topic_id AS discussionTopicId,
-       reply.reply               AS reply,
-       reply.user_id             AS userId,
-       reply.date_posted         AS datePosted,
-       reply.likes               AS likes,
-       upcard.username           AS username
-FROM discussion_reply reply
-         INNER JOIN user_profile_card_view upcard ON reply.user_id = upcard.userId
-where reply.active = true;*/
 
 
 

@@ -25,8 +25,8 @@ public class PostEntity {
     private int views;
 
     @ManyToOne
-    @JoinColumn(name = "post_type")
-    private PostTypeEntity postType;
+    @JoinColumn(name = "type")
+    private PostTypeEntity type;
 
     @ManyToOne
     @JoinColumn(name = "owner")

@@ -42,45 +42,35 @@ values (103, 'Deactivated');
 insert into user_account_status
 values (3, 102, 'Spamming');
 
-insert into discussion_topic(topic, user_id, date_posted, date_last_active, views, likes, replies)
-values ('Are Loreal lip colors better than Lakme or is it the other way around', 1, now(), now(), 155345, 1122, 45);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id, date_posted, likes)
-values (1, 'Yes, Loreal is better than Lakme', 3, now(), 2456);
+insert into post(id, type, title, owner, d_type, source_video_id, text)
+values (101, 1, 'Lakme 9to5 Lip Color', 2, 'video', 'xsztiz', 'This is aideo review for Lakme 9to5');
 
-insert into discussion_reply(discussion_topic_id, reply, user_id, active, date_posted, likes)
-values (1, 'No, I dont think Loreal products are any better than Lakme. It is just the hype', 2, false, now(), 4);
+insert into post(id, type, title, owner, d_type, cover_picture, text, views, likes)
+values (102, 2, 'How to choose the right shade', 3, 'article', 'xsztiz.jpg',
+        'This is an article about picking the right lip color shade', 456765, 3456);
 
-insert into discussion_reply(discussion_topic_id, reply, user_id, date_posted, likes)
-values (1,
-        'It depends on the products you are looking at. For lip colors loreal is better. But then for other things Lakme is better',
-        1, now(), 3);
+insert into article_comment
+values (201, 'This is a very nice article', 102, now(), 0, 3, true);
+insert into article_comment
+values (202, 'I think you should also mention the skin color', 102, now(), 0, 3, true);
+insert into article_comment
+values (203, 'Yes, thanks for the suggestion', 102, now(), 0, 2, true);
+insert into article_comment
+values (204, 'Really enjoyed the article', 102, now(), 0, 1, true);
 
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (1, 'dit', 'Discussion topic');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (2, 'dir', 'Discussion reply');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (3, 'vdc', 'Video comment');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (4, 'txr', 'Text Review');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (5, 'vdr', 'Video Review');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (6, 'txg', 'Text Guide');
-insert into POST_TYPE(post_type_id, post_type, descritpion)
-values (7, 'vdg', 'Video Guide');
+insert into collection(name, about, visibility, owner)
+values ('Party Dresses', 'It is about party dresses', 2, 2);
 
-insert into discussion_topic_user_like(user_id, topic_id)
-values (5, 5);
-insert into discussion_topic_user_like(user_id, topic_id)
-values (5, 1);
-insert into discussion_topic_user_like(user_id, topic_id)
-values (6, 6);
 
-insert into discussion_reply_user_like(user_id, reply_id)
-values (7, 7);
-insert into discussion_reply_user_like(user_id, reply_id)
-values (5, 1);
-insert into discussion_reply_user_like(user_id, reply_id)
-values (8, 8);
+insert into POST_TYPE(id, type)
+values (1, 'video');
+insert into POST_TYPE(id, type)
+values (2, 'article');
+insert into POST_TYPE(id, type)
+values (3, 'discussion');
+
+insert into visibility
+values (1, 'public');
+insert into visibility
+values (2, 'private');

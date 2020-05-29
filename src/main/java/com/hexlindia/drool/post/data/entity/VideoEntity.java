@@ -1,6 +1,5 @@
-package com.hexlindia.drool.video.data.entity;
+package com.hexlindia.drool.post.data.entity;
 
-import com.hexlindia.drool.post.data.entity.PostEntity;
 import lombok.Data;
 
 import javax.persistence.DiscriminatorValue;

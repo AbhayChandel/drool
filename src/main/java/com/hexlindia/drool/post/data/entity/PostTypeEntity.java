@@ -14,5 +14,4 @@ public class PostTypeEntity {
     @Id
     private int id;
     private String type;
-    private String description;
 }
