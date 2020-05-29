@@ -59,8 +59,8 @@ values (203, 'Yes, thanks for the suggestion', 102, now(), 0, 2, true);
 insert into article_comment
 values (204, 'Really enjoyed the article', 102, now(), 0, 1, true);
 
-insert into collection(name, about, visibility, owner)
-values ('Party Dresses', 'It is about party dresses', 2, 2);
+insert into collection(id, name, about, visibility, owner)
+values (1001, 'Party Dresses', 'It is about party dresses', 2, 2);
 
 
 insert into POST_TYPE(id, type)

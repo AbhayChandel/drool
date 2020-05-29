@@ -3,6 +3,7 @@ package com.hexlindia.drool.post.view;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.common.view.UsercardView;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
@@ -11,6 +12,7 @@ import javax.persistence.SqlResultSetMapping;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 @MappedSuperclass
 @SqlResultSetMapping(name = "PostPageViewMapping",
         classes = {
