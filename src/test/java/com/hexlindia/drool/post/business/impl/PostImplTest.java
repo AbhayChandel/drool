@@ -2,10 +2,12 @@ package com.hexlindia.drool.post.business.impl;
 
 import com.hexlindia.drool.common.constant.PostType2;
 import com.hexlindia.drool.post.data.entity.ArticleEntity;
+import com.hexlindia.drool.post.data.entity.DiscussionEntity;
 import com.hexlindia.drool.post.data.entity.VideoEntity;
 import com.hexlindia.drool.post.data.repository.api.PostRepository;
 import com.hexlindia.drool.post.dto.PostDto;
 import com.hexlindia.drool.post.dto.mapper.PostDtoArticleEntityMapper;
+import com.hexlindia.drool.post.dto.mapper.PostDtoDiscussionEntityMapper;
 import com.hexlindia.drool.post.dto.mapper.PostDtoVideoEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +34,12 @@ class PostImplTest {
     @Mock
     PostDtoVideoEntityMapper postDtoVideoEntityMapperMock;
 
+    @Mock
+    PostDtoDiscussionEntityMapper postDtoDiscussionEntityMapperMock;
+
     @BeforeEach
     void setUp() {
-        this.postImplSpy = Mockito.spy(new PostImpl(postRepositoryMock, postDtoArticleEntityMapperMock, postDtoVideoEntityMapperMock));
+        this.postImplSpy = Mockito.spy(new PostImpl(postRepositoryMock, postDtoArticleEntityMapperMock, postDtoVideoEntityMapperMock, postDtoDiscussionEntityMapperMock));
     }
 
     @Test
@@ -48,16 +53,6 @@ class PostImplTest {
     }
 
     @Test
-    void insertArticleCallStack() {
-        PostDto postDto = new PostDto();
-        postDto.setType(PostType2.ARTICLE);
-        doNothing().when(this.postImplSpy).setDefaultInsertValues(any());
-        this.postImplSpy.insertOrUpdate(postDto);
-        verify(this.postImplSpy, times(1)).insert(any());
-        verify(this.postImplSpy, times(1)).saveArticleEntity(any());
-    }
-
-    @Test
     void updateVideoCallStack() {
         PostDto postDto = new PostDto();
         postDto.setId("10000012");
@@ -68,6 +63,26 @@ class PostImplTest {
     }
 
     @Test
+    void updateDiscussionCallStack() {
+        PostDto postDto = new PostDto();
+        postDto.setId("10000012");
+        when(this.postRepositoryMock.findById(any())).thenReturn(Optional.of(new DiscussionEntity()));
+        this.postImplSpy.insertOrUpdate(postDto);
+        verify(this.postImplSpy, times(1)).update(any());
+        verify(this.postImplSpy, times(1)).updateAndSaveDiscussionEntity(any(), any());
+    }
+
+    @Test
+    void insertArticleCallStack() {
+        PostDto postDto = new PostDto();
+        postDto.setType(PostType2.ARTICLE);
+        doNothing().when(this.postImplSpy).setDefaultInsertValues(any());
+        this.postImplSpy.insertOrUpdate(postDto);
+        verify(this.postImplSpy, times(1)).insert(any());
+        verify(this.postImplSpy, times(1)).saveArticleEntity(any());
+    }
+
+    @Test
     void insertVideoCallStack() {
         PostDto postDto = new PostDto();
         postDto.setType(PostType2.VIDEO);
@@ -75,6 +90,16 @@ class PostImplTest {
         this.postImplSpy.insertOrUpdate(postDto);
         verify(this.postImplSpy, times(1)).insert(any());
         verify(this.postImplSpy, times(1)).saveVideoEntity(any());
+    }
+
+    @Test
+    void insertDiscussionCallStack() {
+        PostDto postDto = new PostDto();
+        postDto.setType(PostType2.DISCUSSION);
+        doNothing().when(this.postImplSpy).setDefaultInsertValues(any());
+        this.postImplSpy.insertOrUpdate(postDto);
+        verify(this.postImplSpy, times(1)).insert(any());
+        verify(this.postImplSpy, times(1)).saveDiscussionEntity(any());
     }
 
     @Test
@@ -95,5 +120,15 @@ class PostImplTest {
 
         postImplSpy.updateAndSaveVideoEntity(new PostDto(), videoEntitySpy);
         verify(videoEntitySpy, times(0)).setTitle(any());
+    }
+
+    @Test
+    void discussion_title_is_not_updated_with_null_or_empty() {
+        DiscussionEntity discussionEntity = Mockito.spy(new DiscussionEntity());
+        when(this.postRepositoryMock.save(any())).thenReturn(discussionEntity);
+        when(this.postDtoDiscussionEntityMapperMock.toDto(any())).thenReturn(new PostDto());
+
+        postImplSpy.updateAndSaveDiscussionEntity(new PostDto(), discussionEntity);
+        verify(discussionEntity, times(0)).setTitle(any());
     }
 }

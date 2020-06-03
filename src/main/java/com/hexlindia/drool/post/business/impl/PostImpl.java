@@ -4,11 +4,13 @@ import com.hexlindia.drool.common.constant.PostType2;
 import com.hexlindia.drool.post.business.api.Post;
 import com.hexlindia.drool.post.business.exception.PostNotFoundException;
 import com.hexlindia.drool.post.data.entity.ArticleEntity;
+import com.hexlindia.drool.post.data.entity.DiscussionEntity;
 import com.hexlindia.drool.post.data.entity.PostEntity;
 import com.hexlindia.drool.post.data.entity.VideoEntity;
 import com.hexlindia.drool.post.data.repository.api.PostRepository;
 import com.hexlindia.drool.post.dto.PostDto;
 import com.hexlindia.drool.post.dto.mapper.PostDtoArticleEntityMapper;
+import com.hexlindia.drool.post.dto.mapper.PostDtoDiscussionEntityMapper;
 import com.hexlindia.drool.post.dto.mapper.PostDtoVideoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class PostImpl implements Post {
     private final PostRepository postRepository;
     private final PostDtoArticleEntityMapper postDtoArticleEntityMapper;
     private final PostDtoVideoEntityMapper postDtoVideoEntityMapper;
+    private final PostDtoDiscussionEntityMapper postDtoDiscussionEntityMapper;
 
     @Override
     @Transactional
@@ -43,6 +46,8 @@ public class PostImpl implements Post {
             return updateAndSaveArticleEntity(postDto, (ArticleEntity) postEntity);
         } else if (postEntity instanceof VideoEntity) {
             return updateAndSaveVideoEntity(postDto, (VideoEntity) postEntity);
+        } else if (postEntity instanceof DiscussionEntity) {
+            return updateAndSaveDiscussionEntity(postDto, (DiscussionEntity) postEntity);
         }
         return null;
     }
@@ -82,6 +87,10 @@ public class PostImpl implements Post {
             VideoEntity videoEntity = postDtoVideoEntityMapper.toEntity(postDto);
             setDefaultInsertValues(videoEntity);
             return saveVideoEntity(videoEntity);
+        } else if (postDto.getType().equals(PostType2.DISCUSSION)) {
+            DiscussionEntity discussionEntity = postDtoDiscussionEntityMapper.toEntity(postDto);
+            setDefaultInsertValues(discussionEntity);
+            return saveDiscussionEntity(discussionEntity);
         }
         return null;
     }
@@ -99,5 +108,19 @@ public class PostImpl implements Post {
     void setDefaultInsertValues(PostEntity postEntity) {
         postEntity.setDatePosted(LocalDateTime.now());
         postEntity.setActive(true);
+    }
+
+    PostDto updateAndSaveDiscussionEntity(PostDto postDto, DiscussionEntity discussionEntity) {
+        if (postDto.getTitle() != null && !postDto.getTitle().isEmpty()) {
+            discussionEntity.setTitle(postDto.getTitle());
+        }
+        discussionEntity.setText(postDto.getText());
+        discussionEntity.setCoverPicture(postDto.getCoverPicture());
+        return saveDiscussionEntity(discussionEntity);
+    }
+
+    PostDto saveDiscussionEntity(DiscussionEntity discussionEntity) {
+        discussionEntity = postRepository.save(discussionEntity);
+        return postDtoDiscussionEntityMapper.toDto(discussionEntity);
     }
 }

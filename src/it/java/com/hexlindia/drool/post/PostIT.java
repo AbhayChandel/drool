@@ -165,6 +165,63 @@ public class PostIT {
         assertEquals("This is description for test video post", videoPost.getText());
     }
 
+    @Test
+    void insert_discussion_post() throws JsonProcessingException {
+        PostDto discussionPost = new PostDto();
+        discussionPost.setTitle("This is a discussion");
+        discussionPost.setType(PostType2.DISCUSSION);
+        discussionPost.setOwnerId("3");
+        discussionPost.setText("This is discussion details");
+        discussionPost.setCoverPicture("abc.jpg");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionPost), headers);
+        ResponseEntity<PostDto> responseEntity = this.restTemplate.postForEntity(getInsertOrUpdateUri(), request, PostDto.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(responseEntity.getBody());
+        discussionPost = responseEntity.getBody();
+        assertNotNull(discussionPost.getId());
+        assertEquals("This is a discussion", discussionPost.getTitle());
+        assertEquals("0", discussionPost.getLikes());
+        assertEquals("0", discussionPost.getViews());
+        assertEquals(PostType2.DISCUSSION, discussionPost.getType());
+        assertEquals("3", discussionPost.getOwnerId());
+        assertEquals("abc.jpg", discussionPost.getCoverPicture());
+        assertEquals("This is discussion details", discussionPost.getText());
+    }
+
+    @Test
+    void update_discussion_post() throws JsonProcessingException {
+        PostDto discussionPost = new PostDto();
+        discussionPost.setId("103");
+        discussionPost.setTitle("[UPDATED]Which is the best body lotion for dry skin?");
+        discussionPost.setType(PostType2.DISCUSSION);
+        discussionPost.setOwnerId("1");
+        discussionPost.setText("[UPDATED]I have shortlisted the following lotions");
+        discussionPost.setCoverPicture("ABC.jpg");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(discussionPost), headers);
+        ResponseEntity<PostDto> responseEntity = this.restTemplate.postForEntity(getInsertOrUpdateUri(), request, PostDto.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(responseEntity.getBody());
+        discussionPost = responseEntity.getBody();
+        assertEquals("103", discussionPost.getId());
+        assertEquals("[UPDATED]Which is the best body lotion for dry skin?", discussionPost.getTitle());
+        assertEquals("126", discussionPost.getLikes());
+        assertEquals("12.3k", discussionPost.getViews());
+        assertEquals(PostType2.DISCUSSION, discussionPost.getType());
+        assertEquals("1", discussionPost.getOwnerId());
+        assertEquals("ABC.jpg", discussionPost.getCoverPicture());
+        assertEquals("[UPDATED]I have shortlisted the following lotions", discussionPost.getText());
+    }
+
 
     private String getAuthenticationUri() {
         return "/" + restUriVersion + "/accessall/user/account/authenticate";

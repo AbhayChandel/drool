@@ -2,6 +2,8 @@ package com.hexlindia.drool.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.post.view.PostPageView;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@FlywayTestExtension
+@FlywayTest
 public class PostViewIT {
 
     @Value("${rest.uri.version}")

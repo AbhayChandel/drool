@@ -50,6 +50,10 @@ insert into post(id, type, title, owner, d_type, cover_picture, text, views, lik
 values (102, 2, 'How to choose the right shade', 3, 'article', 'xsztiz.jpg',
         'This is an article about picking the right lip color shade', 456765, 3456);
 
+insert into post(id, type, title, owner, d_type, cover_picture, text, views, likes)
+values (103, 3, 'Which is the best body lotion for dry skin?', 1, 'discussion', 'discuss.jpg',
+        'I have shortlisted the following lotions', 12345, 126);
+
 insert into article_comment
 values (201, 'This is a very nice article', 102, now(), 0, 3, true);
 insert into article_comment

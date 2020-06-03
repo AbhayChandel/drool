@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +58,7 @@ public class VideoViewsIT {
         populatedVideoId = this.mongoTemplate.insert(videoDoc).getId();
     }
 
+    @Disabled
     @Test
     void testFindVideoById() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
