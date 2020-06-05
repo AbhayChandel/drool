@@ -1,5 +1,6 @@
 package com.hexlindia.drool.post.data.repository.impl;
 
+import com.hexlindia.drool.common.constant.PostType2;
 import com.hexlindia.drool.post.data.repository.api.PostViewRepository;
 import com.hexlindia.drool.post.view.PostPageView;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class PostViewRepositoryImplTest {
 
     @Test
     void getPost_post_found() {
-        PostPageView postPageView = postViewRepository.getPost(102L).get();
+        PostPageView postPageView = postViewRepository.getPost(102L, PostType2.ARTICLE).get();
         assertNotNull(postPageView);
         assertEquals("102", postPageView.getId());
         assertEquals("article", postPageView.getType());
@@ -33,11 +34,12 @@ class PostViewRepositoryImplTest {
         assertNull(postPageView.getSourceVideoId());
         assertEquals("This is an article about picking the right lip color shade", postPageView.getText());
         assertEquals("xsztiz.jpg", postPageView.getCoverPicture());
+        assertEquals("4", postPageView.getTotalComments());
     }
 
     @Test
     void getPost_post_not_found() {
-        Optional<PostPageView> postPageView = postViewRepository.getPost(10002L);
+        Optional<PostPageView> postPageView = postViewRepository.getPost(10002L, PostType2.ARTICLE);
         assertFalse(postPageView.isPresent());
     }
 }

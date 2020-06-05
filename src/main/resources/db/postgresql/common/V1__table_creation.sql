@@ -84,6 +84,20 @@ CREATE TABLE post_type
     CONSTRAINT post_type_pk PRIMARY KEY (id)
 );
 
+CREATE SEQUENCE video_comment_id_seq;
+CREATE TABLE video_comment
+(
+    id          SERIAL               NOT NULL,
+    comment     varchar              NOT NULL,
+    post_id     BIGINT               NOT NULL,
+    date_posted TIMESTAMP,
+    likes       INT     default 0,
+    user_id     BIGINT               NOT NULL,
+    active      BOOLEAN default true NOT NULL,
+    CONSTRAINT video_comment_pk PRIMARY KEY (id),
+    CONSTRAINT video_comment_video_fk FOREIGN KEY (post_id) REFERENCES post (id)
+);
+
 CREATE SEQUENCE article_comment_id_seq;
 CREATE TABLE article_comment
 (

@@ -1,5 +1,6 @@
 package com.hexlindia.drool.post.view;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.common.util.MetaFieldValueFormatter;
 import com.hexlindia.drool.common.view.UsercardView;
 import lombok.Data;
@@ -29,14 +30,16 @@ import java.time.LocalDateTime;
                                 @ColumnResult(name = "owner_username", type = String.class),
                                 @ColumnResult(name = "source_video_id", type = String.class),
                                 @ColumnResult(name = "text", type = String.class),
-                                @ColumnResult(name = "cover_picture", type = String.class)
+                                @ColumnResult(name = "cover_picture", type = String.class),
+                                @ColumnResult(name = "total_comments", type = Integer.class)
 
                         })
         })
 public class PostPageView {
 
     public PostPageView(Long id, String type, String title, LocalDateTime datePosted, Integer likes, Integer views,
-                        Long ownerId, String ownerUsername, String sourceVideoId, String text, String coverPicture) {
+                        Long ownerId, String ownerUsername, String sourceVideoId, String text, String coverPicture,
+                        Integer totalComments) {
         this.id = String.valueOf(id);
         this.type = type;
         this.title = title;
@@ -47,6 +50,7 @@ public class PostPageView {
         this.sourceVideoId = sourceVideoId;
         this.text = text;
         this.coverPicture = coverPicture;
+        this.totalComments = String.valueOf(totalComments);
     }
 
     private String id;
@@ -55,10 +59,13 @@ public class PostPageView {
     private String datePosted;
     private String likes;
     private String views;
+
+    @JsonProperty("user")
     private UsercardView usercardView;
     private String sourceVideoId;
     private String text;
     private String coverPicture;
+    private String totalComments;
 
 
 }
