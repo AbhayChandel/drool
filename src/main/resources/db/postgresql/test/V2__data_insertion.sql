@@ -42,6 +42,17 @@ values (103, 'Deactivated');
 insert into user_account_status
 values (3, 102, 'Spamming');
 
+insert into video(id, title, description, source_video_id, owner)
+values (1000001, 'How to pick the right shade for your skin tone', 'This is a guide to pick the best lipstick shades',
+        'zdtx83s', 1);
+insert into video(id, title, description, source_video_id, owner)
+values (1000002, 'Top ten lipstick picks for this summer', 'Here is the list of all the shades', 'anu56sd', 2);
+
+insert into article(id, title, body, cover_picture, owner)
+values (2000001, 'My favorite lipsticks for th fall', 'He is the detailed guide', 'd6dj5j.jps', 2);
+insert into article(id, title, body, cover_picture, owner)
+values (2000002, 'My favorite lipsticks for th winter', 'He is the detailed guide', 'a56js.jps', 3);
+
 
 insert into post(id, type, title, owner, d_type, source_video_id, text)
 values (101, 1, 'Lakme 9to5 Lip Color', 2, 'video', 'xsztiz', 'This is aideo review for Lakme 9to5');
@@ -74,6 +85,16 @@ values (204, 'Really enjoyed the article', 102, now(), 0, 1, true);
 
 insert into collection(id, name, about, visibility, owner)
 values (1001, 'Party Dresses', 'It is about party dresses', 2, 2);
+
+insert into collection_video(collection_id, video_id)
+values (1001, 1000001);
+insert into collection_video(collection_id, video_id)
+values (1001, 1000002);
+
+insert into collection_article(collection_id, article_id)
+values (1001, 2000001);
+insert into collection_article(collection_id, article_id)
+values (1001, 2000002);
 
 
 insert into POST_TYPE(id, type)

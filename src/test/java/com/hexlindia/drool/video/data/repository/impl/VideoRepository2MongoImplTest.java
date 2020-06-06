@@ -35,7 +35,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @SpringBootTest
-public class VideoRepositoryMongoImplTest {
+public class VideoRepository2MongoImplTest {
 
     private final VideoRepositoryMongo videoRepositoryMongo;
     private final MongoTemplate mongoTemplate;
@@ -47,7 +47,7 @@ public class VideoRepositoryMongoImplTest {
     ObjectId userId = new ObjectId();
 
     @Autowired
-    public VideoRepositoryMongoImplTest(VideoRepositoryMongo videoRepositoryMongo, MongoTemplate mongoTemplate) {
+    public VideoRepository2MongoImplTest(VideoRepositoryMongo videoRepositoryMongo, MongoTemplate mongoTemplate) {
         this.videoRepositoryMongo = videoRepositoryMongo;
         this.mongoTemplate = mongoTemplate;
     }

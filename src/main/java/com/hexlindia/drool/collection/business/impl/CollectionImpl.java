@@ -1,14 +1,19 @@
 package com.hexlindia.drool.collection.business.impl;
 
+import com.hexlindia.drool.article.data.entity.ArticleEntity2;
+import com.hexlindia.drool.article.data.repository.api.ArticleRepository2;
+import com.hexlindia.drool.article.exception.ArticleNotFoundException;
 import com.hexlindia.drool.collection.business.api.Collection;
 import com.hexlindia.drool.collection.business.exception.CollectionNotFoundException;
-import com.hexlindia.drool.collection.data.entity.CollectionEntity;
-import com.hexlindia.drool.collection.data.repository.api.CollectionRepository;
+import com.hexlindia.drool.collection.data.entity.CollectionEntity2;
+import com.hexlindia.drool.collection.data.repository.api.CollectionRepository2;
 import com.hexlindia.drool.collection.dto.CollectionPostDto;
 import com.hexlindia.drool.collection.dto.mapper.CollectionPostMapper;
-import com.hexlindia.drool.post.business.exception.PostNotFoundException;
-import com.hexlindia.drool.post.data.entity.PostEntity;
+import com.hexlindia.drool.common.constant.PostType2;
 import com.hexlindia.drool.post.data.repository.api.PostRepository;
+import com.hexlindia.drool.video.exception.VideoNotFoundException;
+import com.hexlindia.drool.video2.data.entity.VideoEntity2;
+import com.hexlindia.drool.video2.data.repository.api.VideoRepository2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,9 +26,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CollectionImpl implements Collection {
 
-    private final CollectionRepository collectionRepository;
+    private final CollectionRepository2 collectionRepository;
     private final PostRepository postRepository;
     private final CollectionPostMapper collectionPostMapper;
+    private final VideoRepository2 videoRepository2;
+    private final ArticleRepository2 articleRepository2;
 
 
     @Override
@@ -34,9 +41,8 @@ public class CollectionImpl implements Collection {
     @Override
     @Transactional
     public boolean addPost(CollectionPostDto collectionPostDto) {
-        CollectionEntity collection = getCollection(collectionPostDto);
-        PostEntity post = getPost(collectionPostDto.getPostId());
-        collection.addPost(post);
+        CollectionEntity2 collection = getCollection(collectionPostDto);
+        setPostInCollection(collection, collectionPostDto.getPostType(), collectionPostDto.getPostId());
         collectionRepository.save(collection);
         return true;
         //TODO
@@ -44,18 +50,18 @@ public class CollectionImpl implements Collection {
         //return collectionPostMapper.toDto(collection);
     }
 
-    CollectionEntity getCollection(CollectionPostDto collectionPostDto) {
-        CollectionEntity collection = null;
+    CollectionEntity2 getCollection(CollectionPostDto collectionPostDto) {
+        CollectionEntity2 collection = null;
         if (collectionPostDto.getCollectionId() != null) {
             collection = getCollectionFromRepository(collectionPostDto.getCollectionId());
         } else {
-            collection = collectionRepository.save(collectionPostMapper.toEntity(collectionPostDto));
+            //collection = collectionRepository.save(collectionPostMapper.toEntity(collectionPostDto));
         }
         return collection;
     }
 
-    CollectionEntity getCollectionFromRepository(String collectionId) {
-        Optional<CollectionEntity> collection = collectionRepository.findById(Integer.valueOf(collectionId));
+    CollectionEntity2 getCollectionFromRepository(String collectionId) {
+        Optional<CollectionEntity2> collection = collectionRepository.findById(Integer.valueOf(collectionId));
         if (collection.isPresent()) {
             return collection.get();
         }
@@ -63,13 +69,32 @@ public class CollectionImpl implements Collection {
         throw new CollectionNotFoundException("Collection with id " + collectionId + " not found");
     }
 
-    PostEntity getPost(String postId) {
-        Optional<PostEntity> post = postRepository.findById(Long.valueOf(postId));
-        if (post.isPresent()) {
-            return post.get();
+    void setPostInCollection(CollectionEntity2 collection, PostType2 postType, String postId) {
+        if (postType.equals(PostType2.VIDEO)) {
+            addVideoPost(collection, postId);
+        } else if (postType.equals(PostType2.ARTICLE)) {
+            addArticlePost(collection, postId);
+        } else if (postType.equals(PostType2.DISCUSSION)) {
+
         }
-        log.error("Post with id " + postId + " not found");
-        throw new PostNotFoundException("Post with id " + postId + " not found");
+    }
+
+    void addVideoPost(CollectionEntity2 collection, String videoId) {
+        Optional<VideoEntity2> video = videoRepository2.findById(Integer.valueOf(videoId));
+        if (video.isPresent()) {
+            collection.addVideo(video.get());
+        }
+        log.error("Video with id " + videoId + " not found");
+        throw new VideoNotFoundException("Video with id " + videoId + " not found");
+    }
+
+    void addArticlePost(CollectionEntity2 collection, String articleId) {
+        Optional<ArticleEntity2> article = articleRepository2.findById(Integer.valueOf(articleId));
+        if (article.isPresent()) {
+            collection.addArticle(article.get());
+        }
+        log.error("Article with id " + articleId + " not found");
+        throw new ArticleNotFoundException("Article with id " + articleId + " not found");
     }
 
 

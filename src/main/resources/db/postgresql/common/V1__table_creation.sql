@@ -58,6 +58,38 @@ CREATE TABLE user_account_status
     CONSTRAINT user_account_status_fk FOREIGN KEY (status) REFERENCES account_status (code)
 );
 
+CREATE SEQUENCE video_id_seq;
+ALTER SEQUENCE video_id_seq RESTART WITH 1000000001;
+CREATE TABLE video
+(
+    id              SERIAL,
+    active          BOOLEAN   default true NOT NULL,
+    title           VARCHAR                NOT NULL,
+    description     varchar,
+    source_video_id varchar,
+    date_posted     TIMESTAMP default CURRENT_TIMESTAMP,
+    likes           INT       default 0,
+    views           INT       default 0,
+    owner           BIGINT                 NOT NULL,
+    CONSTRAINT video_pk PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE article_id_seq;
+ALTER SEQUENCE article_id_seq RESTART WITH 1000000001;
+CREATE TABLE article
+(
+    id            SERIAL,
+    active        BOOLEAN   default true NOT NULL,
+    title         VARCHAR                NOT NULL,
+    body          varchar,
+    cover_picture varchar,
+    date_posted   TIMESTAMP default CURRENT_TIMESTAMP,
+    likes         INT       default 0,
+    views         INT       default 0,
+    owner         BIGINT                 NOT NULL,
+    CONSTRAINT article_pk PRIMARY KEY (id)
+);
+
 CREATE SEQUENCE post_id_seq;
 ALTER SEQUENCE post_id_seq RESTART WITH 90001001;
 CREATE TABLE post
@@ -121,6 +153,24 @@ CREATE TABLE collection
     visibility INT     NOT NULL,
     owner      BIGINT  NOT NULL,
     CONSTRAINT collection_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE collection_video
+(
+    collection_id BIGINT,
+    video_id      BIGINT,
+    CONSTRAINT collection_video_pk PRIMARY KEY (collection_id, video_id),
+    CONSTRAINT collection_video_collection_fk FOREIGN KEY (collection_id) references collection (id),
+    CONSTRAINT collection_video_video_fk FOREIGN KEY (video_id) references video (id)
+);
+
+CREATE TABLE collection_article
+(
+    collection_id BIGINT,
+    article_id    BIGINT,
+    CONSTRAINT collection_article_pk PRIMARY KEY (collection_id, article_id),
+    CONSTRAINT collection_article_collection_fk FOREIGN KEY (collection_id) references collection (id),
+    CONSTRAINT collection_article_article_fk FOREIGN KEY (article_id) references article (id)
 );
 
 CREATE TABLE visibility

@@ -55,6 +55,22 @@ class CollectionRestServiceImplTest {
         assertEquals("Post Id is empty", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
     }
 
+    @Test
+    void addPost_missingPostType() throws Exception {
+        CollectionPostDto collectionPostDto = new CollectionPostDto();
+        collectionPostDto.setPostId("12345");
+        String requestBody = objectMapper.writeValueAsString(collectionPostDto);
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getAddPostUri())
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        ErrorResult responseErrorResult = objectMapper.readValue(contentAsString, ErrorResult.class);
+        assertEquals("Post type is empty", responseErrorResult.getFieldValidationErrors().get(0).getErrorMessage());
+    }
+
     private String getAddPostUri() {
         return "/" + restUriVersion + "/collection/addpost";
     }
