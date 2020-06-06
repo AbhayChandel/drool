@@ -177,6 +177,14 @@ CREATE TABLE visibility
     CONSTRAINT visibility_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE feed
+(
+    post_id     INT,
+    post_type   INT,
+    date_posted timestamp,
+    CONSTRAINT feed_pk PRIMARY KEY (post_id, post_type)
+);
+
 CREATE TABLE POST_COLLECTION
 (
     collection_id BIGINT,

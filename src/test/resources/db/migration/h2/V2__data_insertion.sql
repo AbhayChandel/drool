@@ -99,6 +99,15 @@ values (1001, 2000001);
 insert into collection_article(collection_id, article_id)
 values (1001, 2000002);
 
+insert into feed(post_id, post_type, date_posted)
+values (1000001, 1, '2016-05-22 19:10:25-07');
+insert into feed(post_id, post_type, date_posted)
+values (1000002, 1, '2016-05-23 19:10:25-07');
+insert into feed(post_id, post_type, date_posted)
+values (2000001, 2, '2016-05-24 19:10:25-07');
+insert into feed(post_id, post_type, date_posted)
+values (2000002, 2, '2016-05-25 19:10:25-07');
+
 insert into POST_TYPE(id, type)
 values (1, 'video');
 insert into POST_TYPE(id, type)
