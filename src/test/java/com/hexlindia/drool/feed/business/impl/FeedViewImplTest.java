@@ -1,8 +1,10 @@
 package com.hexlindia.drool.feed.business.impl;
 
+import com.hexlindia.drool.article.business.api.ArticleView;
 import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.entity.FeedEntityId;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
+import com.hexlindia.drool.feed.view.mapper.ArticleFeedPreviewMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +28,15 @@ class FeedViewImplTest {
     @MockBean
     FeedRepository feedRepositoryMock;
 
+    @MockBean
+    ArticleView articleViewMock;
+
+    @MockBean
+    ArticleFeedPreviewMapper articleFeedPreviewMapperMock;
+
     @BeforeEach
     void setUp() {
-        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock));
+        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock, articleViewMock, articleFeedPreviewMapperMock));
     }
 
     @Test
@@ -55,13 +63,16 @@ class FeedViewImplTest {
         Set<Integer> group2 = new HashSet<>();
         group2.add(1);
         group2.add(2);
+        Set<Integer> group3 = new HashSet<>();
+        group3.add(1);
         itemGroupsMapMock.put(1, group1);
         itemGroupsMapMock.put(2, group2);
+        itemGroupsMapMock.put(3, group3);
         doReturn(itemGroupsMapMock).when(feedViewSpy).getItemGroupMap(any());
         feedViewSpy.getFeedItemPreviews(null);
         verify(feedViewSpy, times(1)).getVideoItems(any());
         verify(feedViewSpy, times(1)).getArticleItems(any());
-        verify(feedViewSpy, times(0)).getDiscussionItems(any());
+        verify(feedViewSpy, times(1)).getDiscussionItems(any());
     }
 
     @Test

@@ -81,10 +81,32 @@ CREATE TABLE article
     body          varchar,
     cover_picture varchar,
     date_posted   TIMESTAMP default CURRENT_TIMESTAMP,
-    likes         INT       default 0,
     views         INT       default 0,
     owner         BIGINT                                   NOT NULL,
     CONSTRAINT article_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE article_like
+(
+    article_id INT,
+    user_id    INT,
+    CONSTRAINT article_like_pk PRIMARY KEY (article_id, user_id),
+    CONSTRAINT article_like_article_fk FOREIGN KEY (article_id) references article (id),
+    CONSTRAINT article_like_user_fk FOREIGN KEY (user_id) references user_account (id)
+);
+
+CREATE SEQUENCE article_comment_id_seq;
+CREATE TABLE article_comment
+(
+    id          BIGINT  default article_comment_id_seq.nextval NOT NULL,
+    comment     varchar                                        NOT NULL,
+    article_id  INT                                            NOT NULL,
+    date_posted TIMESTAMP,
+    likes       INT     default 0,
+    user_id     BIGINT                                         NOT NULL,
+    active      BOOLEAN default true                           NOT NULL,
+    CONSTRAINT article_comment_pk PRIMARY KEY (id),
+    CONSTRAINT article_comment_article_fk FOREIGN KEY (article_id) REFERENCES article (id)
 );
 
 
@@ -127,19 +149,7 @@ CREATE TABLE video_comment
     CONSTRAINT video_comment_video_fk FOREIGN KEY (post_id) REFERENCES post (id)
 );
 
-CREATE SEQUENCE article_comment_id_seq;
-CREATE TABLE article_comment
-(
-    id          BIGINT  default article_comment_id_seq.nextval NOT NULL,
-    comment     varchar                                        NOT NULL,
-    post_id     INT                                            NOT NULL,
-    date_posted TIMESTAMP,
-    likes       INT     default 0,
-    user_id     BIGINT                                         NOT NULL,
-    active      BOOLEAN default true                           NOT NULL,
-    CONSTRAINT article_comment_pk PRIMARY KEY (id),
-    CONSTRAINT article_comment_article_fk FOREIGN KEY (post_id) REFERENCES post (id)
-);
+
 
 CREATE SEQUENCE collection_id_seq;
 CREATE TABLE collection

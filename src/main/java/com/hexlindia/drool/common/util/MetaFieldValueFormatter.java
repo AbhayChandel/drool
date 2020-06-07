@@ -10,6 +10,10 @@ public class MetaFieldValueFormatter {
         throw new IllegalStateException("Utility class");
     }
 
+    public static String getCompactFormat(Long number) {
+        return getCompactFormat(number.intValue());
+    }
+
     public static String getCompactFormat(Integer number) {
         if (number == null) {
             return "";

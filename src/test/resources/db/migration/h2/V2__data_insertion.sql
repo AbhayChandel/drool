@@ -53,6 +53,20 @@ values (2000001, 'My favorite lipsticks for th fall', 'He is the detailed guide'
 insert into article(id, title, body, cover_picture, owner)
 values (2000002, 'My favorite lipsticks for th winter', 'He is the detailed guide', 'a56js.jps', 3);
 
+insert into article_like(article_id, user_id)
+values (2000001, 1);
+insert into article_like(article_id, user_id)
+values (2000001, 2);
+
+insert into article_comment(id, comment, article_id, date_posted, likes, user_id, active)
+values (301, 'This is a very nice article', 2000001, now(), 0, 3, true);
+insert into article_comment
+values (302, 'I think you should also mention the skin color', 2000001, now(), 0, 3, true);
+insert into article_comment
+values (303, 'Yes, thanks for the suggestion', 2000001, now(), 0, 2, true);
+insert into article_comment
+values (304, 'Really enjoyed the article', 2000001, now(), 0, 1, true);
+
 insert into post(id, type, title, owner, d_type, source_video_id, text)
 values (101, 1, 'Lakme 9to5 Lip Color', 2, 'video', 'xsztiz', 'This is aideo review for Lakme 9to5');
 
@@ -72,16 +86,6 @@ insert into video_comment(id, comment, post_id, date_posted, user_id, active)
 values (11003, 'Enjoyed this review a lot great job', 101, now(), 3, true);
 insert into video_comment(id, comment, post_id, date_posted, user_id, active)
 values (11004, 'What a great honest review. really liked it.', 101, now(), 1, true);
-
-
-insert into article_comment
-values (201, 'This is a very nice article', 102, now(), 0, 3, true);
-insert into article_comment
-values (202, 'I think you should also mention the skin color', 102, now(), 0, 3, true);
-insert into article_comment
-values (203, 'Yes, thanks for the suggestion', 102, now(), 0, 2, true);
-insert into article_comment
-values (204, 'Really enjoyed the article', 102, now(), 0, 1, true);
 
 insert into collection(id, name, about, visibility, owner)
 values (1001, 'Lipsticks', 'all about lipsticks', 2, 3);
