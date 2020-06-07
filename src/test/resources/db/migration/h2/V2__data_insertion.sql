@@ -81,6 +81,25 @@ values (303, 'Yes, thanks for the suggestion', 2000001, now(), 0, 2, true);
 insert into article_comment
 values (304, 'Really enjoyed the article', 2000001, now(), 0, 1, true);
 
+insert into discussion(id, title, details, cover_picture, date_posted, owner, active)
+values (40001, 'Where to buy genuine chanel products in Delhi', 'I have found Chanel at following locations',
+        'zdtx83s.jpg', now(), 1, true);
+insert into discussion(id, title, details, cover_picture, date_posted, owner, active)
+values (40002, 'How can I get fairer skin', '',
+        'sg675j.jpg', now(), 2, true);
+
+insert into discussion_like(discussion_id, user_id)
+values (40002, 3);
+insert into discussion_like(discussion_id, user_id)
+values (40002, 2);
+
+insert into discussion_reply(id, reply, discussion_id, date_posted, likes, user_id, active)
+values (301, 'Look for some fairness products', 40002, now(), 0, 3, true);
+insert into discussion_reply(id, reply, discussion_id, date_posted, likes, user_id, active)
+values (302, 'I think you should try natural remedies', 40002, now(), 0, 3, true);
+insert into discussion_reply(id, reply, discussion_id, date_posted, likes, user_id, active)
+values (303, 'Yes, thanks for the suggestion', 40002, now(), 0, 2, true);
+
 insert into post(id, type, title, owner, d_type, source_video_id, text)
 values (101, 1, 'Lakme 9to5 Lip Color', 2, 'video', 'xsztiz', 'This is aideo review for Lakme 9to5');
 

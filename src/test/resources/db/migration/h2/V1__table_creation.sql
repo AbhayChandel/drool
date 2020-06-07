@@ -66,7 +66,6 @@ CREATE TABLE video
     description     varchar,
     source_video_id varchar,
     date_posted     TIMESTAMP default CURRENT_TIMESTAMP,
-    likes           INT       default 0,
     views           INT       default 0,
     owner           BIGINT                                 NOT NULL,
     CONSTRAINT video_pk PRIMARY KEY (id)
@@ -130,6 +129,43 @@ CREATE TABLE article_comment
     active      BOOLEAN default true                           NOT NULL,
     CONSTRAINT article_comment_pk PRIMARY KEY (id),
     CONSTRAINT article_comment_article_fk FOREIGN KEY (article_id) REFERENCES article (id)
+);
+
+CREATE SEQUENCE discussion_id_seq;
+CREATE TABLE discussion
+(
+    id            INT       default discussion_id_seq.nextval NOT NULL,
+    active        BOOLEAN   default true                      NOT NULL,
+    title         VARCHAR                                     NOT NULL,
+    details       varchar,
+    cover_picture varchar,
+    date_posted   TIMESTAMP default CURRENT_TIMESTAMP,
+    views         INT       default 0,
+    owner         BIGINT                                      NOT NULL,
+    CONSTRAINT discussion_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE discussion_like
+(
+    discussion_id INT,
+    user_id       INT,
+    CONSTRAINT discussion_like_pk PRIMARY KEY (discussion_id, user_id),
+    CONSTRAINT discussion_like_discussion_fk FOREIGN KEY (discussion_id) references discussion (id),
+    CONSTRAINT discussion_like_user_fk FOREIGN KEY (user_id) references user_account (id)
+);
+
+CREATE SEQUENCE discussion_reply_id_seq;
+CREATE TABLE discussion_reply
+(
+    id            INT     default discussion_reply_id_seq.nextval NOT NULL,
+    reply         varchar                                         NOT NULL,
+    discussion_id INT                                             NOT NULL,
+    date_posted   TIMESTAMP,
+    likes         INT     default 0,
+    user_id       BIGINT                                          NOT NULL,
+    active        BOOLEAN default true                            NOT NULL,
+    CONSTRAINT discussion_reply_pk PRIMARY KEY (id),
+    CONSTRAINT discussion_reply_discussion_fk FOREIGN KEY (discussion_id) REFERENCES discussion (id)
 );
 
 

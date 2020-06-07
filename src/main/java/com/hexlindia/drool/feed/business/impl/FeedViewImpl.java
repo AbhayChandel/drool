@@ -2,6 +2,8 @@ package com.hexlindia.drool.feed.business.impl;
 
 import com.hexlindia.drool.article.business.api.ArticleView;
 import com.hexlindia.drool.article.view.ArticlePreview;
+import com.hexlindia.drool.discussion2.business.api.DiscussionView;
+import com.hexlindia.drool.discussion2.view.DiscussionPreview;
 import com.hexlindia.drool.feed.business.api.FeedView;
 import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
@@ -27,6 +29,8 @@ public class FeedViewImpl implements FeedView {
     private final ArticleFeedPreviewMapper articleFeedPreviewMapper;
     private final VideoView videoView;
     private final VideoFeedPreviewMapper videoFeedPreviewMapper;
+    private final DiscussionView discussionView;
+    private com.hexlindia.drool.feed.view.mapper.DiscussionFeedPreviewMapper DiscussionFeedPreviewMapper;
 
     @Override
     public List<FeedItemPreview> getFeedPage(int pageNumber, int pageSize) {
@@ -64,7 +68,8 @@ public class FeedViewImpl implements FeedView {
     }
 
     List<FeedItemPreview> getDiscussionItems(Set<Integer> itemIds) {
-        return Collections.emptyList();
+        List<DiscussionPreview> discussionPreviewList = discussionView.getDiscussionPreviews(new ArrayList<>(itemIds));
+        return DiscussionFeedPreviewMapper.toFeedPreviewList(discussionPreviewList);
     }
 
     Map<Integer, Set<Integer>> getItemGroupMap(Page<FeedEntity> feedItems) {

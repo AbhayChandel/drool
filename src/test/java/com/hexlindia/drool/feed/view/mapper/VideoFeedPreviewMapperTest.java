@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -26,5 +29,12 @@ class VideoFeedPreviewMapperTest {
         assertEquals("1.2k", feedItemPreview.getComments());
         assertEquals("300098", feedItemPreview.getUserProfilePreview().getId());
         assertEquals("buzzinga77", feedItemPreview.getUserProfilePreview().getUsername());
+    }
+
+    @Test
+    void toFeedPreviewList() {
+        List<VideoPreview> videoPreviewList = Arrays.asList(new VideoPreview(1, "", "", 1L, 1L, 1L, ""),
+                new VideoPreview(1, "", "", 1L, 1L, 1L, ""));
+        assertEquals(2, videoFeedPreviewMapper.toFeedPreviewList(videoPreviewList).size());
     }
 }

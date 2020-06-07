@@ -47,4 +47,14 @@ public class VideoEntity2 {
     @JoinColumn(name = "owner")
     private UserAccountEntity owner;
 
+    public void addComment(VideoCommentEntity2 comment) {
+        comments.add(comment);
+        comment.setVideo(this);
+    }
+
+    public void removeComment(VideoCommentEntity2 comment) {
+        comments.remove(comment);
+        comment.setVideo(null);
+    }
+
 }

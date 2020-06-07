@@ -1,6 +1,7 @@
 package com.hexlindia.drool.feed.business.impl;
 
 import com.hexlindia.drool.article.business.api.ArticleView;
+import com.hexlindia.drool.discussion2.business.api.DiscussionView;
 import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.entity.FeedEntityId;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
@@ -42,9 +43,12 @@ class FeedViewImplTest {
     @MockBean
     VideoFeedPreviewMapper videoFeedPreviewMapperMock;
 
+    @MockBean
+    DiscussionView discussionViewMock;
+
     @BeforeEach
     void setUp() {
-        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock, articleViewMock, articleFeedPreviewMapperMock, videoViewMock, videoFeedPreviewMapperMock));
+        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock, articleViewMock, articleFeedPreviewMapperMock, videoViewMock, videoFeedPreviewMapperMock, discussionViewMock));
     }
 
     @Test

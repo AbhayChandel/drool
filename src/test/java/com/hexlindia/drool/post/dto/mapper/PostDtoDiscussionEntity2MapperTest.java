@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class PostDtoDiscussionEntityMapperTest {
+class PostDtoDiscussionEntity2MapperTest {
 
     @Autowired
     PostDtoDiscussionEntityMapper postDtoDiscussionEntityMapper;
