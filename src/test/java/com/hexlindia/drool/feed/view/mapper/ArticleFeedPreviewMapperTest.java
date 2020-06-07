@@ -19,7 +19,8 @@ class ArticleFeedPreviewMapperTest {
 
     @Test
     void toFeedPreview() {
-        ArticlePreview articlePreview = new ArticlePreview(10000001, "This is an article to test mapper", 1222L, 556L, 100004L, "stylo");
+        ArticlePreview articlePreview = new ArticlePreview(10000001, "This is an article to test mapper", 1222L,
+                556L, 100004L, "stylo");
         FeedItemPreview feedItemPreview = articleFeedPreviewMapper.toFeedPreview(articlePreview);
         assertEquals("10000001", feedItemPreview.getId());
         assertEquals("article", feedItemPreview.getItemType());

@@ -5,6 +5,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "video")
@@ -21,10 +23,28 @@ public class VideoEntity2 {
     private String description;
     private String sourceVideoId;
     private LocalDateTime datePosted;
-    private int likes;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "video_like",
+            joinColumns = @JoinColumn(name = "video_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserAccountEntity> likes = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "video",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<VideoCommentEntity2> comments = new HashSet<>();
+
     private int views;
 
     @ManyToOne
     @JoinColumn(name = "owner")
     private UserAccountEntity owner;
+
 }

@@ -7,6 +7,9 @@ import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
 import com.hexlindia.drool.feed.view.FeedItemPreview;
 import com.hexlindia.drool.feed.view.mapper.ArticleFeedPreviewMapper;
+import com.hexlindia.drool.feed.view.mapper.VideoFeedPreviewMapper;
+import com.hexlindia.drool.video2.business.api.VideoView;
+import com.hexlindia.drool.video2.view.VideoPreview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,8 @@ public class FeedViewImpl implements FeedView {
     private final FeedRepository feedRepository;
     private final ArticleView articleView;
     private final ArticleFeedPreviewMapper articleFeedPreviewMapper;
+    private final VideoView videoView;
+    private final VideoFeedPreviewMapper videoFeedPreviewMapper;
 
     @Override
     public List<FeedItemPreview> getFeedPage(int pageNumber, int pageSize) {
@@ -49,7 +54,8 @@ public class FeedViewImpl implements FeedView {
     }
 
     List<FeedItemPreview> getVideoItems(Set<Integer> itemIds) {
-        return Collections.emptyList();
+        List<VideoPreview> videoPreviewList = videoView.getVideoPreviews(new ArrayList<>(itemIds));
+        return videoFeedPreviewMapper.toFeedPreviewList(videoPreviewList);
     }
 
     List<FeedItemPreview> getArticleItems(Set<Integer> itemIds) {
@@ -60,7 +66,6 @@ public class FeedViewImpl implements FeedView {
     List<FeedItemPreview> getDiscussionItems(Set<Integer> itemIds) {
         return Collections.emptyList();
     }
-
 
     Map<Integer, Set<Integer>> getItemGroupMap(Page<FeedEntity> feedItems) {
         Map<Integer, Set<Integer>> itemGroups = new HashMap<>();

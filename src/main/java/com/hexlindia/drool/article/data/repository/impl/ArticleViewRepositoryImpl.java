@@ -16,8 +16,6 @@ public class ArticleViewRepositoryImpl implements ArticleViewRepository {
 
     @Override
     public List<ArticlePreview> getArticlePreviews(List<Integer> idList) {
-        System.out.println(em.createQuery("select count(c.id) from ArticleCommentEntity2 c where c.article = '2000001'")
-                .getSingleResult());
 
         return em.createQuery("select new com.hexlindia.drool.article.view.ArticlePreview(a.id, a.title, count(DISTINCT l.id)," +
                 " count(DISTINCT c.id), o.id, o.username)" +

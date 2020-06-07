@@ -1,5 +1,6 @@
-package com.hexlindia.drool.article.data.entity;
+package com.hexlindia.drool.video2.data.entity;
 
+import com.hexlindia.drool.article.data.entity.ArticleEntity2;
 import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import lombok.Data;
 
@@ -7,13 +8,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "article_comment")
+@Table(name = "video_comment")
 @Data
-public class ArticleCommentEntity2 {
+public class VideoCommentEntity2 {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_comment_id_generator")
-    @SequenceGenerator(name = "article_comment_id_generator", sequenceName = "article_comment_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "video_comment_id_generator")
+    @SequenceGenerator(name = "video_comment_id_generator", sequenceName = "video_comment_id_seq", allocationSize = 1)
     private Integer id;
 
     private String comment;
@@ -26,13 +27,13 @@ public class ArticleCommentEntity2 {
     private UserAccountEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ArticleEntity2 article;
+    private ArticleEntity2 video;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ArticleCommentEntity2 )) return false;
-        return id != null && id.equals(((ArticleCommentEntity2) o).getId());
+        if (!(o instanceof VideoCommentEntity2)) return false;
+        return id != null && id.equals(((VideoCommentEntity2) o).getId());
     }
 
     @Override

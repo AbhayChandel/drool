@@ -5,6 +5,8 @@ import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.entity.FeedEntityId;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
 import com.hexlindia.drool.feed.view.mapper.ArticleFeedPreviewMapper;
+import com.hexlindia.drool.feed.view.mapper.VideoFeedPreviewMapper;
+import com.hexlindia.drool.video2.business.api.VideoView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,9 +36,15 @@ class FeedViewImplTest {
     @MockBean
     ArticleFeedPreviewMapper articleFeedPreviewMapperMock;
 
+    @MockBean
+    VideoView videoViewMock;
+
+    @MockBean
+    VideoFeedPreviewMapper videoFeedPreviewMapperMock;
+
     @BeforeEach
     void setUp() {
-        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock, articleViewMock, articleFeedPreviewMapperMock));
+        feedViewSpy = spy(new FeedViewImpl(feedRepositoryMock, articleViewMock, articleFeedPreviewMapperMock, videoViewMock, videoFeedPreviewMapperMock));
     }
 
     @Test

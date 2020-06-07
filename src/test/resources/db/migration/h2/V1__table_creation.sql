@@ -72,6 +72,29 @@ CREATE TABLE video
     CONSTRAINT video_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE video_like
+(
+    video_id INT,
+    user_id  INT,
+    CONSTRAINT video_like_pk PRIMARY KEY (video_id, user_id),
+    CONSTRAINT video_like_video_fk FOREIGN KEY (video_id) references video (id),
+    CONSTRAINT video_like_user_fk FOREIGN KEY (user_id) references user_account (id)
+);
+
+CREATE SEQUENCE video_comment_id_seq;
+CREATE TABLE video_comment
+(
+    id          INT     default video_comment_id_seq.nextval NOT NULL,
+    comment     varchar                                      NOT NULL,
+    video_id    INT                                          NOT NULL,
+    date_posted TIMESTAMP,
+    likes       INT     default 0,
+    user_id     BIGINT                                       NOT NULL,
+    active      BOOLEAN default true                         NOT NULL,
+    CONSTRAINT video_comment_pk PRIMARY KEY (id),
+    CONSTRAINT video_comment_video_fk FOREIGN KEY (video_id) REFERENCES video (id)
+);
+
 CREATE SEQUENCE article_id_seq;
 CREATE TABLE article
 (
@@ -98,7 +121,7 @@ CREATE TABLE article_like
 CREATE SEQUENCE article_comment_id_seq;
 CREATE TABLE article_comment
 (
-    id          BIGINT  default article_comment_id_seq.nextval NOT NULL,
+    id          INT     default article_comment_id_seq.nextval NOT NULL,
     comment     varchar                                        NOT NULL,
     article_id  INT                                            NOT NULL,
     date_posted TIMESTAMP,
@@ -133,20 +156,6 @@ CREATE TABLE post_type
     id   INT,
     type VARCHAR(15),
     CONSTRAINT post_type_pk PRIMARY KEY (id)
-);
-
-CREATE SEQUENCE video_comment_id_seq;
-CREATE TABLE video_comment
-(
-    id          BIGINT  default video_comment_id_seq.nextval NOT NULL,
-    comment     varchar                                      NOT NULL,
-    post_id     BIGINT                                       NOT NULL,
-    date_posted TIMESTAMP,
-    likes       INT     default 0,
-    user_id     BIGINT                                       NOT NULL,
-    active      BOOLEAN default true                         NOT NULL,
-    CONSTRAINT video_comment_pk PRIMARY KEY (id),
-    CONSTRAINT video_comment_video_fk FOREIGN KEY (post_id) REFERENCES post (id)
 );
 
 

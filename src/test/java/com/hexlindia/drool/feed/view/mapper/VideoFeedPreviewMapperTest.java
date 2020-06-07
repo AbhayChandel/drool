@@ -1,0 +1,30 @@
+package com.hexlindia.drool.feed.view.mapper;
+
+import com.hexlindia.drool.feed.view.FeedItemPreview;
+import com.hexlindia.drool.video2.view.VideoPreview;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+class VideoFeedPreviewMapperTest {
+
+    @Autowired
+    VideoFeedPreviewMapper videoFeedPreviewMapper;
+
+    @Test
+    void toFeedPreview() {
+        VideoPreview videoPreview = new VideoPreview(103456001, "This is a video to test mapper", "se56z45", 23546L,
+                1234, 300098, "buzzinga77");
+        FeedItemPreview feedItemPreview = videoFeedPreviewMapper.toFeedPreview(videoPreview);
+        assertEquals("103456001", feedItemPreview.getId());
+        assertEquals("video", feedItemPreview.getItemType());
+        assertEquals("This is a video to test mapper", feedItemPreview.getTitle());
+        assertEquals("23.5k", feedItemPreview.getLikes());
+        assertEquals("1.2k", feedItemPreview.getComments());
+        assertEquals("300098", feedItemPreview.getUserProfilePreview().getId());
+        assertEquals("buzzinga77", feedItemPreview.getUserProfilePreview().getUsername());
+    }
+}

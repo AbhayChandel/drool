@@ -48,6 +48,20 @@ values (1000001, 'How to pick the right shade for your skin tone', 'This is a gu
 insert into video(id, title, description, source_video_id, owner)
 values (1000002, 'Top ten lipstick picks for this summer', 'Here is the list of all the shades', 'anu56sd', 2);
 
+insert into video_like(video_id, user_id)
+values (1000001, 1);
+insert into video_like(video_id, user_id)
+values (1000001, 2);
+insert into video_like(video_id, user_id)
+values (1000001, 3);
+
+insert into video_comment(id, comment, video_id, date_posted, likes, user_id, active)
+values (301, 'Great tips. thank you so much.', 1000001, now(), 0, 3, true);
+insert into video_comment(id, comment, video_id, date_posted, likes, user_id, active)
+values (302, 'Wow !! I really like all those colors', 1000001, now(), 0, 3, true);
+insert into video_comment(id, comment, video_id, date_posted, likes, user_id, active)
+values (303, 'I have 3 of those shades', 1000001, now(), 0, 2, true);
+
 insert into article(id, title, body, cover_picture, owner)
 values (2000001, 'My favorite lipsticks for th fall', 'He is the detailed guide', 'd6dj5j.jps', 2);
 insert into article(id, title, body, cover_picture, owner)
@@ -77,15 +91,6 @@ values (102, 2, 'How to choose the right shade', 3, 'article', 'xsztiz.jpg',
 insert into post(id, type, title, owner, d_type, cover_picture, text, views, likes)
 values (103, 3, 'Which is the best body lotion for dry skin?', 1, 'discussion', 'discuss.jpg',
         'I have shortlisted the following lotions', 12345, 126);
-
-insert into video_comment(id, comment, post_id, date_posted, user_id, active)
-values (11001, 'I liked all the shades in this series', 101, now(), 3, true);
-insert into video_comment(id, comment, post_id, date_posted, user_id, active)
-values (11002, 'Can you also do the video review for LOreal as well', 101, now(), 1, true);
-insert into video_comment(id, comment, post_id, date_posted, user_id, active)
-values (11003, 'Enjoyed this review a lot great job', 101, now(), 3, true);
-insert into video_comment(id, comment, post_id, date_posted, user_id, active)
-values (11004, 'What a great honest review. really liked it.', 101, now(), 1, true);
 
 insert into collection(id, name, about, visibility, owner)
 values (1001, 'Lipsticks', 'all about lipsticks', 2, 3);
