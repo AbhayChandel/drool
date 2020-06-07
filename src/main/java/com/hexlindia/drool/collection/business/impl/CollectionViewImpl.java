@@ -14,6 +14,6 @@ public class CollectionViewImpl implements com.hexlindia.drool.collection.busine
     @Override
     public CollectionView findById(int id) {
         int pageSize = 5;
-        return new CollectionView(collectionViewRepository.getVideos(id, 0, pageSize), collectionViewRepository.getArticles(id, 0, pageSize));
+        return new CollectionView(collectionViewRepository.getVideos(id, 0, pageSize), collectionViewRepository.getArticles(id, 0, pageSize), collectionViewRepository.getDiscussions(id, 0, pageSize));
     }
 }

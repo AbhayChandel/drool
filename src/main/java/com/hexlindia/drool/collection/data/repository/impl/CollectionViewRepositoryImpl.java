@@ -2,6 +2,7 @@ package com.hexlindia.drool.collection.data.repository.impl;
 
 import com.hexlindia.drool.article.view.ArticleMinimalPreview;
 import com.hexlindia.drool.collection.data.repository.api.CollectionViewRepository;
+import com.hexlindia.drool.discussion2.view.DiscussionMinimalPreview;
 import com.hexlindia.drool.video2.view.VideoMinimalPreview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,16 @@ public class CollectionViewRepositoryImpl implements CollectionViewRepository {
     public List<VideoMinimalPreview> getVideos(int id, int firstResult, int resultSetSize) {
         return em.createQuery("select new com.hexlindia.drool.video2.view.VideoMinimalPreview(v.id, v.title, v.sourceVideoId) " +
                 "from collection c JOIN c.posts.video v where c.id = :id and v.active = true")
+                .setParameter("id", id)
+                .setFirstResult(firstResult)
+                .setMaxResults(resultSetSize)
+                .getResultList();
+    }
+
+    @Override
+    public List<DiscussionMinimalPreview> getDiscussions(int id, int firstResult, int resultSetSize) {
+        return em.createQuery("select new com.hexlindia.drool.discussion2.view.DiscussionMinimalPreview(d.id, d.title, d.coverPicture) " +
+                "from collection c JOIN c.posts.discussion d where c.id = :id and d.active = true")
                 .setParameter("id", id)
                 .setFirstResult(firstResult)
                 .setMaxResults(resultSetSize)

@@ -1,6 +1,7 @@
 package com.hexlindia.drool.collection.data.repository.impl;
 
 import com.hexlindia.drool.article.view.ArticleMinimalPreview;
+import com.hexlindia.drool.discussion2.view.DiscussionMinimalPreview;
 import com.hexlindia.drool.video2.view.VideoMinimalPreview;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,11 @@ class CollectionViewRepositoryImplTest {
     void getVideos() {
         List<VideoMinimalPreview> videos = collectionViewRepository.getVideos(1001, 0, 10);
         assertEquals(2, videos.size());
+    }
+
+    @Test
+    void getDiscussions() {
+        List<DiscussionMinimalPreview> discussions = collectionViewRepository.getDiscussions(1001, 0, 10);
+        assertEquals(2, discussions.size());
     }
 }
