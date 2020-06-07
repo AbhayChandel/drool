@@ -35,6 +35,7 @@ class ArticleViewRepositoryImplTest {
         assertEquals("My favorite lipsticks for th fall", articlePreview.getTitle());
         assertEquals("2", articlePreview.getLikes());
         assertEquals("4", articlePreview.getComments());
+        assertEquals("24, May 2019", articlePreview.getDatePosted());
         assertEquals("2", articlePreview.getUserProfilePreview().getId());
         assertEquals("priyankasingh", articlePreview.getUserProfilePreview().getUsername());
     }

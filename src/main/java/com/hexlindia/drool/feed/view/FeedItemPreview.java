@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.user.view.UserProfilePreview;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class FeedItemPreview {
     private String id;
@@ -12,7 +14,10 @@ public class FeedItemPreview {
     private String sourceVideoId;
     private String likes;
     private String comments;
+    private LocalDateTime datePosted;
 
     @JsonProperty("user")
     private UserProfilePreview userProfilePreview;
+
+
 }

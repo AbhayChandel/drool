@@ -17,12 +17,12 @@ public class VideoViewRepositoryImpl implements VideoViewRepository {
     @Override
     public List<VideoPreview> getVideoPreviews(List<Integer> idList) {
         return em.createQuery("select new com.hexlindia.drool.video2.view.VideoPreview(v.id, v.title, v.sourceVideoId," +
-                " count(DISTINCT l.id), count(DISTINCT c.id), o.id, o.username)" +
+                " count(DISTINCT l.id), count(DISTINCT c.id), v.datePosted, o.id, o.username)" +
                 " from VideoEntity2 v JOIN v.owner o" +
                 " LEFT JOIN v.likes l" +
                 " LEFT JOIN v.comments c" +
                 " where v.id IN (:idList) and v.active = true" +
-                " group by v.id")
+                " group by v.id, o.id")
                 .setParameter("idList", idList)
                 .getResultList();
     }

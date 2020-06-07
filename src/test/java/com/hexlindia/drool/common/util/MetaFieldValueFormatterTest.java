@@ -78,4 +78,10 @@ class MetaFieldValueFormatterTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         assertEquals("15 Feb, 2017", MetaFieldValueFormatter.getDateInDayMonCommaYear(LocalDate.parse("2017-02-15", formatter)));
     }
+
+    @Test
+    void toLocalDateTime() {
+        assertEquals(LocalDateTime.of(2017, 02, 15, 11, 14), MetaFieldValueFormatter.toLocalDateTime("15 Feb, 2017 11:14 AM"));
+
+    }
 }

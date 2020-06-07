@@ -42,11 +42,12 @@ values (103, 'Deactivated');
 insert into user_account_status
 values (3, 102, 'Spamming');
 
-insert into video(id, title, description, source_video_id, owner)
+insert into video(id, title, description, source_video_id, date_posted, owner)
 values (1000001, 'How to pick the right shade for your skin tone', 'This is a guide to pick the best lipstick shades',
-        'zdtx83s', 1);
-insert into video(id, title, description, source_video_id, owner)
-values (1000002, 'Top ten lipstick picks for this summer', 'Here is the list of all the shades', 'anu56sd', 2);
+        'zdtx83s', '2020-06-07 19:10:25-07', 1);
+insert into video(id, title, description, source_video_id, date_posted, owner)
+values (1000002, 'Top ten lipstick picks for this summer', 'Here is the list of all the shades', 'anu56sd',
+        '2020-06-06 19:10:25-07', 2);
 
 insert into video_like(video_id, user_id)
 values (1000001, 1);
@@ -62,10 +63,12 @@ values (302, 'Wow !! I really like all those colors', 1000001, now(), 0, 3, true
 insert into video_comment(id, comment, video_id, date_posted, likes, user_id, active)
 values (303, 'I have 3 of those shades', 1000001, now(), 0, 2, true);
 
-insert into article(id, title, body, cover_picture, owner)
-values (2000001, 'My favorite lipsticks for th fall', 'He is the detailed guide', 'd6dj5j.jps', 2);
-insert into article(id, title, body, cover_picture, owner)
-values (2000002, 'My favorite lipsticks for th winter', 'He is the detailed guide', 'a56js.jps', 3);
+insert into article(id, title, body, cover_picture, date_posted, owner)
+values (2000001, 'My favorite lipsticks for th fall', 'He is the detailed guide', 'd6dj5j.jps',
+        '2020-06-05 19:10:25-07', 2);
+insert into article(id, title, body, cover_picture, date_posted, owner)
+values (2000002, 'My favorite lipsticks for th winter', 'He is the detailed guide', 'a56js.jps',
+        '2020-06-04 19:10:25-07', 3);
 
 insert into article_like(article_id, user_id)
 values (2000001, 1);
@@ -83,10 +86,10 @@ values (304, 'Really enjoyed the article', 2000001, now(), 0, 1, true);
 
 insert into discussion(id, title, details, cover_picture, date_posted, owner, active)
 values (40001, 'Where to buy genuine chanel products in Delhi', 'I have found Chanel at following locations',
-        'zdtx83s.jpg', now(), 1, true);
+        'zdtx83s.jpg', '2020-06-03 19:10:25-07', 1, true);
 insert into discussion(id, title, details, cover_picture, date_posted, owner, active)
 values (40002, 'How can I get fairer skin', '',
-        'sg675j.jpg', now(), 2, true);
+        'sg675j.jpg', '2020-06-02 19:10:25-07', 2, true);
 
 insert into discussion_like(discussion_id, user_id)
 values (40002, 3);
@@ -127,6 +130,11 @@ values (1001, 2000001);
 insert into collection_article(collection_id, article_id)
 values (1001, 2000002);
 
+insert into collection_discussion(collection_id, discussion_id)
+values (1001, 40001);
+insert into collection_discussion(collection_id, discussion_id)
+values (1001, 40002);
+
 insert into feed(post_id, post_type, date_posted)
 values (1000001, 1, '2016-05-22 19:10:25-07');
 insert into feed(post_id, post_type, date_posted)
@@ -135,6 +143,10 @@ insert into feed(post_id, post_type, date_posted)
 values (2000001, 2, '2016-05-24 19:10:25-07');
 insert into feed(post_id, post_type, date_posted)
 values (2000002, 2, '2016-05-25 19:10:25-07');
+insert into feed(post_id, post_type, date_posted)
+values (40001, 3, '2016-05-24 19:10:25-07');
+insert into feed(post_id, post_type, date_posted)
+values (40002, 3, '2016-05-25 19:10:25-07');
 
 insert into POST_TYPE(id, type)
 values (1, 'video');

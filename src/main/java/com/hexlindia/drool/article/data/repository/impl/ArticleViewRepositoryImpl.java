@@ -18,12 +18,12 @@ public class ArticleViewRepositoryImpl implements ArticleViewRepository {
     public List<ArticlePreview> getArticlePreviews(List<Integer> idList) {
 
         return em.createQuery("select new com.hexlindia.drool.article.view.ArticlePreview(a.id, a.title, count(DISTINCT l.id)," +
-                " count(DISTINCT c.id), o.id, o.username)" +
+                " count(DISTINCT c.id), a.datePosted, o.id, o.username)" +
                 " from ArticleEntity2 a JOIN a.owner o" +
                 " LEFT JOIN a.likes l" +
                 " LEFT JOIN a.comments c" +
                 " where a.id IN (:idList) and a.active = true" +
-                " group by a.id")
+                " group by a.id, o.id")
                 .setParameter("idList", idList)
                 .getResultList();
     }

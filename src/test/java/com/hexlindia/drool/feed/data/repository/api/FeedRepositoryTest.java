@@ -21,7 +21,7 @@ class FeedRepositoryTest {
     void getFeedEntities() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("datePosted").descending());
         Page<FeedEntity> feedEntityList = feedRepository.findAll(pageable);
-        assertEquals(4, feedEntityList.getTotalElements());
+        assertEquals(6, feedEntityList.getTotalElements());
     }
 
 }

@@ -9,6 +9,7 @@ import com.hexlindia.drool.feed.data.entity.FeedEntity;
 import com.hexlindia.drool.feed.data.repository.api.FeedRepository;
 import com.hexlindia.drool.feed.view.FeedItemPreview;
 import com.hexlindia.drool.feed.view.mapper.ArticleFeedPreviewMapper;
+import com.hexlindia.drool.feed.view.mapper.DiscussionFeedPreviewMapper;
 import com.hexlindia.drool.feed.view.mapper.VideoFeedPreviewMapper;
 import com.hexlindia.drool.video2.business.api.VideoView;
 import com.hexlindia.drool.video2.view.VideoPreview;
@@ -30,7 +31,7 @@ public class FeedViewImpl implements FeedView {
     private final VideoView videoView;
     private final VideoFeedPreviewMapper videoFeedPreviewMapper;
     private final DiscussionView discussionView;
-    private com.hexlindia.drool.feed.view.mapper.DiscussionFeedPreviewMapper DiscussionFeedPreviewMapper;
+    private final DiscussionFeedPreviewMapper discussionFeedPreviewMapper;
 
     @Override
     public List<FeedItemPreview> getFeedPage(int pageNumber, int pageSize) {
@@ -53,7 +54,7 @@ public class FeedViewImpl implements FeedView {
                 feedItemPreviews.addAll(getDiscussionItems(group.getValue()));
             }
         }
-        //Collections.sort(feedItemPreviews);
+        sortByDateDesc(feedItemPreviews);
         return feedItemPreviews;
     }
 
@@ -69,7 +70,7 @@ public class FeedViewImpl implements FeedView {
 
     List<FeedItemPreview> getDiscussionItems(Set<Integer> itemIds) {
         List<DiscussionPreview> discussionPreviewList = discussionView.getDiscussionPreviews(new ArrayList<>(itemIds));
-        return DiscussionFeedPreviewMapper.toFeedPreviewList(discussionPreviewList);
+        return discussionFeedPreviewMapper.toFeedPreviewList(discussionPreviewList);
     }
 
     Map<Integer, Set<Integer>> getItemGroupMap(Page<FeedEntity> feedItems) {
@@ -86,6 +87,15 @@ public class FeedViewImpl implements FeedView {
             itemGroups.put(groupType, items);
         }
         return itemGroups;
+    }
+
+    void sortByDateDesc(List<FeedItemPreview> feedItemPreviews) {
+        feedItemPreviews.sort((m1, m2) -> {
+            if (m1.getDatePosted() == m2.getDatePosted()) {
+                return 0;
+            }
+            return m1.getDatePosted().isBefore(m2.getDatePosted()) ? 1 : -1;
+        });
     }
 
 

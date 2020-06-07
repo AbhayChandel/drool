@@ -225,6 +225,15 @@ CREATE TABLE collection_article
     CONSTRAINT collection_article_article_fk FOREIGN KEY (article_id) references article (id)
 );
 
+CREATE TABLE collection_discussion
+(
+    collection_id INT,
+    discussion_id INT,
+    CONSTRAINT collection_discussion_pk PRIMARY KEY (collection_id, discussion_id),
+    CONSTRAINT collection_discussion_collection_fk FOREIGN KEY (collection_id) references collection (id),
+    CONSTRAINT collection_discussion_discussion_fk FOREIGN KEY (discussion_id) references discussion (id)
+);
+
 CREATE TABLE visibility
 (
     id         INT         NOT NULL,

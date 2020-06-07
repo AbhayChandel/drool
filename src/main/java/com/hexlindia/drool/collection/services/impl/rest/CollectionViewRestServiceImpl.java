@@ -1,5 +1,6 @@
-package com.hexlindia.drool.collection.services.api.rest;
+package com.hexlindia.drool.collection.services.impl.rest;
 
+import com.hexlindia.drool.collection.services.api.rest.CollectionViewRestService;
 import com.hexlindia.drool.collection.view.CollectionView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

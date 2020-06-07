@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,22 +21,23 @@ class ArticleFeedPreviewMapperTest {
     @Test
     void toFeedPreview() {
         ArticlePreview articlePreview = new ArticlePreview(10000001, "This is an article to test mapper", 1222L,
-                556L, 100004L, "stylo");
+                556L, LocalDateTime.of(2017, 02, 15, 18, 14), 100004L, "stylo");
         FeedItemPreview feedItemPreview = articleFeedPreviewMapper.toFeedPreview(articlePreview);
         assertEquals("10000001", feedItemPreview.getId());
         assertEquals("article", feedItemPreview.getItemType());
         assertEquals("This is an article to test mapper", feedItemPreview.getTitle());
         assertEquals("1.2k", feedItemPreview.getLikes());
         assertEquals("556", feedItemPreview.getComments());
+        assertEquals(LocalDateTime.of(2017, 02, 15, 18, 14), feedItemPreview.getDatePosted());
         assertEquals("100004", feedItemPreview.getUserProfilePreview().getId());
         assertEquals("stylo", feedItemPreview.getUserProfilePreview().getUsername());
     }
 
     @Test
     void toFeedPreviewList() {
-        List<ArticlePreview> articlePreviewList = Arrays.asList(new ArticlePreview(1, "", 1L, 1L, 1L, ""),
-                new ArticlePreview(1, "", 1L, 1L, 1L, ""),
-                new ArticlePreview(1, "", 1L, 1L, 1L, ""));
+        List<ArticlePreview> articlePreviewList = Arrays.asList(new ArticlePreview(1, "", 1L, 1L, null, 1L, ""),
+                new ArticlePreview(1, "", 1L, 1L, null, 1L, ""),
+                new ArticlePreview(1, "", 1L, 1L, null, 1L, ""));
         assertEquals(3, articleFeedPreviewMapper.toFeedPreviewList(articlePreviewList).size());
     }
 }
