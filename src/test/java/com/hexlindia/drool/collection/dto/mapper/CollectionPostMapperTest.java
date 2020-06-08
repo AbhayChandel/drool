@@ -1,6 +1,6 @@
 package com.hexlindia.drool.collection.dto.mapper;
 
-import com.hexlindia.drool.collection.data.entity.CollectionEntity;
+import com.hexlindia.drool.collection.data.entity.CollectionEntity2;
 import com.hexlindia.drool.collection.dto.CollectionPostDto;
 import com.hexlindia.drool.common.data.constant.Visibility;
 import com.hexlindia.drool.common.data.entity.VisibilityEntity;
@@ -50,16 +50,16 @@ class CollectionPostMapperTest {
         collectionPostDto.setVisibility(Visibility.PUBLIC);
         when(visibilityRepositoryMock.findByVisibility(any())).thenReturn(Optional.of(new VisibilityEntity()));
 
-        CollectionEntity collectionEntitySpy = spy(new CollectionEntity());
-        collectionPostMapper.setVisibilityInEntity(collectionPostDto, collectionEntitySpy);
+        CollectionEntity2 collectionEntity2Spy = spy(new CollectionEntity2());
+        collectionPostMapper.setVisibilityInEntity(collectionPostDto, collectionEntity2Spy);
 
-        verify(collectionEntitySpy, times(1)).setVisibility(any());
+        verify(collectionEntity2Spy, times(1)).setVisibility(any());
     }
 
     @Test
     void setOwner_OwnerIdIsNull() {
         assertThrows(RequestParameterNotValidException.class, () -> {
-            collectionPostMapper.setOwner(new CollectionPostDto(), new CollectionEntity());
+            collectionPostMapper.setOwner(new CollectionPostDto(), new CollectionEntity2());
         });
     }
 
@@ -69,7 +69,7 @@ class CollectionPostMapperTest {
         collectionPostDto.setOwnerId("1001");
         when(userAccountRepositoryMock.findById(any())).thenReturn(Optional.empty());
         assertThrows(UserAccountNotFoundException.class, () -> {
-            collectionPostMapper.setOwner(collectionPostDto, new CollectionEntity());
+            collectionPostMapper.setOwner(collectionPostDto, new CollectionEntity2());
         });
     }
 
@@ -79,10 +79,10 @@ class CollectionPostMapperTest {
         collectionPostDto.setOwnerId("100");
         when(userAccountRepositoryMock.findById(any())).thenReturn(Optional.of(new UserAccountEntity()));
 
-        CollectionEntity collectionEntitySpy = spy(new CollectionEntity());
-        collectionPostMapper.setOwner(collectionPostDto, collectionEntitySpy);
+        CollectionEntity2 collectionEntity2Spy = spy(new CollectionEntity2());
+        collectionPostMapper.setOwner(collectionPostDto, collectionEntity2Spy);
 
-        verify(collectionEntitySpy, times(1)).setOwner(any());
+        verify(collectionEntity2Spy, times(1)).setOwner(any());
     }
 
     @Test
@@ -101,15 +101,16 @@ class CollectionPostMapperTest {
         userAccountEntityMock.setId(11L);
         when(userAccountRepositoryMock.findById(any())).thenReturn(Optional.of(userAccountEntityMock));
 
-        CollectionEntity collectionEntity = collectionPostMapper.toEntity(collectionPostDto);
+        CollectionEntity2 collectionEntity2 = collectionPostMapper.toEntity(collectionPostDto);
 
-        assertEquals(10987, collectionEntity.getId());
-        assertEquals("Chic Styles", collectionEntity.getName());
-        assertEquals("This is about a Chic style", collectionEntity.getAbout());
-        assertEquals(4, collectionEntity.getVisibility().getId());
-        assertEquals(11L, collectionEntity.getOwner().getId());
+        assertEquals(10987, collectionEntity2.getId());
+        assertEquals("Chic Styles", collectionEntity2.getName());
+        assertEquals("This is about a Chic style", collectionEntity2.getAbout());
+        assertEquals(4, collectionEntity2.getVisibility().getId());
+        assertEquals(11L, collectionEntity2.getOwner().getId());
     }
 
+    // These test correspond to toDto mapping which is currently commented out as not being used
     /*@Test
     void setVisibilityInDto_public(){
         CollectionPostDto collectionPostDto = new CollectionPostDto();

@@ -1,3 +1,4 @@
+
 CREATE SEQUENCE user_account_id_seq;
 ALTER SEQUENCE user_account_id_seq RESTART WITH 10001001;
 

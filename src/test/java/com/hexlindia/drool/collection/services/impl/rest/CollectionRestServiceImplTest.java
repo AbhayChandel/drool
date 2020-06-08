@@ -3,6 +3,7 @@ package com.hexlindia.drool.collection.services.impl.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.collection.business.api.Collection;
 import com.hexlindia.drool.collection.dto.CollectionPostDto;
+import com.hexlindia.drool.common.constant.PostType2;
 import com.hexlindia.drool.common.error.ErrorResult;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ class CollectionRestServiceImplTest {
     @Test
     void addPost_missingPostId() throws Exception {
         CollectionPostDto collectionPostDto = new CollectionPostDto();
+        collectionPostDto.setPostType(PostType2.ARTICLE);
         String requestBody = objectMapper.writeValueAsString(collectionPostDto);
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(getAddPostUri())
                 .content(requestBody).contentType(MediaType.APPLICATION_JSON))

@@ -19,13 +19,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import javax.persistence.EntityManager;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CollectionIT {
+public class CollectionViewIT {
 
     @Value("${rest.uri.version}")
     String restUriVersion;
@@ -37,9 +35,6 @@ public class CollectionIT {
     private TestRestTemplate restTemplate;
 
     private String authToken;
-
-    @Autowired
-    EntityManager em;
 
     @BeforeEach
     private void setup() throws JSONException, JsonProcessingException {
@@ -64,42 +59,25 @@ public class CollectionIT {
         collectionPostDto.setAbout("All about street fashion");
         collectionPostDto.setVisibility(Visibility.PUBLIC);
         collectionPostDto.setOwnerId("1");
+        collectionPostDto.setPostId("40002");
+        collectionPostDto.setPostType(PostType2.DISCUSSION);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + this.authToken);
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(collectionPostDto), headers);
+        ResponseEntity<Boolean> responseEntity = this.restTemplate.postForEntity(getAddPostUri(), request, Boolean.class);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertTrue(responseEntity.getBody());
+    }
+
+    @Test
+    void add_post_to_existing_collection() throws JsonProcessingException {
+        CollectionPostDto collectionPostDto = new CollectionPostDto();
+        collectionPostDto.setCollectionId("1001");
         collectionPostDto.setPostId("2000001");
         collectionPostDto.setPostType(PostType2.ARTICLE);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + this.authToken);
-        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(collectionPostDto), headers);
-        ResponseEntity<Boolean> responseEntity = this.restTemplate.postForEntity(getAddPostUri(), request, Boolean.class);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertTrue(responseEntity.getBody());
-    }
-
-    @Test
-    void add_video_post_to_existing_collection() throws JsonProcessingException {
-        CollectionPostDto collectionPostDto = new CollectionPostDto();
-        collectionPostDto.setCollectionId("1001");
-        collectionPostDto.setPostId("1000003");
-        collectionPostDto.setPostType(PostType2.VIDEO);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + this.authToken);
-        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(collectionPostDto), headers);
-        ResponseEntity<Boolean> responseEntity = this.restTemplate.postForEntity(getAddPostUri(), request, Boolean.class);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertTrue(responseEntity.getBody());
-    }
-
-    @Test
-    void add_discussion_post_to_existing_collection() throws JsonProcessingException {
-        CollectionPostDto collectionPostDto = new CollectionPostDto();
-        collectionPostDto.setCollectionId("1001");
-        collectionPostDto.setPostId("40003");
-        collectionPostDto.setPostType(PostType2.DISCUSSION);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

@@ -21,4 +21,5 @@ public class Posts {
 
     @ManyToMany
     private Set<DiscussionEntity2> discussion = new HashSet<>();
+
 }

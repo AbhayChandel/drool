@@ -1,7 +1,8 @@
 package com.hexlindia.drool.collection.dto.mapper;
 
-import com.hexlindia.drool.collection.data.entity.CollectionEntity;
+import com.hexlindia.drool.collection.data.entity.CollectionEntity2;
 import com.hexlindia.drool.collection.dto.CollectionPostDto;
+import com.hexlindia.drool.common.data.entity.Posts;
 import com.hexlindia.drool.common.data.entity.VisibilityEntity;
 import com.hexlindia.drool.common.data.repository.VisibilityRepository;
 import com.hexlindia.drool.common.error.exception.RequestParameterNotValidException;
@@ -27,6 +28,8 @@ public abstract class CollectionPostMapper {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
+
+    //UNCOMMENT THE TESTS AS WELL WHEN THIS IS UNCOMMENTED
 
     /*@Mapping(source = "id", target = "collectionId")
     @Mapping(source = "visibility", target = "visibility", ignore = true)
@@ -55,19 +58,24 @@ public abstract class CollectionPostMapper {
 
     @Mapping(source = "visibility", target = "visibility", ignore = true)
     @Mapping(source = "collectionId", target = "id")
-    public abstract CollectionEntity toEntity(CollectionPostDto collectionPostDto);
+    public abstract CollectionEntity2 toEntity(CollectionPostDto collectionPostDto);
 
     @AfterMapping
-    void afterToEntity(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity collectionEntity) {
-        setVisibilityInEntity(collectionPostDto, collectionEntity);
-        setOwner(collectionPostDto, collectionEntity);
+    void afterToEntity(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity2 collectionEntity2) {
+        setVisibilityInEntity(collectionPostDto, collectionEntity2);
+        setOwner(collectionPostDto, collectionEntity2);
+        setPost(collectionEntity2);
     }
 
-    void setVisibilityInEntity(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity collectionEntity) {
+    private void setPost(CollectionEntity2 collectionEntity2) {
+        collectionEntity2.setPosts(new Posts());
+    }
+
+    void setVisibilityInEntity(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity2 collectionEntity2) {
         if (collectionPostDto.getVisibility() != null) {
             Optional<VisibilityEntity> visibility = visibilityRepository.findByVisibility(collectionPostDto.getVisibility().toString().toLowerCase());
             if (visibility.isPresent()) {
-                collectionEntity.setVisibility(visibility.get());
+                collectionEntity2.setVisibility(visibility.get());
                 return;
             }
             log.error("Visibility '" + collectionPostDto.getVisibility().toString() + "' not found");
@@ -75,17 +83,17 @@ public abstract class CollectionPostMapper {
         }
     }
 
-    void setOwner(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity collectionEntity) {
+    void setOwner(CollectionPostDto collectionPostDto, @MappingTarget CollectionEntity2 collectionEntity2) {
         if (collectionPostDto.getOwnerId() != null) {
             Optional<UserAccountEntity> userAccount = userAccountRepository.findById(Long.valueOf(collectionPostDto.getOwnerId()));
             if (userAccount.isPresent()) {
-                collectionEntity.setOwner(userAccount.get());
+                collectionEntity2.setOwner(userAccount.get());
                 return;
             }
             log.error("User Account with id '" + collectionPostDto.getOwnerId() + "' not found. Location: " + this.getClass().getSimpleName());
             throw new UserAccountNotFoundException("User Account with id '" + collectionPostDto.getOwnerId() + "' not found");
         } else if (collectionPostDto.getCollectionId() == null) {
-            log.error("While mapping " + collectionPostDto.getClass().getSimpleName() + " to " + collectionEntity.getClass().getSimpleName() +
+            log.error("While mapping " + collectionPostDto.getClass().getSimpleName() + " to " + collectionEntity2.getClass().getSimpleName() +
                     " collectionId and ownerId both are empty");
             throw new RequestParameterNotValidException("OwnerId", "OwnerId cannot be NULL, If collectionId is null");
         }

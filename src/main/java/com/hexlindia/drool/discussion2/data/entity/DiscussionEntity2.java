@@ -1,7 +1,6 @@
 package com.hexlindia.drool.discussion2.data.entity;
 
 import com.hexlindia.drool.user.data.entity.UserAccountEntity;
-import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +9,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "discussion")
-@Data
 public class DiscussionEntity2 {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discussion_id_generator")
