@@ -1,8 +1,7 @@
 package com.hexlindia.drool.user.business;
 
-import com.hexlindia.drool.user.data.doc.UserAccountDoc;
+import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.data.repository.api.UserAccountRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +26,10 @@ class JwtUserDetailsServiceTest {
 
     @Test
     void testLoadUserByUsername_ValidCredentials() {
-        UserAccountDoc userAccountDoc = new UserAccountDoc();
-        userAccountDoc.setId(ObjectId.get());
-        userAccountDoc.setEmailId("sonam99@gmail.com");
-        userAccountDoc.setPassword("soni");
-        when(userAccountRepository.findByEmail("sonam99@gmail.com")).thenReturn(Optional.of(userAccountDoc));
+        UserAccountEntity userAuthenticationEntity = new UserAccountEntity();
+        userAuthenticationEntity.setEmail("sonam99@gmail.com");
+        userAuthenticationEntity.setPassword("soni");
+        when(userAccountRepository.findUser("sonam99@gmail.com")).thenReturn(Optional.of(userAuthenticationEntity));
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("sonam99@gmail.com");
         assertEquals("soni", userDetails.getPassword());
@@ -39,10 +37,10 @@ class JwtUserDetailsServiceTest {
 
     @Test
     void testLoadUserByUsername_InvalidCredentials() {
-        when(userAccountRepository.findByEmail("sonam99@gmail.com")).thenReturn(Optional.empty());
+        when(userAccountRepository.findUser("sonam99@gmail.com")).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
-            jwtUserDetailsService.loadUserByUsername("sonam99@gmail.com");
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("sonam99@gmail.com");
         });
     }
 }

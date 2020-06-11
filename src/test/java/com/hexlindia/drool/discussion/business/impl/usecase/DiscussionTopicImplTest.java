@@ -1,7 +1,7 @@
 package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -11,8 +11,8 @@ import com.hexlindia.drool.discussion.data.repository.api.DiscussionTopicReposit
 import com.hexlindia.drool.discussion.dto.DiscussionTopicDto;
 import com.hexlindia.drool.discussion.dto.mapper.DiscussionTopicDtoDocMapper;
 import com.hexlindia.drool.discussion.exception.DiscussionTopicNotFoundException;
+import com.hexlindia.drool.user.business.api.usecase.UserAccount;
 import com.hexlindia.drool.user.business.api.usecase.UserActivity;
-import com.hexlindia.drool.user.business.api.usecase.UserProfile;
 import com.hexlindia.drool.user.data.doc.ActionType;
 import com.hexlindia.drool.user.data.doc.UserRef;
 import org.bson.types.ObjectId;
@@ -51,14 +51,14 @@ class DiscussionTopicImplTest {
     private ActivityFeed activityFeedMock;
 
     @Mock
-    private UserProfile userProfileMock;
+    private UserAccount userAccountMock;
 
     @Mock
     private UserRefMapper userRefMapperMock;
 
     @BeforeEach
     void setUp() {
-        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock, userProfileMock, userRefMapperMock));
+        this.discussionTopicImplSpy = Mockito.spy(new DiscussionTopicImpl(this.discussionTopicRepository, this.discussionTopicDtoDocMapperMocked, userActivityMock, activityFeedMock, userAccountMock, userRefMapperMock));
     }
 
     @Test
@@ -103,7 +103,7 @@ class DiscussionTopicImplTest {
         assertEquals(discussionId, postRefArgumentCaptor.getValue().getId());
         assertEquals("THis is a test discusion title", postRefArgumentCaptor.getValue().getTitle());
         assertEquals(PostType.discussion, postRefArgumentCaptor.getValue().getType());
-        assertEquals(PostMedium.text, postRefArgumentCaptor.getValue().getMedium());
+        assertEquals(PostFormat.article, postRefArgumentCaptor.getValue().getMedium());
 
         ArgumentCaptor<DiscussionTopicDoc> discussionTopicDocArgumentCaptorActivityFeed = ArgumentCaptor.forClass(DiscussionTopicDoc.class);
         verify(this.activityFeedMock, times(1)).addDiscussion(discussionTopicDocArgumentCaptorActivityFeed.capture());

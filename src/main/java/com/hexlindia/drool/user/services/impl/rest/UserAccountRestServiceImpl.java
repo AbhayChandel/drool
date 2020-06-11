@@ -27,8 +27,8 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     }
 
     @Override
-    public ResponseEntity<UserAccountDto> findByEmail(String email) {
-        UserAccountDto userAccountDto = this.userAccount.findByEmail(email);
+    public ResponseEntity<UserAccountDto> findByEmail(String userIdentifier) {
+        UserAccountDto userAccountDto = this.userAccount.findUser(userIdentifier);
         return ResponseEntity.ok(userAccountDto);
     }
 }

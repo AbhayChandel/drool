@@ -3,7 +3,7 @@ package com.hexlindia.drool.product.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hexlindia.drool.common.dto.UserRefDto;
 import com.hexlindia.drool.product.business.impl.usecase.ReviewType;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +31,7 @@ public class ReviewDto {
     private TextReviewDto textReviewDto;
 
     @JsonProperty("videoReview")
-    private VideoDto videoDto;
+    private VideoDtoMOngo videoDtoMOngo;
 
     @JsonProperty("user")
     private UserRefDto userRefDto;

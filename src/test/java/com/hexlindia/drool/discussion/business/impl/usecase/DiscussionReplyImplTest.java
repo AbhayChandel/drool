@@ -2,7 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.data.doc.ReplyRef;
@@ -164,7 +164,7 @@ class DiscussionReplyImplTest {
         String reply = "This is going to be a great reply";
         discussionReplyDtoMocked.setReply(reply);
         ObjectId postId = ObjectId.get();
-        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostMedium.text, null));
+        discussionReplyDtoMocked.setPostRefDto(new PostRefDto(postId.toHexString(), "This is a test discussion", PostType.discussion, PostFormat.article, null));
         ObjectId userId = ObjectId.get();
         discussionReplyDtoMocked.setUserRefDto(new UserRefDto(userId.toHexString(), "Arpit"));
         when(this.discussionReplyRepositoryMocked.incrementLikes(any(), any())).thenReturn(301);

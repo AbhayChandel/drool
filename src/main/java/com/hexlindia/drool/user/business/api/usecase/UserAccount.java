@@ -8,5 +8,5 @@ public interface UserAccount {
 
     JwtResponse register(UserRegistrationDto userRegistrationDto);
 
-    UserAccountDto findByEmail(String email);
+    UserAccountDto findUser(String userIdentifier);
 }

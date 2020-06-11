@@ -1,6 +1,6 @@
 package com.hexlindia.drool.violation.data.repository.impl;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.user.data.doc.UserRef;
@@ -54,7 +54,7 @@ class ViolationRepositoryImplTest {
         ViolationReportDoc violationReportDoc = new ViolationReportDoc();
         violationReportDoc.setViolations(Arrays.asList("Bad Language", "Sexual Content"));
         ObjectId postId = ObjectId.get();
-        violationReportDoc.setPost(new PostRef(postId, "This is an ordinary comment", PostType.comment, PostMedium.text, LocalDateTime.now()));
+        violationReportDoc.setPost(new PostRef(postId, "This is an ordinary comment", PostType.comment, PostFormat.article, LocalDateTime.now()));
         ObjectId postOwnerId = ObjectId.get();
         violationReportDoc.setPostOwner(new UserRef(postOwnerId, "priyanka"));
         ObjectId reportingUserId = ObjectId.get();

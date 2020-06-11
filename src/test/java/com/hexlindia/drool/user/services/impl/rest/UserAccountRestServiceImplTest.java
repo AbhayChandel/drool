@@ -138,9 +138,7 @@ class UserAccountRestServiceImplTest {
         UserProfileDto userProfileDto = new UserProfileDto();
         userProfileDto.setCity("Chandigarh");
         userProfileDto.setGender("M");
-        userProfileDto.setMobile("9876543210");
         userProfileDto.setName("Ajay Singh");
-        userProfileDto.setUsername("Ajayboss");
 
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
         userRegistrationDto.setUserAccountDto(userAccountDto);
@@ -156,9 +154,7 @@ class UserAccountRestServiceImplTest {
         assertEquals("priya", userRegistrationDtoArgumentCaptor.getValue().getUserAccountDto().getPassword());
         assertEquals("Chandigarh", userRegistrationDtoArgumentCaptor.getValue().getUserProfileDto().getCity());
         assertEquals("M", userRegistrationDtoArgumentCaptor.getValue().getUserProfileDto().getGender());
-        assertEquals("9876543210", userRegistrationDtoArgumentCaptor.getValue().getUserProfileDto().getMobile());
         assertEquals("Ajay Singh", userRegistrationDtoArgumentCaptor.getValue().getUserProfileDto().getName());
-        assertEquals("Ajayboss", userRegistrationDtoArgumentCaptor.getValue().getUserProfileDto().getUsername());
 
     }
 
@@ -179,7 +175,7 @@ class UserAccountRestServiceImplTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindEmailUri() + "/sonam99@gmail.com"));
 
         ArgumentCaptor<String> emailArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.userAccount, times(1)).findByEmail(emailArgumentCaptor.capture());
+        verify(this.userAccount, times(1)).findUser(emailArgumentCaptor.capture());
         assertEquals("sonam99@gmail.com", emailArgumentCaptor.getValue());
     }
 
@@ -187,7 +183,7 @@ class UserAccountRestServiceImplTest {
     void findByEmail_ValidateJsonResponse() throws Exception {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setEmailId("sonam99@gmail.com");
-        when(this.userAccount.findByEmail("sonam99@gmail.com")).thenReturn(userAccountDto);
+        when(this.userAccount.findUser("sonam99@gmail.com")).thenReturn(userAccountDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get(getFindEmailUri() + "/sonam99@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.emailId").value("sonam99@gmail.com"));
@@ -198,6 +194,6 @@ class UserAccountRestServiceImplTest {
     }
 
     private String getFindEmailUri() {
-        return "/" + restUriVersion + "/accessall/user/account/find/email";
+        return "/" + restUriVersion + "/accessall/user/account/find";
     }
 }

@@ -2,7 +2,7 @@ package com.hexlindia.drool.video.services.impl.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexlindia.drool.user.filters.JwtValidationFilter;
-import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.business.api.Video;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;

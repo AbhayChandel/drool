@@ -1,6 +1,6 @@
 package com.hexlindia.drool.violation.dto.mapper;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.PostRefDto;
@@ -31,7 +31,7 @@ class ViolationReportMapperTest {
         ViolationReportDto violationReportDto = new ViolationReportDto();
         violationReportDto.setViolations(Arrays.asList("Bad Language", "Sexual Content"));
         ObjectId postId = ObjectId.get();
-        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", PostType.comment, PostMedium.text, null));
+        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", PostType.comment, PostFormat.article, null));
         ObjectId postOwnerId = ObjectId.get();
         violationReportDto.setPostOwner(new UserRefDto(postOwnerId.toHexString(), "priyanka"));
         ObjectId reportingUserId = ObjectId.get();
@@ -49,7 +49,7 @@ class ViolationReportMapperTest {
         assertEquals(postId, violationReportDoc.getPost().getId());
         assertEquals("This is an ordinary comment", violationReportDoc.getPost().getTitle());
         assertEquals(PostType.comment, violationReportDoc.getPost().getType());
-        assertEquals(PostMedium.text, violationReportDoc.getPost().getMedium());
+        assertEquals(PostFormat.article, violationReportDoc.getPost().getMedium());
         assertEquals(postOwnerId, violationReportDoc.getPostOwner().getId());
         assertEquals("priyanka", violationReportDoc.getPostOwner().getUsername());
         assertEquals(reportingUserId, violationReportDoc.getReportedBy().getId());
@@ -66,7 +66,7 @@ class ViolationReportMapperTest {
         violationReportDoc.setId(violationReportId);
         violationReportDoc.setViolations(Arrays.asList("Bad Language", "Sexual Content"));
         ObjectId postId = ObjectId.get();
-        violationReportDoc.setPost(new PostRef(postId, "This is an ordinary comment", PostType.comment, PostMedium.text, LocalDateTime.now()));
+        violationReportDoc.setPost(new PostRef(postId, "This is an ordinary comment", PostType.comment, PostFormat.article, LocalDateTime.now()));
         ObjectId postOwnerId = ObjectId.get();
         violationReportDoc.setPostOwner(new UserRef(postOwnerId, "priyanka"));
         ObjectId reportingUserId = ObjectId.get();
@@ -85,7 +85,7 @@ class ViolationReportMapperTest {
         assertEquals(postId.toHexString(), violationReportDto.getPost().getId());
         assertEquals("This is an ordinary comment", violationReportDto.getPost().getTitle());
         assertEquals(PostType.comment, violationReportDto.getPost().getType());
-        assertEquals(PostMedium.text, violationReportDto.getPost().getMedium());
+        assertEquals(PostFormat.article, violationReportDto.getPost().getMedium());
         assertEquals(postOwnerId.toHexString(), violationReportDto.getPostOwner().getId());
         assertEquals("priyanka", violationReportDto.getPostOwner().getUsername());
         assertEquals(reportingUserId.toHexString(), violationReportDto.getReportedBy().getId());

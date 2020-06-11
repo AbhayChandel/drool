@@ -3,7 +3,7 @@ package com.hexlindia.drool.violation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.mongo.MongoDataInsertion;
 import com.hexlindia.drool.common.dto.PostRefDto;
@@ -58,7 +58,7 @@ public class ViolationIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
+        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();
@@ -91,7 +91,7 @@ public class ViolationIT {
         ViolationReportDto violationReportDto = new ViolationReportDto();
         violationReportDto.setViolations(Arrays.asList("Bad Language", "Sexual Content"));
         ObjectId postId = ObjectId.get();
-        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", PostType.comment, PostMedium.text, null));
+        violationReportDto.setPost(new PostRefDto(postId.toHexString(), "This is an ordinary comment", PostType.comment, PostFormat.article, null));
         violationReportDto.setPostOwner(new UserRefDto(insertedUserId.toHexString(), "priyanka"));
         violationReportDto.setReportedBy(new UserRefDto(insertedUserId.toHexString(), "sonam99"));
 

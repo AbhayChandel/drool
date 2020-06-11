@@ -1,7 +1,7 @@
 package com.hexlindia.drool.video.services.api.rest;
 
 import com.hexlindia.drool.video.dto.VideoCommentDto;
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import com.hexlindia.drool.video.dto.VideoLikeUnlikeDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public interface VideoRestService {
 
     @PostMapping("/save")
-    ResponseEntity<VideoDto> save(@RequestBody VideoDto videoDto);
+    ResponseEntity<VideoDtoMOngo> save(@RequestBody VideoDtoMOngo videoDtoMOngo);
 
     @DeleteMapping("/delete")
-    ResponseEntity<Boolean> delete(@RequestBody VideoDto videoDto);
+    ResponseEntity<Boolean> delete(@RequestBody VideoDtoMOngo videoDtoMOngo);
 
     @PutMapping(value = "/likes/increment")
     ResponseEntity<String> incrementVideoLikes(@RequestBody VideoLikeUnlikeDto videoLikeUnlikeDto);

@@ -1,6 +1,6 @@
 package com.hexlindia.drool.video.dto.mapper;
 
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.dto.PostRefDto;
 import com.hexlindia.drool.common.dto.UserRefDto;
@@ -41,7 +41,7 @@ class VideoCommentMapperTest {
     @Test
     void toDoc_WithId() {
         ObjectId userId = new ObjectId();
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", PostType.guide, PostMedium.video, null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", PostType.guide, PostFormat.video, null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
         ObjectId videoCommentId = ObjectId.get();
         videoCommentDto.setId(videoCommentId.toHexString());
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
@@ -54,7 +54,7 @@ class VideoCommentMapperTest {
     @Test
     void toDoc_WithoutId() {
         ObjectId userId = new ObjectId();
-        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", PostType.guide, PostMedium.video, null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
+        VideoCommentDto videoCommentDto = new VideoCommentDto(new PostRefDto("p123", "Title for dummy test post", PostType.guide, PostFormat.video, null), new UserRefDto(userId.toHexString(), "sonam99"), "This is a comment to test videoCommentMapper toDoc");
         VideoComment videoComment = videoCommentMapper.toDoc(videoCommentDto);
         assertEquals(userId, videoComment.getUserRef().getId());
         assertEquals("sonam99", videoComment.getUserRef().getUsername());

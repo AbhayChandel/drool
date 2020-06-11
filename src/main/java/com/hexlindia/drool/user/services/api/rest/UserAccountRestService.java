@@ -12,8 +12,8 @@ public interface UserAccountRestService {
     @PostMapping(value = "/register")
     ResponseEntity<JwtResponse> register(@RequestBody UserRegistrationDto userRegistrationDto);
 
-    @GetMapping(value = "/find/email/{email}")
-    ResponseEntity<UserAccountDto> findByEmail(@PathVariable("email") String email);
+    @GetMapping(value = "/find/{userIdentifier}")
+    ResponseEntity<UserAccountDto> findByEmail(@PathVariable("userIdentifier") String userIdentifier);
 
 
 }

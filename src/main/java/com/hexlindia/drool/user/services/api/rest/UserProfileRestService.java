@@ -13,9 +13,6 @@ public interface UserProfileRestService {
     @PutMapping(value = "/${rest.uri.version}/user/profile/update")
     ResponseEntity<UserProfileDto> update(@RequestBody UserProfileDto userProfileDto);
 
-    @GetMapping(value = "/${rest.uri.version}/user/profile/find/id/{id}")
+    @GetMapping(value = "/${rest.uri.version}/view/user/profile/find/id/{id}")
     ResponseEntity<UserProfileDto> findById(@PathVariable("id") String id);
-
-    @GetMapping(value = "/${rest.uri.version}/accessall/user/profile/find/username/{username}")
-    ResponseEntity<UserProfileDto> findByUsername(@PathVariable("username") String username);
 }

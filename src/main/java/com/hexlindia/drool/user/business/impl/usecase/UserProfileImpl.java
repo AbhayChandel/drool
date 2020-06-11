@@ -1,16 +1,15 @@
 package com.hexlindia.drool.user.business.impl.usecase;
 
 import com.hexlindia.drool.user.business.api.usecase.UserProfile;
-import com.hexlindia.drool.user.data.doc.UserProfileDoc;
+import com.hexlindia.drool.user.data.entity.UserProfileEntity;
 import com.hexlindia.drool.user.data.repository.api.UserProfileRepository;
 import com.hexlindia.drool.user.dto.ContributionSummaryDto;
 import com.hexlindia.drool.user.dto.UserProfileDto;
 import com.hexlindia.drool.user.dto.mapper.UserProfileMapper;
 import com.hexlindia.drool.user.exception.UserProfileNotFoundException;
-import com.hexlindia.drool.video.business.api.usecase.Video;
+import com.hexlindia.drool.video.business.api.Video;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -28,35 +27,25 @@ public class UserProfileImpl implements UserProfile {
 
     @Override
     public UserProfileDto create(UserProfileDto userProfileDto) {
-        UserProfileDoc userProfileDoc = this.userProfileRepository.save(userProfileMapper.toDoc(userProfileDto));
-        return this.userProfileMapper.toDto(userProfileDoc);
+        UserProfileEntity userProfileEntity = this.userProfileRepository.save(userProfileMapper.toEntity(userProfileDto));
+        return this.userProfileMapper.toDto(userProfileEntity);
     }
 
     @Override
     public UserProfileDto findById(String id) {
-        Optional<UserProfileDoc> userProfileDocOptional = this.userProfileRepository.findById(new ObjectId(id));
-        if (userProfileDocOptional.isPresent()) {
+        Optional<UserProfileEntity> userProfileEntityOptional = this.userProfileRepository.findById(Long.valueOf(id));
+        if (userProfileEntityOptional.isPresent()) {
             log.debug("User with id {} found", id);
-            return userProfileMapper.toDto(userProfileDocOptional.get());
+            return userProfileMapper.toDto(userProfileEntityOptional.get());
         }
         throw new UserProfileNotFoundException("User profile with id " + id + " not found");
     }
 
     @Override
-    public UserProfileDto findByUsername(String username) {
-        Optional<UserProfileDoc> userProfileDocOptional = this.userProfileRepository.findByUsername(username);
-        if (userProfileDocOptional.isPresent()) {
-            log.debug("User with username {} found", username);
-            return userProfileMapper.toDto(userProfileDocOptional.get());
-        }
-        throw new UserProfileNotFoundException("User profile with username " + username + " not found");
-    }
-
-    @Override
     public UserProfileDto update(UserProfileDto userProfileDto) {
-        UserProfileDoc userProfileDoc = this.userProfileRepository.save(userProfileMapper.toDoc(userProfileDto));
-        log.debug("User profile after update {}", userProfileDoc);
-        return userProfileMapper.toDto(userProfileDoc);
+        UserProfileEntity userProfileEntity = this.userProfileRepository.save(userProfileMapper.toEntity(userProfileDto));
+        log.debug("User profile after update {}", userProfileEntity);
+        return this.userProfileMapper.toDto(userProfileEntity);
     }
 
     @Override

@@ -1,19 +1,13 @@
 package com.hexlindia.drool.user.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UserProfileDto {
 
     private String id;
-
-    private String username;
     private String name;
-
-    private String mobile;
     private String city;
     private String gender;
 }

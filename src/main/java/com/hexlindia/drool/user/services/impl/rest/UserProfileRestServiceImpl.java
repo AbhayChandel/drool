@@ -26,9 +26,4 @@ public class UserProfileRestServiceImpl implements UserProfileRestService {
     public ResponseEntity<UserProfileDto> findById(String id) {
         return ResponseEntity.ok(this.userProfile.findById(id));
     }
-
-    @Override
-    public ResponseEntity<UserProfileDto> findByUsername(String username) {
-        return ResponseEntity.ok(this.userProfile.findByUsername(username));
-    }
 }

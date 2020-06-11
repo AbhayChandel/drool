@@ -2,7 +2,7 @@ package com.hexlindia.drool.discussion.business.impl.usecase;
 
 import com.hexlindia.drool.activity.FeedDocField;
 import com.hexlindia.drool.activity.business.api.usecase.ActivityFeed;
-import com.hexlindia.drool.common.data.constant.PostMedium;
+import com.hexlindia.drool.common.data.constant.PostFormat;
 import com.hexlindia.drool.common.data.constant.PostType;
 import com.hexlindia.drool.common.data.doc.PostRef;
 import com.hexlindia.drool.common.dto.mapper.PostRefMapper;
@@ -45,7 +45,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     private DiscussionReplyDto updateReply(DiscussionReplyDto discussionReplyDto) {
         boolean result = discussionReplyRepository.updateReply(discussionReplyDto.getReply(), new ObjectId(discussionReplyDto.getId()), new ObjectId(discussionReplyDto.getPostRefDto().getId()));
         if (result) {
-            userActivity.update(new ObjectId(discussionReplyDto.getUserRefDto().getId()), ActionType.post, new PostRef(new ObjectId(discussionReplyDto.getId()), discussionReplyDto.getReply(), PostType.reply, PostMedium.text, null, null));
+            userActivity.update(new ObjectId(discussionReplyDto.getUserRefDto().getId()), ActionType.post, new PostRef(new ObjectId(discussionReplyDto.getId()), discussionReplyDto.getReply(), PostType.reply, PostFormat.article, null, null));
             return discussionReplyDto;
         }
         log.warn("Discussion reply was not updated");
@@ -57,7 +57,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
         discussionReplyDoc.setDatePosted(LocalDateTime.now());
         boolean result = discussionReplyRepository.saveReply(discussionReplyDoc, new ObjectId(discussionReplyDto.getPostRefDto().getId()));
         if (result) {
-            userActivity.add(discussionReplyDoc.getUserRef().getId(), ActionType.post, new PostRef(discussionReplyDoc.getId(), discussionReplyDoc.getReply(), PostType.reply, PostMedium.text, discussionReplyDoc.getDatePosted(), postRefMapper.toDoc(discussionReplyDto.getPostRefDto())));
+            userActivity.add(discussionReplyDoc.getUserRef().getId(), ActionType.post, new PostRef(discussionReplyDoc.getId(), discussionReplyDoc.getReply(), PostType.reply, PostFormat.article, discussionReplyDoc.getDatePosted(), postRefMapper.toDoc(discussionReplyDto.getPostRefDto())));
             activityFeed.incrementDecrementField(new ObjectId(discussionReplyDto.getPostRefDto().getId()), FeedDocField.comments, 1);
             return discussionReplyDtoDocMapper.toDto(discussionReplyDoc);
         }
@@ -68,14 +68,14 @@ public class DiscussionReplyImpl implements DiscussionReply {
     @Override
     public String incrementLikes(DiscussionReplyDto discussionReplyDto) {
         String likes = MetaFieldValueFormatter.getCompactFormat(discussionReplyRepository.incrementLikes(new ObjectId(discussionReplyDto.getId()), new ObjectId(discussionReplyDto.getPostRefDto().getId())));
-        userActivity.add(new ObjectId(discussionReplyDto.getUserRefDto().getId()), ActionType.like, new PostRef(new ObjectId(discussionReplyDto.getId()), discussionReplyDto.getReply(), PostType.reply, PostMedium.text, null, postRefMapper.toDoc(discussionReplyDto.getPostRefDto())));
+        userActivity.add(new ObjectId(discussionReplyDto.getUserRefDto().getId()), ActionType.like, new PostRef(new ObjectId(discussionReplyDto.getId()), discussionReplyDto.getReply(), PostType.reply, PostFormat.article, null, postRefMapper.toDoc(discussionReplyDto.getPostRefDto())));
         return likes;
     }
 
     @Override
     public String decrementLikes(String replyId, String discussionId, String userId) {
         String likes = MetaFieldValueFormatter.getCompactFormat(discussionReplyRepository.decrementLikes(new ObjectId(replyId), new ObjectId(discussionId)));
-        userActivity.delete(new ObjectId(userId), ActionType.like, new PostRef(new ObjectId(replyId), null, PostType.reply, PostMedium.text, null));
+        userActivity.delete(new ObjectId(userId), ActionType.like, new PostRef(new ObjectId(replyId), null, PostType.reply, PostFormat.article, null));
         return likes;
     }
 
@@ -83,7 +83,7 @@ public class DiscussionReplyImpl implements DiscussionReply {
     public boolean delete(String replyId, String discussionId, String userId) {
         boolean result = discussionReplyRepository.delete(new ObjectId(replyId), new ObjectId(discussionId));
         if (result) {
-            userActivity.delete(new ObjectId(userId), ActionType.post, new PostRef(new ObjectId(replyId), null, PostType.reply, PostMedium.text, null));
+            userActivity.delete(new ObjectId(userId), ActionType.post, new PostRef(new ObjectId(replyId), null, PostType.reply, PostFormat.article, null));
             activityFeed.incrementDecrementField(new ObjectId(discussionId), FeedDocField.comments, -1);
             return result;
         }

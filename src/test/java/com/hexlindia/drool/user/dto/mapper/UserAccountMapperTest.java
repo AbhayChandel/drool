@@ -1,8 +1,7 @@
 package com.hexlindia.drool.user.dto.mapper;
 
-import com.hexlindia.drool.user.data.doc.UserAccountDoc;
+import com.hexlindia.drool.user.data.entity.UserAccountEntity;
 import com.hexlindia.drool.user.dto.UserAccountDto;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,26 +16,26 @@ class UserAccountMapperTest {
 
     @Test
     void toDto() {
-        ObjectId id = new ObjectId();
-        UserAccountDoc userAccountDoc = new UserAccountDoc();
-        userAccountDoc.setId(id);
-        userAccountDoc.setEmailId("nishant@gmail.com");
-        userAccountDoc.setPassword("nishant");
-        userAccountDoc.setActive(true);
-
-        UserAccountDto userAccountDto = userAccountMapper.toDto(userAccountDoc);
-        assertEquals("nishant@gmail.com", userAccountDto.getEmailId());
-        assertEquals("nishant", userAccountDto.getPassword());
+        UserAccountEntity userAccountEntity = new UserAccountEntity();
+        userAccountEntity.setId(1001L);
+        userAccountEntity.setEmail("priya11@gmail.com");
+        userAccountEntity.setPassword("$2y$12$nkEeE1P.hWfg1iqhp8JWOea9F7lEEzBi07ZdGs1ujrVJM5YVYnQqi");
+        userAccountEntity.setUsername("priya11");
+        UserAccountDto userAccountDto = userAccountMapper.toDto(userAccountEntity);
+        assertEquals("priya11@gmail.com", userAccountDto.getEmailId());
+        assertEquals("$2y$12$nkEeE1P.hWfg1iqhp8JWOea9F7lEEzBi07ZdGs1ujrVJM5YVYnQqi", userAccountDto.getPassword());
+        assertEquals("priya11", userAccountDto.getUsername());
     }
 
     @Test
-    void toDoc() {
+    void toEntity() {
         UserAccountDto userAccountDto = new UserAccountDto();
-        userAccountDto.setEmailId("priya@gmail.com");
-        userAccountDto.setPassword("priya");
-
-        UserAccountDoc userAccountDoc = userAccountMapper.toDoc(userAccountDto);
-        assertEquals("priya@gmail.com", userAccountDoc.getEmailId());
-        assertEquals("priya", userAccountDoc.getPassword());
+        userAccountDto.setEmailId("priya99@gmail.com");
+        userAccountDto.setPassword("abcd");
+        userAccountDto.setUsername("priya99");
+        UserAccountEntity userAccountEntity = userAccountMapper.toEntity(userAccountDto);
+        assertEquals("priya99@gmail.com", userAccountEntity.getEmail());
+        assertEquals("abcd", userAccountEntity.getPassword());
+        assertEquals("priya99", userAccountEntity.getUsername());
     }
 }

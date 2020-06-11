@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -148,6 +149,7 @@ public class ProductReviewIT {
     }
 
     @Test
+    @Disabled
     void testVideoReviewSave() throws JSONException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -276,7 +278,7 @@ public class ProductReviewIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jwtRequestJson = new JSONObject();
-        jwtRequestJson.put("email", "priyanka.singh@gmail.com");
+        jwtRequestJson.put("email", "talk_to_priyanka@gmail.com");
         jwtRequestJson.put("password", "priyanka");
         HttpEntity<String> request = new HttpEntity<>(jwtRequestJson.toString(), headers);
         String response = this.restTemplate.postForEntity(getAuthenticationUri(), request, String.class).getBody();

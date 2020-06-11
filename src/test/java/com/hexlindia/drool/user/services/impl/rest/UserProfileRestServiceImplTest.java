@@ -21,8 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = UserProfileRestServiceImpl.class,
@@ -64,45 +64,6 @@ class UserProfileRestServiceImplTest {
     }
 
     @Test
-    public void findByUsername_HttpMethodNotAllowedError() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.put(getFindUsernameUri() + "/priya21"))
-                .andExpect(status().isMethodNotAllowed());
-    }
-
-    @Test
-    public void findByUsername_ParametersMissing() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(getFindUsernameUri() + "/"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void findByUsername_ParametersPassedToBusinessLayer() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindUsernameUri() + "/priya21"));
-        ArgumentCaptor<String> usernameArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(this.userProfileMock, times(1)).findByUsername(usernameArgumentCaptor.capture());
-        assertEquals("priya21", usernameArgumentCaptor.getValue());
-    }
-
-    @Test
-    void findByUsername_ValidateJsonResponse() throws Exception {
-        UserProfileDto userProfileDto = new UserProfileDto();
-        ObjectId id = new ObjectId();
-        userProfileDto.setId(id.toHexString());
-        userProfileDto.setUsername("priya21");
-        userProfileDto.setMobile("8765432109");
-        userProfileDto.setCity("Pune");
-        userProfileDto.setGender("F");
-        when(this.userProfileMock.findByUsername("priya21")).thenReturn(userProfileDto);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(getFindUsernameUri() + "/priya21"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id.toHexString()))
-                .andExpect(jsonPath("$.username").value("priya21"))
-                .andExpect(jsonPath("$.mobile").value("8765432109"))
-                .andExpect(jsonPath("$.city").value("Pune"))
-                .andExpect(jsonPath("$.gender").value("F"));
-    }
-
-    @Test
     public void update_HttpMethodNotAllowedError() throws Exception {
         UserProfileDto userProfileTo = new UserProfileDto();
         this.mockMvc.perform(MockMvcRequestBuilders.post(getUpdateUri()))
@@ -121,8 +82,6 @@ class UserProfileRestServiceImplTest {
         UserProfileDto userProfileDto = new UserProfileDto();
         userProfileDto.setGender("M");
         userProfileDto.setCity("Jaipur");
-        userProfileDto.setMobile("9876543210");
-        userProfileDto.setUsername("priya11");
         ObjectId accountId = new ObjectId();
         userProfileDto.setId(accountId.toHexString());
         userProfileDto.setName("Priya Gupta");
@@ -134,14 +93,12 @@ class UserProfileRestServiceImplTest {
         verify(this.userProfileMock, times(1)).update(userProfileDtoArgumentCaptor.capture());
         assertEquals("M", userProfileDtoArgumentCaptor.getValue().getGender());
         assertEquals("Jaipur", userProfileDtoArgumentCaptor.getValue().getCity());
-        assertEquals("9876543210", userProfileDtoArgumentCaptor.getValue().getMobile());
-        assertEquals("priya11", userProfileDtoArgumentCaptor.getValue().getUsername());
         assertEquals(accountId.toHexString(), userProfileDtoArgumentCaptor.getValue().getId());
         assertEquals("Priya Gupta", userProfileDtoArgumentCaptor.getValue().getName());
     }
 
     private String getFindByIdUri() {
-        return "/" + restUriVersion + "/user/profile/find/id";
+        return "/" + restUriVersion + "/view/user/profile/find/id";
     }
 
     private String getFindUsernameUri() {

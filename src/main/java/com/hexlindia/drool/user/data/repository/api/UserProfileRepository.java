@@ -1,14 +1,9 @@
 package com.hexlindia.drool.user.data.repository.api;
 
-import com.hexlindia.drool.user.data.doc.UserProfileDoc;
-import org.bson.types.ObjectId;
+import com.hexlindia.drool.user.data.entity.UserProfileEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface UserProfileRepository extends JpaRepository<UserProfileEntity, Long> {
 
-public interface UserProfileRepository {
-    UserProfileDoc save(UserProfileDoc userProfileDoc);
 
-    Optional<UserProfileDoc> findById(ObjectId id);
-
-    Optional<UserProfileDoc> findByUsername(String username);
 }

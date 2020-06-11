@@ -6,8 +6,15 @@ import java.time.format.DateTimeFormatter;
 
 public class MetaFieldValueFormatter {
 
+    private static final String dateTimeFormat = "d MMM, yyyy h:mm a";
+    private static final String dateFormat = "d MMM, yyyy";
+
     private MetaFieldValueFormatter() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static String getCompactFormat(Long number) {
+        return getCompactFormat(number.intValue());
     }
 
     public static String getCompactFormat(Integer number) {
@@ -40,18 +47,14 @@ public class MetaFieldValueFormatter {
         if (dateTime == null) {
             return "";
         }
-        String dateFormat = "d MMM, yyyy h:mm a";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         return dateTimeFormatter.format(dateTime);
-
-
     }
 
     public static String getDateInDayMonCommaYear(LocalDateTime date) {
         if (date == null) {
             return "";
         }
-        String dateFormat = "d MMM, yyyy";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         return dateFormatter.format(date);
     }
@@ -60,8 +63,15 @@ public class MetaFieldValueFormatter {
         if (date == null) {
             return "";
         }
-        String dateFormat = "d MMM, yyyy";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         return dateFormatter.format(date);
+    }
+
+    public static LocalDateTime toLocalDateTime(String dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        return LocalDateTime.parse(dateTime, formatter);
     }
 }

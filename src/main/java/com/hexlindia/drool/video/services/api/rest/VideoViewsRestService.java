@@ -1,6 +1,6 @@
 package com.hexlindia.drool.video.services.api.rest;
 
-import com.hexlindia.drool.video.dto.VideoDto;
+import com.hexlindia.drool.video.dto.VideoDtoMOngo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface VideoViewsRestService {
 
     @GetMapping("/find/id/{id}")
-    ResponseEntity<VideoDto> findById(@PathVariable("id") String id);
+    ResponseEntity<VideoDtoMOngo> findById(@PathVariable("id") String id);
 }
