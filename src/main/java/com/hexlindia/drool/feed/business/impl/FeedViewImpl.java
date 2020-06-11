@@ -34,7 +34,7 @@ public class FeedViewImpl implements FeedView {
     private final DiscussionFeedPreviewMapper discussionFeedPreviewMapper;
 
     @Override
-    public List<FeedItemPreview> getFeedPage(int pageNumber, int pageSize) {
+    public List<FeedItemPreview> getFeed(int pageNumber, int pageSize) {
         Page<FeedEntity> feedItems = feedRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("datePosted").descending()));
         if (feedItems.isEmpty()) {
             return Collections.emptyList();

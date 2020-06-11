@@ -16,7 +16,7 @@ public class FeedViewRestServiceImpl implements FeedViewRestService {
     private final FeedView feedView;
 
     @Override
-    public ResponseEntity<List<FeedItemPreview>> findById(int pageNumber, int pageSize) {
-        return ResponseEntity.ok(feedView.getFeedPage(pageNumber, pageSize));
+    public ResponseEntity<List<FeedItemPreview>> getFeed(int pageNumber, int pageSize) {
+        return ResponseEntity.ok(feedView.getFeed(pageNumber, pageSize));
     }
 }

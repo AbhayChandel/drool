@@ -60,7 +60,7 @@ class FeedViewImplTest {
     @Test
     void getFeedPage_feed_items_not_found() {
         when(feedRepositoryMock.findAll((Pageable) any())).thenReturn(Page.empty());
-        assertTrue(feedViewSpy.getFeedPage(0, 1).isEmpty());
+        assertTrue(feedViewSpy.getFeed(0, 1).isEmpty());
     }
 
     @Test
@@ -68,7 +68,7 @@ class FeedViewImplTest {
         Page<FeedEntity> feedItems = new PageImpl<>(Arrays.asList(new FeedEntity(new FeedEntityId(1, 1), null)));
         when(feedRepositoryMock.findAll((Pageable) any())).thenReturn(feedItems);
         doReturn(null).when(feedViewSpy).getFeedItemPreviews(any());
-        feedViewSpy.getFeedPage(0, 1);
+        feedViewSpy.getFeed(0, 1);
         verify(feedViewSpy, times(1)).getFeedItemPreviews(any());
     }
 

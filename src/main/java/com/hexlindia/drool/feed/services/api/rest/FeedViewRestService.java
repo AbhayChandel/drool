@@ -12,5 +12,6 @@ import java.util.List;
 public interface FeedViewRestService {
 
     @GetMapping
-    ResponseEntity<List<FeedItemPreview>> findById(@RequestParam(name = "pno", defaultValue = "0") int pageNumber, @RequestParam(name = "psize", defaultValue = "7") int pageSize);
+    ResponseEntity<List<FeedItemPreview>> getFeed(@RequestParam(name = "pno", defaultValue = "0") int pageNumber,
+                                                  @RequestParam(name = "psize", defaultValue = "7") int pageSize);
 }

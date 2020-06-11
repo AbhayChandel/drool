@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FeedView {
 
-    List<FeedItemPreview> getFeedPage(int pageNumber, int pageSize);
+    List<FeedItemPreview> getFeed(int pageNumber, int pageSize);
 }
